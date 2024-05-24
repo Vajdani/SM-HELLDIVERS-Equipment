@@ -1,0 +1,43 @@
+{
+   "lodList" : [
+      {
+         "includes" : [
+            "POSITION",
+            "UV0",
+            "NORMAL",
+            "TANGENTS",
+            "BLEND_INDICES",
+            "BLEND_WEIGHTS"
+         ],
+         "maxViewDistance" : 1000.0,
+         "mesh" : "$CONTENT_DATA/Characters/Mesh/char_helldiver_armour_boots.dae",
+         "subMeshMap" : {
+            "default_body_female" : {
+               "material" : "Skin",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_dif.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_asg.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_nor.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_tkn.tga"
+               ]
+            },
+            "default_body_female_cloth" : {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_dif.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_asg.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_nor.tga"
+               ]
+            },
+            "outfit_engineer_shoes" : {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Character/Char_Male/Outfit/Shoes/Outfit_engineer_shoes/outfit_engineer_shoes_dif.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Outfit/Shoes/Outfit_engineer_shoes/outfit_engineer_shoes_asg.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Outfit/Shoes/Outfit_engineer_shoes/outfit_engineer_shoes_nor.tga"
+               ]
+            }
+         }
+      }
+   ]
+}

@@ -11,7 +11,7 @@
 					]
 				}
 			},
-			"mesh": "$CONTENT_DATA/Character/Mesh/char_helldiver_armour_leggings.dae"
+			"mesh": "$CONTENT_DATA/Characters/Mesh/char_helldiver_armour_leggings.dae"
 		}
 	]
 }
