@@ -1,0 +1,17 @@
+{
+    "lodList": [
+        {
+            "mesh": "$CONTENT_DATA/Objects/Mesh/obj_helldiver_armour_helmet.fbx",
+            "subMeshMap": {
+                "Hat_mat": {
+                    "material": "DifAsgNor",
+                    "textureList": [
+                        "$CONTENT_DATA/Objects/Textures/outfit_engineer_hat_dif.tga",
+                        "$SURVIVAL_DATA/Character/Char_Male/Outfit/Hat/Outfit_engineer_hat/outfit_engineer_hat_asg.tga",
+                        "$CONTENT_DATA/Objects/Textures/outfit_engineer_hat_nor.tga"
+                    ]
+                }
+            }
+        }
+    ]
+}

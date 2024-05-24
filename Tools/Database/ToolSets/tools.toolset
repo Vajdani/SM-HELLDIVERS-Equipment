@@ -1,0 +1,16 @@
+{
+   "toolList" : [
+      {
+         "autoTool" : true,
+         "name" : "ArmourSetup",
+         "previewRenderable" : "$GAME_DATA/Character/Char_Tools/char_connecttool_preview.rend",
+         "previewRotation" : [ 1, 0, 0, 0, 0, -1, 0, 1, 0 ],
+         "script" : {
+            "class" : "ArmourSetup",
+            "data" : {},
+            "file" : "$CONTENT_DATA/Scripts/ArmourSetup.lua"
+         },
+         "uuid" : "9266ebb2-2954-4466-9832-8075ae0eb10c"
+      }
+   ]
+}

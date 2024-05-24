@@ -1,0 +1,64 @@
+{
+    "partList": [
+        {
+            "box": {
+                "x": 2,
+                "y": 1,
+                "z": 2
+            },
+            "color": "ffffff",
+            "flammable": false,
+            "name": "obj_helldiver_armour_helmet",
+            "physicsMaterial": "Mechanical",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/obj_helldiver_armour_helmet.rend",
+            "rotationSet": "PropY",
+            "sticky": "-Y",
+            "uuid": "d39d911c-280b-429e-8168-2c6db39c4eaf"
+        },
+        {
+            "box": {
+                "x": 2,
+                "y": 2,
+                "z": 1
+            },
+            "color": "ffffff",
+            "flammable": false,
+            "name": "obj_helldiver_armour_chestplate",
+            "physicsMaterial": "Mechanical",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/obj_helldiver_armour_chestplate.rend",
+            "rotationSet": "PropZ",
+            "sticky": "-Z",
+            "uuid": "f4aada57-e8ac-4a54-ba79-6cdb9d73f039"
+        },
+        {
+            "box": {
+                "x": 2,
+                "y": 2,
+                "z": 1
+            },
+            "color": "ffffff",
+            "flammable": false,
+            "name": "obj_helldiver_armour_leggings",
+            "physicsMaterial": "Mechanical",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/obj_helldiver_armour_leggings.rend",
+            "rotationSet": "PropZ",
+            "sticky": "-Z",
+            "uuid": "2592e8f0-2bab-4f4f-b153-1566717ab42e"
+        },
+        {
+            "box": {
+                "x": 2,
+                "y": 1,
+                "z": 1
+            },
+            "color": "ffffff",
+            "flammable": false,
+            "name": "obj_helldiver_armour_boots",
+            "physicsMaterial": "Mechanical",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/obj_helldiver_armour_boots.rend",
+            "rotationSet": "PropY",
+            "sticky": "-Y",
+            "uuid": "37eac317-fff1-47b7-86d0-e67c31cdf09a"
+        }
+    ]
+}
