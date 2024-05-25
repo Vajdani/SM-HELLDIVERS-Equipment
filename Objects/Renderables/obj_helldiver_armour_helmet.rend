@@ -3,14 +3,14 @@
         {
             "mesh": "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Mesh/obj_helldiver_armour_helmet.fbx",
             "subMeshMap": {
-                "Hat_mat": {
-                    "material": "DifAsgNor",
-                    "textureList": [
-                        "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Textures/outfit_engineer_hat_dif.tga",
-                        "$SURVIVAL_DATA/Character/Char_Male/Outfit/Hat/Outfit_engineer_hat/outfit_engineer_hat_asg.tga",
-                        "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Textures/outfit_engineer_hat_nor.tga"
-                    ]
-                }
+                "black": {
+					"material": "DifAsgNor",
+					"textureList": [
+						"$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_hat_dif.tga",
+						"$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_hat_asg.tga",
+						"$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_hat_nor.tga"
+					]
+				}
             }
         }
     ]

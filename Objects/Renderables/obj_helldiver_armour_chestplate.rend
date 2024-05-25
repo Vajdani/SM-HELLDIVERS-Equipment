@@ -3,20 +3,12 @@
 		{
 			"mesh": "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Mesh/obj_helldiver_armour_chestplate.fbx",
 			"subMeshMap": {
-				"Metal": {
+				"black": {
 					"material": "DifAsgNor",
 					"textureList": [
-						"$GAME_DATA/Objects/Textures/Blocks/blk_metal01_dif.tga",
-						"$GAME_DATA/Objects/Textures/Blocks/blk_metal01_asg.tga",
-						"$GAME_DATA/Objects/Textures/Blocks/blk_metal01_nor.tga"
-					]
-				},
-				"outfit_automotive_jacket": {
-					"material": "DifAsgNor",
-					"textureList": [
-						"$SURVIVAL_DATA/Character/Char_Male/Outfit/Jacket/Outfit_automotive_jacket/outfit_automotive_jacket_dif.tga",
-						"$SURVIVAL_DATA/Character/Char_Male/Outfit/Jacket/Outfit_automotive_jacket/outfit_automotive_jacket_asg.tga",
-						"$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Textures/outfit_automotive_jacket_nor.tga"
+						"$GAME_DATA/Textures/black.png",
+						"$GAME_DATA/Textures/Default/default_asg.tga",
+						"$GAME_DATA/Textures/Default/default_nor.tga"
 					]
 				}
 			}

@@ -3,12 +3,12 @@
 		{
 			"mesh": "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Mesh/obj_helldiver_armour_boots.fbx",
 			"subMeshMap": {
-				"outfit_engineer_shoes": {
+				"black": {
 					"material": "DifAsgNor",
 					"textureList": [
-						"$SURVIVAL_DATA/Character/Char_Male/Outfit/Shoes/Outfit_engineer_shoes/outfit_engineer_shoes_dif.tga",
-						"$SURVIVAL_DATA/Character/Char_Male/Outfit/Shoes/Outfit_engineer_shoes/outfit_engineer_shoes_asg.tga",
-						"$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Textures/outfit_engineer_shoes_nor.tga"
+						"$GAME_DATA/Textures/black.png",
+						"$GAME_DATA/Textures/Default/default_asg.tga",
+						"$GAME_DATA/Textures/Default/default_nor.tga"
 					]
 				}
 			}
