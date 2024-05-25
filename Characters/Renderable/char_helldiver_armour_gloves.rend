@@ -10,7 +10,7 @@
             "BLEND_WEIGHTS"
          ],
          "maxViewDistance" : 1000.0,
-         "mesh" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Mesh/char_helldiver_armour_boots.dae",
+         "mesh" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Mesh/char_helldiver_armour_gloves.dae",
          "subMeshMap" : {
             "black": {
 					"material": "DifAsgNor",

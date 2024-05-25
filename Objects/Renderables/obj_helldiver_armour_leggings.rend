@@ -1,14 +1,14 @@
 {
 	"lodList": [
 		{
-			"mesh": "$CONTENT_DATA/Objects/Mesh/obj_helldiver_armour_leggings.fbx",
+			"mesh": "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Mesh/obj_helldiver_armour_leggings.fbx",
 			"subMeshMap": {
 				"outfit_automotive_pants": {
 					"material": "DifAsgNor",
 					"textureList": [
 						"$SURVIVAL_DATA/Character/Char_Male/Outfit/Pants/Outfit_automotive_pants/outfit_automotive_pants_dif.tga",
 						"$SURVIVAL_DATA/Character/Char_Male/Outfit/Pants/Outfit_automotive_pants/outfit_automotive_pants_asg.tga",
-						"$CONTENT_DATA/Objects/Textures/outfit_automotive_pants_nor.tga"
+						"$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Textures/outfit_automotive_pants_nor.tga"
 					]
 				}
 			}
