@@ -1,17 +1,17 @@
 {
-    "lodList": [
-        {
-            "mesh": "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Mesh/obj_helldiver_armour_helmet.fbx",
-            "subMeshMap": {
-                "black": {
-					"material": "DifAsgNor",
-					"textureList": [
-						"$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_hat_dif.tga",
-						"$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_hat_asg.tga",
-						"$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_hat_nor.tga"
-					]
-				}
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Mesh/obj_helldiver_armour_helmet.fbx",
+         "subMeshMap" : {
+            "black" : {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_hat_dif.tga",
+                  "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_hat_asg.tga",
+                  "$CONTENT_DATA/Characters/Textures/obj_outfit_helldiver_hat_nor.tga"
+               ]
             }
-        }
-    ]
+         }
+      }
+   ]
 }
