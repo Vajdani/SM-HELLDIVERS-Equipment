@@ -1,7 +1,7 @@
 {
 	"lodList": [
 		{
-			"mesh": "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Mesh/obj_helldiver_armour_boots.fbx",
+			"mesh": "$CONTENT_DATA/Objects/Mesh/obj_helldiver_armour_boots.fbx",
 			"subMeshMap": {
 				"black": {
 					"material": "DifAsgNor",

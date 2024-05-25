@@ -1,0 +1,19 @@
+{
+	"lodList": [{
+		"mesh": "$GAME_DATA/Character/Char_Classic/Char_classic_shared/char_classic_shared_fp_arms_geo.dae",
+		"includes" : ["POSITION", "UV0", "NORMAL", "TANGENTS", "BLEND_INDICES", "BLEND_WEIGHTS"],
+		"subMeshList" : [
+			{
+				"textureList": [
+					"$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_dif.tga",
+					"$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_asg.tga",
+					"$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_nor.tga",
+					"$SURVIVAL_DATA/Character/Char_Male/Body/Female/char_female_body_tkn.tga"
+				],
+				"color": "ffffff",
+				"material": "Skin"
+			}
+		],
+		"maxViewDistance": 1000.0
+	}]
+}
