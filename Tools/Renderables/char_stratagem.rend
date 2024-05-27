@@ -1,0 +1,17 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Tools/Mesh/char_stratagem.dae",
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_dif.tga",
+                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_asg.tga",
+                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

@@ -43,8 +43,14 @@ local armour = {
 function ArmourSetup:server_onCreate()
     if setupComplete then return end
 
-    for k, v in pairs(armour) do
-        sm.crashlander.addEquipment(v.uuid, v.slot, v.renderable, v.stats)
+    if sm.crashlander then
+        for k, v in pairs(armour) do
+            sm.crashlander.addEquipment(v.uuid, v.slot, v.renderable, v.stats)
+        end
+
+        print("[HELLDIVERS] Armour setup complete")
+    else
+        print("[HELLDIVERS] Non crashlander gamemode, armour setup aborted")
     end
 
     setupComplete = true

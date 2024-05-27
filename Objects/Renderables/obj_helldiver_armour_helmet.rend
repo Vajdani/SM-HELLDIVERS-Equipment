@@ -1,14 +1,14 @@
 {
    "lodList" : [
       {
-         "mesh" : "$CONTENT_DATA/Objects/Mesh/obj_helldiver_armour_helmet.fbx",
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/armour/obj_helldiver_armour_helmet.fbx",
          "subMeshMap" : {
             "black" : {
                "material" : "DifAsgNor",
                "textureList" : [
                   "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_hat_dif.tga",
                   "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_hat_asg.tga",
-                  "$CONTENT_DATA/Objects/Textures/obj_outfit_helldiver_hat_nor.tga"
+                  "$CONTENT_DATA/Objects/Textures/armour/obj_outfit_helldiver_hat_nor.tga"
                ]
             }
          }
