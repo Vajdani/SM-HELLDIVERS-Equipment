@@ -42,7 +42,7 @@ end
 ---@param caller Player
 function Stratagem:sv_throwStratagem( args, caller )
     self:sv_cancel(nil, caller)
-    sm.projectile.customProjectileAttack({ code = args.code }, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, args.pos, caller.character.direction * 35, caller )
+    sm.event.sendToTool(sm.HELLDIVERSBACKEND, "OnStratagemThrow", { player = caller, code = args.code, pos = args.pos })
 end
 
 ---@param args any
@@ -214,7 +214,14 @@ function Stratagem.client_onUpdate( self, dt )
 	end
 end
 
+function Stratagem:client_onReload()
+    return true
+end
+
 function Stratagem:client_onToggle()
+    local lock = sm.localPlayer.getPlayer().character:getLockingInteractable()
+    if lock and lock.shape.uuid == sm.uuid.new("09a84352-04b2-47d1-9346-15ae4f768d03") then return end
+
     self.available = {}
     self.selected = {}
 
@@ -339,7 +346,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             self.network:sendToServer("sv_throwAnim")
         end
 
-        if rmb == 1 then
+        if rmb == 1 and not self.pendingThrow then
             self.activated = false
             g_strataGemCode = nil
         end
@@ -354,7 +361,32 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
         elseif lmb == 3 then
             self.network:sendToServer("sv_cancel")
 
-            if GetStratagem(g_strataGemCode) then
+            local stratagems = {}
+            local tick = sm.game.getServerTick()
+            for k, v in pairs(GetStratagems()) do
+                local uuid = v.uuid
+                if isAnyOf(uuid, g_cl_loadout) then
+                    table.insert(stratagems, v)
+                end
+            end
+
+            local stratagem = GetStratagem(g_strataGemCode, stratagems)
+            if stratagem then
+                if GetClStratagemProgression(stratagem.uuid).charges == 0 then
+                    sm.gui.displayAlertText("#ff0000Out of charges!", 2.5)
+                    sm.audio.play("RaftShark")
+                    g_strataGemCode = nil
+                    return true, false
+                end
+
+                local cooldownTick = (g_cl_cooldowns[stratagem.uuid] or tick)
+                if tick < cooldownTick then
+                    sm.gui.displayAlertText("#ff0000Stratagem is on cooldown! "..math.ceil((cooldownTick - tick)/40).." seconds left.", 2.5)
+                    sm.audio.play("RaftShark")
+                    g_strataGemCode = nil
+                    return true, false
+                end
+
                 self.activated = true
                 sm.effect.playHostedEffect("Stratagem - Armed", self.tool:getOwner().character)
             else

@@ -88,15 +88,17 @@ function HelldiversBackend:server_onCreate()
     local storage = {} --self.storage:load() or {}
     g_sv_stratagemProgression = storage.progression or {}
     self.loadouts = storage.loadouts or {}
+    self.cooldownsPerPlayer = storage.cooldowns or {}
 
     self.queuedStratagems = {}
 end
 
 function HelldiversBackend:server_onFixedUpdate()
-    for k, v in pairs(self.queuedStratagems) do
-        v.activation = v.activation - 1
-        if v.activation <= 0 then
-            if v:summon() then
+    local tick = sm.game.getServerTick()
+    for k, stratagem in pairs(self.queuedStratagems) do
+        stratagem.activation = stratagem.activation - 1
+        if stratagem.activation <= 0 then
+            if stratagem:summon() then
                 self.queuedStratagems[k] = nil
                 self.network:sendToClients("cl_DeleteStratagem", k)
             end
@@ -122,7 +124,8 @@ function HelldiversBackend:sv_save()
     self.storage:save(
         {
             loadouts = self.loadouts,
-            progression = g_sv_stratagemProgression
+            progression = g_sv_stratagemProgression,
+            cooldowns = self.cooldownsPerPlayer
         }
     )
 end
@@ -131,6 +134,7 @@ function HelldiversBackend:sv_requestData(args, caller)
     self.network:sendToClient(caller, "cl_recieveData",{
         loadout = self.loadouts[caller.id] or {},
         progression = g_sv_stratagemProgression[caller.id] or {},
+        cooldowns = self.cooldownsPerPlayer[caller.id] or {}
     })
 end
 
@@ -165,6 +169,7 @@ function HelldiversBackend:client_onCreate()
 
     g_cl_loadout = {}
     g_cl_stratagemProgression = {}
+    g_cl_cooldowns = {}
     self.network:sendToServer("sv_requestData")
 end
 
@@ -179,6 +184,29 @@ function HelldiversBackend:client_onFixedUpdate()
             v.gui:setText("Text", "Activating...")
         end
     end
+end
+
+function HelldiversBackend:OnStratagemThrow(args)
+    local player, stratagem = args.player, GetStratagem(args.code)
+    local pId, uuid = player.id, stratagem.uuid
+    local progression = GetSvStratagemProgression(player, uuid)
+    if progression.charges == 0 then return end
+
+    if not self.cooldownsPerPlayer[pId] then
+        self.cooldownsPerPlayer[pId] = {}
+    end
+
+    local tick = sm.game.getServerTick()
+    if (self.cooldownsPerPlayer[pId][uuid] or tick) > tick then return end
+
+    self.cooldownsPerPlayer[pId][uuid] = sm.game.getServerTick() + stratagem.cooldown
+    progression.charges = progression.charges - 1
+    g_sv_stratagemProgression[pId][uuid] = progression
+
+    sm.projectile.customProjectileAttack({ code = args.code }, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, args.pos, player.character.direction * 35, player )
+
+    self:sv_save()
+    self:sv_requestData(nil, player)
 end
 
 function HelldiversBackend:cl_OnStratagemHit(args)
@@ -204,14 +232,16 @@ function HelldiversBackend:cl_OnStratagemHit(args)
 end
 
 function HelldiversBackend:cl_DeleteStratagem(index)
-    self.cl_queuedStratagems[index].gui:close()
-    self.cl_queuedStratagems[index].beacon:destroy()
+    local data = self.cl_queuedStratagems[index]
+    data.gui:close()
+    data.beacon:destroy()
     self.cl_queuedStratagems[index] = nil
 end
 
 function HelldiversBackend:cl_recieveData(data)
     g_cl_loadout = data.loadout
     g_cl_stratagemProgression = data.progression
+    g_cl_cooldowns = data.cooldowns
 
     if g_stratagemTerminal then
         sm.event.sendToInteractable(g_stratagemTerminal, "cl_refresh")

@@ -264,9 +264,10 @@ local stratagemUserdata = {
     }
 }
 
-function GetStratagem(id)
+function GetStratagem(id, override)
+    override = override or stratagems
     if type(id) == "string" then
-        for k, v in pairs(stratagems) do
+        for k, v in pairs(override) do
             if v.code == id then
                 return v, k
             end
