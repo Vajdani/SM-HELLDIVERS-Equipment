@@ -1,0 +1,17 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/armour/outfit_helldiver_jacket_test.fbx",
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_jacket_dif.tga",
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_jacket_asg.tga",
+                  "$CONTENT_DATA/Objects/Textures/armour/obj_outfit_helldiver_jacket_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

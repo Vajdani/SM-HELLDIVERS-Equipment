@@ -1,26 +1,26 @@
 {
-	"lodList": [
-		{
-			"subMeshMap": {
-				"default_body_male": {
-					"textureList": [
-						"$SURVIVAL_DATA/Character/Char_Male/Body/Male/char_male_body_dif.tga",
-						"$SURVIVAL_DATA/Character/Char_Male/Body/Male/char_male_body_asg.tga",
-						"$SURVIVAL_DATA/Character/Char_Male/Body/Male/char_male_body_nor.tga",
-						"$SURVIVAL_DATA/Character/Char_Male/Body/Male/char_male_body_tkn.tga"
-					],
-					"material": "Skin"
-				},
-				"black": {
-					"material": "DifAsgNor",
-					"textureList": [
-						"$GAME_DATA/Textures/black.png",
-						"$GAME_DATA/Textures/Default/default_asg.tga",
-						"$GAME_DATA/Textures/Default/default_nor.tga"
-					]
-				}
-			},
-			"mesh": "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Mesh/char_helldiver_armour_chestplate.dae"
-		}
-	]
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Mesh/char_helldiver_armour_chestplate.dae",
+         "subMeshMap" : {
+            "black" : {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_jacket_dif.tga",
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_jacket_asg.tga",
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_jacket_nor.tga"
+               ]
+            },
+            "default_body_male" : {
+               "material" : "Skin",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Male/char_male_body_dif.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Male/char_male_body_asg.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Male/char_male_body_nor.tga",
+                  "$SURVIVAL_DATA/Character/Char_Male/Body/Male/char_male_body_tkn.tga"
+               ]
+            }
+         }
+      }
+   ]
 }
