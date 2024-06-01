@@ -1,0 +1,17 @@
+{
+   "projectiles" : [
+      {
+			"uuid": "6411767a-8882-4b94-aae5-381057cde9f9",
+			"name": "projectile_stratagem",
+			"mass": 3.0,
+			"radius": 0.25,
+			"friction": 0.2,
+			"spin": 7.0,
+			"mesh": "$GAME_DATA/Projectiles/Renderables/potato.rend",
+			"effect": "PotatoProjectile - Hit",
+			"audiomass": 250.0,
+			"effectmaterial": "Potato",
+			"enableImpactEffect": true
+		}
+   ]
+}

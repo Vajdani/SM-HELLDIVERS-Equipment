@@ -28,7 +28,7 @@
 								"material": "DifAsgNor"
 							}
 						],
-						"mesh": "$CONTENT_DATA/Objects/Mesh/cube.fbx"
+						"mesh": "$GAME_DATA/Mesh/cube.mesh"
 					}
 				]
 			},

@@ -15,7 +15,91 @@ Stratagem.variants = {
     {
         name = "Resupply",
         code = "4432",
-        cooldown = 160 * 40
+        cooldown = 160 * 40,
+        activation = 12 * 40,
+        type = "mission",
+        summon = function(self)
+            local uuid = sm.uuid.new("ad35f7e6-af8f-40fa-aef4-77d827ac8a8a")
+            local rotation = sm.quat.angleAxis(math.rad(90), sm.vec3.new(1,0,0))
+            local chest = sm.shape.createPart(uuid, self.hitData.position - rotation * sm.item.getShapeOffset(uuid), rotation, false, true)
+            local container = chest.interactable:getContainer(0)
+            for k, v in pairs(self.items) do
+                sm.container.beginTransaction()
+                sm.container.collect(container, v.uuid, v.amount)
+                sm.container.endTransaction()
+            end
+
+            return true
+        end,
+        items = {
+            {
+                uuid = obj_plantables_potato,
+                amount = 500
+            },
+            {
+                uuid = obj_consumable_glowstick,
+                amount = 100
+            },
+            {
+                uuid = obj_interactive_propanetank_large,
+                amount = 5
+            },
+            {
+                uuid = obj_interactive_propanetank_small,
+                amount = 10
+            }
+        }
+    },
+    {
+        name = "Eagle 500kg Bomb",
+        code = "32444",
+        cooldown = 160 * 40,
+        activation = 3 * 40,
+        type = "offensive",
+        summon = function(self)
+            sm.physics.explode(self.hitData.position, 100, 50, 75, 1000, "PropaneTank - ExplosionBig")
+            return true
+        end
+    },
+    {
+        name = "Orbital Airburst Strike",
+        code = "222",
+        cooldown = 120 * 40,
+        activation = 3 * 40,
+        type = "offensive",
+        summon = function(self)
+            if self.tick%40 == 0 then
+                local origin = self.hitData.position + sm.vec3.new(0,0,20)
+                for i = 0, 6 do
+                    local dir = sm.vec3.new(0,1,0):rotate(-math.rad(math.random(45, 75)), sm.vec3.new(1,0,0)):rotate(math.rad(i * 60), sm.vec3.new(0,0,1))
+                    sm.projectile.projectileAttack(projectile_explosivetape, 100, origin, dir * 100, self.hitData.shooter)
+                    sm.effect.playEffect("PropaneTank - ExplosionSmall", origin)
+                end
+            end
+
+            self.tick = self.tick + 1
+            return self.tick >= 120
+        end,
+        tick = 0
+    },
+    {
+        name = "Orbital Gatling Barrage",
+        code = "24133",
+        cooldown = 80 * 40,
+        activation = 1 * 40,
+        type = "offensive",
+        summon = function(self)
+            if self.tick%2 == 0 then
+                local origin = self.hitData.position + sm.vec3.new(0,0,20)
+                local dir = sm.vec3.new(0,1,0):rotate(-math.rad(math.random(45, 75)), sm.vec3.new(1,0,0)):rotate(math.rad(math.random(0, 359)), sm.vec3.new(0,0,1))
+                sm.projectile.projectileAttack(projectile_potato, 100, origin, dir * 100, self.hitData.shooter)
+                sm.effect.playEffect("SpudgunSpinner - SpinnerMuzzel", origin, sm.vec3.zero(), sm.vec3.getRotation(dir, sm.vec3.new(0,0,1)))
+            end
+
+            self.tick = self.tick + 1
+            return self.tick >= 160
+        end,
+        tick = 0
     }
 }
 
@@ -49,7 +133,7 @@ end
 ---@param caller Player
 function Stratagem:sv_throwStratagem( args, caller )
     self:sv_cancel(nil, caller)
-    sm.projectile.projectileAttack(projectile_potato, 0, args.pos, caller.character.direction * 50, caller)
+    sm.projectile.customProjectileAttack({ code = args.code }, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, args.pos, caller.character.direction * 35, caller )
 end
 
 ---@param args any
@@ -79,7 +163,6 @@ function Stratagem:client_onCreate()
 
     if not self.isLocal then return end
 
-    self.typing = false
     self.activated = false
     self.pendingThrow = false
 end
@@ -154,11 +237,14 @@ function Stratagem.client_onUpdate( self, dt )
                 self.network:sendToServer(
                     "sv_throwStratagem",
                     {
-                        pos = self.tool:isInFirstPersonView() and sm.camera.getPosition() or self.tool:getTpBonePos("root_item")
+                        pos = self.tool:isInFirstPersonView() and sm.camera.getPosition() or self.tool:getTpBonePos("root_item"),
+                        code = g_strataGemCode
                     }
                 )
 
-                self:cl_cancel()
+                self.activated = false
+                self.pendingThrow = false
+                g_strataGemCode = nil
             end
         end
 	end
@@ -251,44 +337,29 @@ function Stratagem.client_onUnequip( self )
 end
 
 function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
-    if lmb == 1 then
-        if self.typing then
-            --[[if self.activated then
-                self.network:sendToServer("sv_throwAnim")
-            else
-                for k, v in pairs(self.variants) do
-                    if v.code == g_strataGemCode then
-                        self.activated = true
-                        self.network:sendToServer("sv_cancel")
-
-                        return true, true
-                    end
-                end
-
-                self:cl_cancel(true)
-            end]]
-
-            for k, v in pairs(self.variants) do
-                if v.code == g_strataGemCode then
-                    self.network:sendToServer("sv_throwAnim")
-                    break
-                end
-            end
-        else
-            self.typing = true
+    if self.activated then
+        if lmb == 1 then
+            self.network:sendToServer("sv_throwAnim")
+        end
+    else
+        if lmb == 1 then
             self.network:sendToServer("sv_prime")
+        elseif lmb == 2 then
+            sm.gui.setInteractionText("Code:", g_strataGemCode or "", "")
+        elseif lmb == 3 then
+            self.network:sendToServer("sv_cancel")
+
+            if GetStratagemByCode(g_strataGemCode) then
+                self.activated = true
+                sm.effect.playHostedEffect("Stratagem - Armed", self.tool:getOwner().character)
+            else
+                sm.audio.play("RaftShark")
+                g_strataGemCode = nil
+            end
         end
     end
 
-    if rmb == 1 and self.typing then
-        self:cl_cancel(true)
-    end
-
-    if self.typing then
-        sm.gui.setInteractionText("Code:", g_strataGemCode or "", "")
-    end
-
-	return true, true
+	return true, false
 end
 
 function Stratagem:cl_updateRends()
@@ -304,20 +375,6 @@ function Stratagem:cl_updateRends()
 	self.tool:setTpRenderables( currentRenderablesTp )
     if self.isLocal then
 		self.tool:setFpRenderables( currentRenderablesFp )
-    end
-end
-
-function Stratagem:cl_cancel(sv)
-    self.pendingThrow = false
-
-    if not self.isLocal then return end
-
-    g_strataGemCode = nil
-    self.typing = false
-    self.activated = false
-
-    if sv then
-        self.network:sendToServer("sv_cancel")
     end
 end
 
@@ -346,17 +403,11 @@ local blockActions = {
     [4] = true
 }
 
-local indexToArrow = {
-    [1] = "<",
-    [2] = ">",
-    [3] = "^",
-    [4] = "ˇ"
-}
-
 function Input:client_onAction(action, state)
     local isBlocked = blockActions[action] == true and state
     if isBlocked then
         g_strataGemCode = (g_strataGemCode or "")..action
+        sm.audio.play("PaintTool - ColorPick")
     end
 
     return isBlocked
