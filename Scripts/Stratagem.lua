@@ -20,7 +20,7 @@ Stratagem.variants = {
         type = "mission",
         summon = function(self)
             local uuid = sm.uuid.new("ad35f7e6-af8f-40fa-aef4-77d827ac8a8a")
-            local rotation = sm.quat.angleAxis(math.rad(90), sm.vec3.new(1,0,0))
+            local rotation = sm.quat.angleAxis(math.rad(90), vec3_right)
             local chest = sm.shape.createPart(uuid, self.hitData.position - rotation * sm.item.getShapeOffset(uuid), rotation, false, true)
             local container = chest.interactable:getContainer(0)
             for k, v in pairs(self.items) do
@@ -68,17 +68,17 @@ Stratagem.variants = {
         activation = 3 * 40,
         type = "offensive",
         summon = function(self)
-            if self.tick%40 == 0 then
+            if self.tick%80 == 0 then
                 local origin = self.hitData.position + sm.vec3.new(0,0,20)
                 for i = 0, 6 do
-                    local dir = sm.vec3.new(0,1,0):rotate(-math.rad(math.random(45, 75)), sm.vec3.new(1,0,0)):rotate(math.rad(i * 60), sm.vec3.new(0,0,1))
+                    local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(i * 60), vec3_up)
                     sm.projectile.projectileAttack(projectile_explosivetape, 100, origin, dir * 100, self.hitData.shooter)
                     sm.effect.playEffect("PropaneTank - ExplosionSmall", origin)
                 end
             end
 
             self.tick = self.tick + 1
-            return self.tick >= 120
+            return self.tick >= 240
         end,
         tick = 0
     },
@@ -91,9 +91,9 @@ Stratagem.variants = {
         summon = function(self)
             if self.tick%2 == 0 then
                 local origin = self.hitData.position + sm.vec3.new(0,0,20)
-                local dir = sm.vec3.new(0,1,0):rotate(-math.rad(math.random(45, 75)), sm.vec3.new(1,0,0)):rotate(math.rad(math.random(0, 359)), sm.vec3.new(0,0,1))
+                local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(math.random(0, 359)), vec3_up)
                 sm.projectile.projectileAttack(projectile_potato, 100, origin, dir * 100, self.hitData.shooter)
-                sm.effect.playEffect("SpudgunSpinner - SpinnerMuzzel", origin, sm.vec3.zero(), sm.vec3.getRotation(dir, sm.vec3.new(0,0,1)))
+                sm.effect.playEffect("SpudgunSpinner - SpinnerMuzzel", origin, sm.vec3.zero(), sm.vec3.getRotation(dir, vec3_up))
             end
 
             self.tick = self.tick + 1
@@ -340,6 +340,11 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
     if self.activated then
         if lmb == 1 then
             self.network:sendToServer("sv_throwAnim")
+        end
+
+        if rmb == 1 then
+            self.activated = false
+            g_strataGemCode = nil
         end
     else
         if lmb == 1 then

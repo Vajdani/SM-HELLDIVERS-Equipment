@@ -169,9 +169,9 @@
             // HELLDIVER TORSO START
             {
                "female" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_chestplate.rend",
-               "femaleCode" : 2198359713,
+               "femaleCode" : 2836355865,
                "male" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_chestplate.rend",
-               "maleCode" : 2198359713,
+               "maleCode" : 2836355865,
                "projection" : [
                   -132.2363433837891,
                   132.1551513671875,
@@ -714,9 +714,9 @@
             // HELLDIVER GLOVES START
             {
                "female" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_gloves.rend",
-               "femaleCode" : 3398863299,
+               "femaleCode" : 1546240132,
                "male" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_gloves.rend",
-               "maleCode" : 3398863299,
+               "maleCode" : 1546240132,
                "projection" : [
                   -68.96872711181641,
                   55.48193740844727,
@@ -923,9 +923,9 @@
             // HELLDIVER SHOES START
             {
                "female" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_boots.rend",
-               "femaleCode" : 2798590418,
+               "femaleCode" : 3381864617,
                "male" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_boots.rend",
-               "maleCode" : 2798590418,
+               "maleCode" : 3381864617,
                "projection" : [
                   -70.8527832031250,
                   90.80199432373047,
@@ -1132,9 +1132,9 @@
             // HELLDIVER LEGS START
             {
                "female" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_leggings.rend",
-               "femaleCode" : 3052785829,
+               "femaleCode" : 2474733552,
                "male" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_leggings.rend",
-               "maleCode" : 3052785829,
+               "maleCode" : 2474733552,
                "projection" : [
                   -179.0561981201172,
                   165.8750762939453,
@@ -1863,9 +1863,9 @@
             {
                "allowHair" : false,
                "female" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_helmet.rend",
-               "femaleCode" : 2879075946,
+               "femaleCode" : 42027988,
                "male" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_helmet.rend",
-               "maleCode" : 2879075946,
+               "maleCode" : 42027988,
                "projection" : [
                   -73.88831329345703,
                   57.92886352539063,

@@ -10,5 +10,16 @@
 				"delay": 0.0
 			}
 		]
+	},
+	"Stratagem - Beacon": {
+		"effectList":
+		[
+			{
+				"type": "particle",
+				"name": "stratagem_beacon",
+				"offset": { "x": 0.0, "y": 0.0, "z": 0.0 },
+				"delay": 0.0
+			}
+		]
 	}
 }

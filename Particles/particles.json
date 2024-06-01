@@ -1,3 +1,5 @@
 {
-   "particleSystemList" : []
+   "particleSystemList" : [
+      "stratagem_beacon.json"
+   ]
 }

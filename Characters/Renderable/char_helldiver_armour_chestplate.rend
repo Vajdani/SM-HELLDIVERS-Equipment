@@ -6,9 +6,9 @@
             "black" : {
                "material" : "DifAsgNor",
                "textureList" : [
-                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_jacket_dif.tga",
-                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_jacket_asg.tga",
-                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_jacket_nor.tga"
+                  "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_jacket_dif.tga",
+                  "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_jacket_asg.tga",
+                  "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Textures/char_outfit_helldiver_jacket_nor.tga"
                ]
             },
             "default_body_male" : {
