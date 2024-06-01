@@ -6,7 +6,7 @@
             {
                "material" : "LightCone",
                "textureList" : [
-                  "$CONTENT_DATA/Particles/Textures/stratagem_beacon.tga"
+                  "$GAME_DATA/Textures/transparent.tga"
                ]
             }
          ]

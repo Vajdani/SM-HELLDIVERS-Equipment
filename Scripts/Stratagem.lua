@@ -11,97 +11,6 @@ dofile "$SURVIVAL_DATA/Scripts/game/survival_shapes.lua"
 ---@field pendingThrow boolean
 ---@field blendTime number
 Stratagem = class()
-Stratagem.variants = {
-    {
-        name = "Resupply",
-        code = "4432",
-        cooldown = 160 * 40,
-        activation = 12 * 40,
-        type = "mission",
-        summon = function(self)
-            local uuid = sm.uuid.new("ad35f7e6-af8f-40fa-aef4-77d827ac8a8a")
-            local rotation = sm.quat.angleAxis(math.rad(90), vec3_right)
-            local chest = sm.shape.createPart(uuid, self.hitData.position - rotation * sm.item.getShapeOffset(uuid), rotation, false, true)
-            local container = chest.interactable:getContainer(0)
-            for k, v in pairs(self.items) do
-                sm.container.beginTransaction()
-                sm.container.collect(container, v.uuid, v.amount)
-                sm.container.endTransaction()
-            end
-
-            return true
-        end,
-        items = {
-            {
-                uuid = obj_plantables_potato,
-                amount = 500
-            },
-            {
-                uuid = obj_consumable_glowstick,
-                amount = 100
-            },
-            {
-                uuid = obj_interactive_propanetank_large,
-                amount = 5
-            },
-            {
-                uuid = obj_interactive_propanetank_small,
-                amount = 10
-            }
-        }
-    },
-    {
-        name = "Eagle 500kg Bomb",
-        code = "32444",
-        cooldown = 160 * 40,
-        activation = 3 * 40,
-        type = "offensive",
-        summon = function(self)
-            sm.physics.explode(self.hitData.position, 100, 50, 75, 1000, "PropaneTank - ExplosionBig")
-            return true
-        end
-    },
-    {
-        name = "Orbital Airburst Strike",
-        code = "222",
-        cooldown = 120 * 40,
-        activation = 3 * 40,
-        type = "offensive",
-        summon = function(self)
-            if self.tick%80 == 0 then
-                local origin = self.hitData.position + sm.vec3.new(0,0,20)
-                for i = 0, 6 do
-                    local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(i * 60), vec3_up)
-                    sm.projectile.projectileAttack(projectile_explosivetape, 100, origin, dir * 100, self.hitData.shooter)
-                    sm.effect.playEffect("PropaneTank - ExplosionSmall", origin)
-                end
-            end
-
-            self.tick = self.tick + 1
-            return self.tick >= 240
-        end,
-        tick = 0
-    },
-    {
-        name = "Orbital Gatling Barrage",
-        code = "24133",
-        cooldown = 80 * 40,
-        activation = 1 * 40,
-        type = "offensive",
-        summon = function(self)
-            if self.tick%2 == 0 then
-                local origin = self.hitData.position + sm.vec3.new(0,0,20)
-                local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(math.random(0, 359)), vec3_up)
-                sm.projectile.projectileAttack(projectile_potato, 100, origin, dir * 100, self.hitData.shooter)
-                sm.effect.playEffect("SpudgunSpinner - SpinnerMuzzel", origin, sm.vec3.zero(), sm.vec3.getRotation(dir, vec3_up))
-            end
-
-            self.tick = self.tick + 1
-            return self.tick >= 160
-        end,
-        tick = 0
-    }
-}
 
 local renderables = {
     "$CONTENT_DATA/Tools/Renderables/char_stratagem.rend"
@@ -154,6 +63,10 @@ function Stratagem:sv_prime(args, caller)
     char:setLockingInteractable(shape.interactable)
 
     self.input = shape
+end
+
+function Stratagem:sv_saveLoadout(loadout, caller)
+    sm.event.sendToTool(sm.HELLDIVERSBACKEND, "sv_setLoadout", { player = caller, loadout = loadout })
 end
 
 
@@ -302,7 +215,91 @@ function Stratagem.client_onUpdate( self, dt )
 end
 
 function Stratagem:client_onToggle()
-	return true
+    self.available = {}
+    self.selected = {}
+
+    local stratagems = GetStratagemsFromClProgression()
+    self.originalLength = #stratagems
+    for k, v in pairs(stratagems) do
+        if isAnyOf(v.uuid, g_cl_loadout) then
+            table.insert(self.selected, v)
+        else
+            table.insert(self.available, v)
+        end
+    end
+
+    self.loadoutGui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/LoadoutTerminal.layout", true)
+    self.loadoutGui:createGridFromJson("AvailableGrid",
+        {
+            type = "materialGrid",
+            layout = "$CONTENT_DATA/Gui/Layouts/Loadout_GridItem.layout",
+            itemWidth = 44,
+            itemHeight = 60,
+            itemCount = self.originalLength,
+        }
+    )
+
+    self:cl_refreshGrid("AvailableGrid", self.available, self.originalLength)
+    self.loadoutGui:setGridButtonCallback("Click", "cl_onSelect")
+
+    self.loadoutGui:createGridFromJson("SelectedGrid",
+        {
+            type = "materialGrid",
+            layout = "$CONTENT_DATA/Gui/Layouts/Loadout_GridItem.layout",
+            itemWidth = 44,
+            itemHeight = 60,
+            itemCount = 4,
+        }
+    )
+    self:cl_refreshGrid("SelectedGrid", self.selected, 4)
+
+    self.loadoutGui:setOnCloseCallback("cl_onClose")
+
+    self.loadoutGui:open()
+
+    return true
+end
+
+function Stratagem:cl_refreshGrid(grid, items, size)
+    for i = 1, size do
+        local data = items[i]
+        if data then
+            self.loadoutGui:setGridItem(grid, i - 1, {
+                itemId = data.icon,
+                quantity = data.charges,
+                stratagem = i
+            })
+        else
+            self.loadoutGui:setGridItem(grid, i - 1, nil)
+        end
+    end
+end
+
+function Stratagem:cl_onSelect(button, id, data, gridName)
+    if gridName == "AvailableGrid" then
+        if #self.selected == 4 then
+            sm.audio.play("RaftShark")
+            return
+        end
+
+        table.insert(self.selected, self.available[id + 1])
+        table.remove(self.available, id + 1)
+    else
+        table.insert(self.available, self.selected[id + 1])
+        table.remove(self.selected, id + 1)
+    end
+
+    self:cl_refreshGrid("AvailableGrid", self.available, self.originalLength)
+    self:cl_refreshGrid("SelectedGrid", self.selected, 4)
+end
+
+function Stratagem:cl_onClose()
+    local stratagems = {}
+    for k, v in pairs(self.selected) do
+        table.insert(stratagems, v.uuid)
+    end
+
+    self.network:sendToServer("sv_saveLoadout", stratagems)
 end
 
 function Stratagem:client_onEquip()
@@ -346,21 +343,26 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             self.activated = false
             g_strataGemCode = nil
         end
+
+        sm.gui.setInteractionText(sm.gui.getKeyBinding("Create", true).."Throw\t", sm.gui.getKeyBinding("Attack", true).."Cancel", "")
     else
         if lmb == 1 then
             self.network:sendToServer("sv_prime")
         elseif lmb == 2 then
+            --sm.gui.setInteractionText(sm.gui.getKeyBinding("Forward", true).."UP\t", sm.gui.getKeyBinding("Backward", true).."DOWN\t", sm.gui.getKeyBinding("StrafeLeft", true).."LEFT\t", sm.gui.getKeyBinding("StrafeRight", true).."RIGHT", "")
             sm.gui.setInteractionText("Code:", g_strataGemCode or "", "")
         elseif lmb == 3 then
             self.network:sendToServer("sv_cancel")
 
-            if GetStratagemByCode(g_strataGemCode) then
+            if GetStratagem(g_strataGemCode) then
                 self.activated = true
                 sm.effect.playHostedEffect("Stratagem - Armed", self.tool:getOwner().character)
             else
                 sm.audio.play("RaftShark")
                 g_strataGemCode = nil
             end
+        else
+            sm.gui.setInteractionText(sm.gui.getKeyBinding("Create", true).."Call", "")
         end
     end
 

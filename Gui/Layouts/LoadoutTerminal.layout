@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="PanelEmpty" position="0 0 1280 700" name="BackPanel">
+        <Widget type="Widget" skin="BeaconBG" position="0 0 1280 690">
+            <Widget type="TextBox" skin="TextBox" position="0 0 1280 120">
+                <Property key="Caption" value="LOADOUT TERMINAL"/>
+                <Property key="TextAlign" value="Center"/>
+                <Property key="FontName" value="SM_HeaderLarge_Wide"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="125 150 300 50">
+                <Property key="Caption" value="AVAILABLE"/>
+                <Property key="TextAlign" value="Center"/>
+                <Property key="FontName" value="SM_HeaderLarge_Wide"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="855 150 300 50">
+                <Property key="Caption" value="SELECTED"/>
+                <Property key="TextAlign" value="Center"/>
+                <Property key="FontName" value="SM_HeaderLarge_Wide"/>
+            </Widget>
+            <Widget type="ItemBox" skin="InventoryItemBox2" position="50 225 450 450" name="AvailableGrid">
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedToolTip" value="true"/>
+            </Widget>
+            <Widget type="ItemBox" skin="InventoryItemBox2" position="775 225 450 450" name="SelectedGrid">
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedToolTip" value="true"/>
+            </Widget>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

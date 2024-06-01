@@ -85,6 +85,10 @@ function HelldiversBackend:server_onCreate()
 
     sm.HELLDIVERSBACKEND = self.tool
 
+    local storage = {} --self.storage:load() or {}
+    g_sv_stratagemProgression = storage.progression or {}
+    self.loadouts = storage.loadouts or {}
+
     self.queuedStratagems = {}
 end
 
@@ -101,19 +105,72 @@ function HelldiversBackend:server_onFixedUpdate()
 end
 
 function HelldiversBackend:OnStratagemHit(args)
-    local stratagem = shallowcopy(GetStratagemByCode(args.data.code))
+    local stratagem = shallowcopy(GetStratagem(args.data.code))
     stratagem.hitData = args
     table.insert(self.queuedStratagems, stratagem)
-    self.network:sendToClients("cl_OnStratagemHit", stratagem)
+
+    self.network:sendToClients("cl_OnStratagemHit",
+        {
+            uuid = stratagem.uuid,
+            hitData = args,
+            activation = stratagem.activation,
+        }
+    )
+end
+
+function HelldiversBackend:sv_save()
+    self.storage:save(
+        {
+            loadouts = self.loadouts,
+            progression = g_sv_stratagemProgression
+        }
+    )
+end
+
+function HelldiversBackend:sv_requestData(args, caller)
+    self.network:sendToClient(caller, "cl_recieveData",{
+        loadout = self.loadouts[caller.id] or {},
+        progression = g_sv_stratagemProgression[caller.id] or {},
+    })
+end
+
+function HelldiversBackend:sv_purchaseStratagem(args)
+    local player, uuid = args.player, args.uuid
+    local progression = GetSvStratagemProgression(player, uuid)
+    progression.unlocked = true
+    progression.charges = progression.charges + 1
+
+    local pId = player.id
+    if not g_sv_stratagemProgression[pId] then
+        g_sv_stratagemProgression[pId] = {}
+    end
+
+    g_sv_stratagemProgression[pId][uuid] = progression
+    self:sv_save()
+    self:sv_requestData(nil, player)
+end
+
+function HelldiversBackend:sv_setLoadout(args)
+    self.loadouts[args.player.id] = args.loadout
+    self:sv_save()
+    self:sv_requestData(nil, args.player)
 end
 
 
 
 function HelldiversBackend:client_onCreate()
+    if g_cl_stratagemProgression then return end
+
     self.cl_queuedStratagems = {}
+
+    g_cl_loadout = {}
+    g_cl_stratagemProgression = {}
+    self.network:sendToServer("sv_requestData")
 end
 
 function HelldiversBackend:client_onFixedUpdate()
+    if not self.cl_queuedStratagems then return end
+
     for k, v in pairs(self.cl_queuedStratagems) do
         v.activation = v.activation - 1
         if v.activation >= 0 then
@@ -126,10 +183,11 @@ end
 
 function HelldiversBackend:cl_OnStratagemHit(args)
     local pos = args.hitData.position
+    local userdata = GetStratagemUserdata(args.uuid)
 
     local beaconScale = sm.vec3.new(1,500,1)
     local beacon = sm.effect.createEffect("Stratagem - Beacon")
-    beacon:setParameter("Color", STRATAGEMTYPETOCOLOUR[args.type])
+    beacon:setParameter("Color", STRATAGEMTYPETOCOLOUR[userdata.type])
     beacon:setParameter("Scale", beaconScale)
     beacon:setPosition(pos + vec3_up * beaconScale.y * 0.125)
     beacon:start()
@@ -149,4 +207,13 @@ function HelldiversBackend:cl_DeleteStratagem(index)
     self.cl_queuedStratagems[index].gui:close()
     self.cl_queuedStratagems[index].beacon:destroy()
     self.cl_queuedStratagems[index] = nil
+end
+
+function HelldiversBackend:cl_recieveData(data)
+    g_cl_loadout = data.loadout
+    g_cl_stratagemProgression = data.progression
+
+    if g_stratagemTerminal then
+        sm.event.sendToInteractable(g_stratagemTerminal, "cl_refresh")
+    end
 end

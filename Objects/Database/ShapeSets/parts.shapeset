@@ -46,6 +46,55 @@
 			},
 			"physicsMaterial": "Metal",
 			"showInInventory": false
-		}
+		},
+		{
+			"scripted": {
+				"filename": "$CONTENT_DATA/Scripts/StratagemTerminal.lua",
+				"classname": "StratagemTerminal",
+				"data": {}
+			},
+			"color" : "9f2600",
+			"density" : 1250.0,
+			"hull" : {
+			   "col" : "$CHALLENGE_DATA/Objects/Collision/obj_challenge_interactive_mapinspector.obj",
+			   "x" : 4,
+			   "y" : 8,
+			   "z" : 4
+			},
+			"name" : "obj_challenge_interactive_mapinspector",
+			"physicsMaterial" : "Metal",
+			"qualityLevel" : 0,
+			"ratings" : {
+			   "friction" : 4
+			},
+			"renderable" : {
+			   "lodList" : [
+				  {
+					 "mesh" : "$CHALLENGE_DATA/Objects/Mesh/interactive/obj_interactive_mapinspector.fbx",
+					 "subMeshList" : [
+						{
+						   "material" : "DifAsgNor",
+						   "textureList" : [
+							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_dif.tga",
+							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_asg.tga",
+							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_nor.tga"
+						   ]
+						},
+						{
+						   "material" : "DifAsg",
+						   "textureList" : [
+							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_screen_dif.tga",
+							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_screen_asg.tga",
+							  ""
+						   ]
+						}
+					 ]
+				  }
+			   ]
+			},
+			"rotationSet" : "PropY",
+			"sticky" : "-Y",
+			"uuid" : "1204064f-437e-4054-870f-4027d05d791b"
+		 }
     ]
 }
