@@ -53,6 +53,13 @@ function HelldiversBackend:server_onCreate()
                 setId = "Helldiver"
             },
             {
+                uuid = sm.uuid.new("32271c87-97db-4158-aeed-5fed1dbc1ed7"),
+                slot = "acc",
+                renderable = "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_gloves.rend",
+                stats = {},
+                setId = "Helldiver"
+            },
+            {
                 uuid = sm.uuid.new("2592e8f0-2bab-4f4f-b153-1566717ab42e"),
                 slot = "leg",
                 renderable = "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_leggings.rend",

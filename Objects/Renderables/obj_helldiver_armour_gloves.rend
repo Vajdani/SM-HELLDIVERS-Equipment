@@ -1,7 +1,7 @@
 {
 	"lodList": [
 		{
-			"mesh": "$CONTENT_DATA/Objects/Mesh/armour/obj_helldiver_armour_boots.fbx",
+			"mesh": "$CONTENT_DATA/Objects/Mesh/armour/obj_helldiver_armour_gloves.fbx",
 			"subMeshList": [
 				{
 					"material": "DifAsgNor",

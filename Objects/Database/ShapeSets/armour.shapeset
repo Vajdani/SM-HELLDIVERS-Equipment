@@ -18,31 +18,46 @@
         {
             "box": {
                 "x": 2,
-                "y": 2,
-                "z": 1
+                "y": 1,
+                "z": 3
             },
             "color": "ffffff",
             "flammable": false,
             "name": "obj_helldiver_armour_chestplate",
             "physicsMaterial": "Mechanical",
             "renderable": "$CONTENT_DATA/Objects/Renderables/obj_helldiver_armour_chestplate.rend",
-            "rotationSet": "PropZ",
-            "sticky": "-Z",
+            "rotationSet": "PropY",
+            "sticky": "-Y",
             "uuid": "f4aada57-e8ac-4a54-ba79-6cdb9d73f039"
         },
         {
             "box": {
-                "x": 2,
-                "y": 2,
+                "x": 1,
+                "y": 1,
                 "z": 1
+            },
+            "color": "ffffff",
+            "flammable": false,
+            "name": "obj_helldiver_armour_gloves",
+            "physicsMaterial": "Mechanical",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/obj_helldiver_armour_gloves.rend",
+            "rotationSet": "PropY",
+            "sticky": "-Y",
+            "uuid": "32271c87-97db-4158-aeed-5fed1dbc1ed7"
+        },
+        {
+            "box": {
+                "x": 2,
+                "y": 1,
+                "z": 2
             },
             "color": "ffffff",
             "flammable": false,
             "name": "obj_helldiver_armour_leggings",
             "physicsMaterial": "Mechanical",
             "renderable": "$CONTENT_DATA/Objects/Renderables/obj_helldiver_armour_leggings.rend",
-            "rotationSet": "PropZ",
-            "sticky": "-Z",
+            "rotationSet": "PropY",
+            "sticky": "-Y",
             "uuid": "2592e8f0-2bab-4f4f-b153-1566717ab42e"
         },
         {
