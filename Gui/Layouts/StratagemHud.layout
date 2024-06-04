@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Canvas" skin="Canvas" position="20 20 440 540" name="StratagemPanel">
+        <Widget type="Button" skin="SelectionFieldBox" position="5 5 430 80" name="stratagem1">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem1_preview">
+                <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem1_name">
+                <Property key="Caption" value="Challenge Name"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+                <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem1_code">
+                <Property key="FontName" value="SM_ItemTitle"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+            </Widget>
+            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem1_charges">
+                    <Property key="TextAlign" value="Center"/>
+                    <Property key="FontName" value="SM_ItemTitle"/>
+                    <Property key="Caption" value="69"/>
+                    <Property key="TextColour" value="0 0 0"/>
+                </Widget>
+            </Widget>
+        </Widget>
+        <Widget type="Button" skin="SelectionFieldBox" position="5 95 430 80" name="stratagem2">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem2_preview">
+                <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem2_name">
+                <Property key="Caption" value="Challenge Name"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+                <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem2_code">
+                <Property key="FontName" value="SM_ItemTitle"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+            </Widget>
+            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem2_charges">
+                    <Property key="TextAlign" value="Center"/>
+                    <Property key="FontName" value="SM_ItemTitle"/>
+                    <Property key="Caption" value="69"/>
+                    <Property key="TextColour" value="0 0 0"/>
+                </Widget>
+            </Widget>
+        </Widget>
+        <Widget type="Button" skin="SelectionFieldBox" position="5 185 430 80" name="stratagem3">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem3_preview">
+                <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem3_name">
+                <Property key="Caption" value="Challenge Name"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+                <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem3_code">
+                <Property key="FontName" value="SM_ItemTitle"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+            </Widget>
+            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem3_charges">
+                    <Property key="TextAlign" value="Center"/>
+                    <Property key="FontName" value="SM_ItemTitle"/>
+                    <Property key="Caption" value="69"/>
+                    <Property key="TextColour" value="0 0 0"/>
+                </Widget>
+            </Widget>
+        </Widget>
+        <Widget type="Button" skin="SelectionFieldBox" position="5 275 430 80" name="stratagem4">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem4_preview">
+                <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem4_name">
+                <Property key="Caption" value="Challenge Name"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+                <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem4_code">
+                <Property key="FontName" value="SM_ItemTitle"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+            </Widget>
+            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem4_charges">
+                    <Property key="TextAlign" value="Center"/>
+                    <Property key="FontName" value="SM_ItemTitle"/>
+                    <Property key="Caption" value="69"/>
+                    <Property key="TextColour" value="0 0 0"/>
+                </Widget>
+            </Widget>
+        </Widget>
+        <Widget type="Button" skin="SelectionFieldBox" position="5 365 430 80" name="stratagem5">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem5_preview">
+                <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem5_name">
+                <Property key="Caption" value="Challenge Name"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+                <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem5_code">
+                <Property key="FontName" value="SM_ItemTitle"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+            </Widget>
+            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem5_charges">
+                    <Property key="TextAlign" value="Center"/>
+                    <Property key="FontName" value="SM_ItemTitle"/>
+                    <Property key="Caption" value="69"/>
+                    <Property key="TextColour" value="0 0 0"/>
+                </Widget>
+            </Widget>
+        </Widget>
+        <Widget type="Button" skin="SelectionFieldBox" position="5 455 430 80" name="stratagem6">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem6_preview">
+                <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem6_name">
+                <Property key="Caption" value="Challenge Name"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+                <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem6_code">
+                <Property key="FontName" value="SM_ItemTitle"/>
+                <Property key="TextAlign" value="Left VCenter"/>
+            </Widget>
+            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem6_charges">
+                    <Property key="TextAlign" value="Center"/>
+                    <Property key="FontName" value="SM_ItemTitle"/>
+                    <Property key="Caption" value="69"/>
+                    <Property key="TextColour" value="0 0 0"/>
+                </Widget>
+            </Widget>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

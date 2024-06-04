@@ -1,6 +1,5 @@
 ---@class StratagemObj
 ---@field uuid string
----@field code string
 ---@field cooldown number
 ---@field activation number
 ---@field summon function
@@ -9,7 +8,6 @@
 local stratagems =  {
     {
         uuid = "5fe2e519-9c05-4b4d-b0d6-3dc6fa7357c8",
-        code = "4432",
         cooldown = 160 * 40,
         activation = 12 * 40,
         summon = function(self)
@@ -46,7 +44,6 @@ local stratagems =  {
     },
     {
         uuid = "4778cafb-d7d0-44cd-bca0-a2494018108b",
-        code = "32444",
         cooldown = 160 * 40,
         activation = 3 * 40,
         summon = function(self)
@@ -56,7 +53,6 @@ local stratagems =  {
     },
     {
         uuid = "bd7e37ba-844c-4c57-b660-e93048cd48a6",
-        code = "222",
         cooldown = 120 * 40,
         activation = 3 * 40,
         summon = function(self)
@@ -76,7 +72,6 @@ local stratagems =  {
     },
     {
         uuid = "53d9dc66-e90c-4ea2-9795-7522206a0549",
-        code = "24133",
         cooldown = 80 * 40,
         activation = 1 * 40,
         summon = function(self)
@@ -94,7 +89,6 @@ local stratagems =  {
     },
     {
         uuid = "7e196787-92c7-4f1e-9dad-1b494d27d7f1",
-        code = "24133",
         cooldown = 80 * 40,
         activation = 1 * 40,
         summon = function(self)
@@ -112,7 +106,6 @@ local stratagems =  {
     },
     {
         uuid = "c0b1618e-79b7-404f-8f6c-6da4a1f4e217",
-        code = "24133",
         cooldown = 80 * 40,
         activation = 1 * 40,
         summon = function(self)
@@ -130,7 +123,6 @@ local stratagems =  {
     },
     {
         uuid = "416b47fb-1b7a-4936-b940-2abc94ae1100",
-        code = "24133",
         cooldown = 80 * 40,
         activation = 1 * 40,
         summon = function(self)
@@ -148,12 +140,20 @@ local stratagems =  {
     }
 }
 
+local stratagemUUIDToIndex = {}
+for k, v in pairs(stratagems) do
+    stratagemUUIDToIndex[v.uuid] = k
+end
+
+
+
 local stratagemUserdata = {
     ["5fe2e519-9c05-4b4d-b0d6-3dc6fa7357c8"] = {
         name = "Resupply",
         description = "omg ammo no way",
         icon = "bfcfac34-db0f-42d6-bd0c-74a7a5c95e82", --Potato
         type = "mission",
+        code = "4432",
         cost = {
             {
                 uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
@@ -170,6 +170,7 @@ local stratagemUserdata = {
         description = "big domb goes big boom",
         icon = "24001201-40dd-4950-b99f-17d878a9e07b", --large explosive
         type = "offensive",
+        code = "32444",
         cost = {
             {
                 uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
@@ -186,6 +187,7 @@ local stratagemUserdata = {
         description = "very random very good",
         icon = "8d3b98de-c981-4f05-abfe-d22ee4781d33", --small explosive
         type = "offensive",
+        code = "222",
         cost = {
             {
                 uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
@@ -202,6 +204,7 @@ local stratagemUserdata = {
         description = "ratatatatatata",
         icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
         type = "offensive",
+        code = "24133",
         cost = {
             {
                 uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
@@ -219,6 +222,7 @@ local stratagemUserdata = {
         description = "ratatatatatata",
         icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
         type = "offensive",
+        code = "24133",
         cost = {
             {
                 uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
@@ -235,6 +239,7 @@ local stratagemUserdata = {
         description = "ratatatatatata",
         icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
         type = "offensive",
+        code = "24133",
         cost = {
             {
                 uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
@@ -251,6 +256,7 @@ local stratagemUserdata = {
         description = "ratatatatatata",
         icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
         type = "offensive",
+        code = "24133",
         cost = {
             {
                 uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
@@ -268,8 +274,9 @@ function GetStratagem(id, override)
     override = override or stratagems
     if type(id) == "string" then
         for k, v in pairs(override) do
-            if v.code == id then
-                return v, k
+            local uuid = v.uuid
+            if GetStratagemUserdata(uuid).code == id then
+                return v, uuid
             end
         end
     else
@@ -278,11 +285,7 @@ function GetStratagem(id, override)
 end
 
 function GetStratagemByUUUID(uuid)
-    for k, v in pairs(stratagems) do
-        if v.uuid == uuid then
-            return v
-        end
-    end
+    return stratagems[stratagemUUIDToIndex[uuid]]
 end
 
 function GetStratagems()
@@ -324,7 +327,8 @@ end
 function GetStratagemsFromClProgression()
     local stratagems_ = {}
     for k, v in pairs(g_cl_stratagemProgression) do
-        table.insert(stratagems_, { uuid = k, charges = v.charges, icon = GetStratagemUserdata(k).icon })
+        local userdata = GetStratagemUserdata(k)
+        table.insert(stratagems_, { uuid = k, charges = v.charges, icon = userdata.icon, code = userdata.code })
     end
 
     return stratagems_

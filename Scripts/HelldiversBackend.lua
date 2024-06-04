@@ -116,11 +116,13 @@ end
 function HelldiversBackend:OnStratagemHit(args)
     local stratagem = shallowcopy(GetStratagem(args.data.code))
     stratagem.hitData = args
-    table.insert(self.queuedStratagems, stratagem)
+
+    local id = ("%s_%s"):format(args.shooter.id, stratagem.uuid)
+    self.queuedStratagems[id] = stratagem
 
     self.network:sendToClients("cl_OnStratagemHit",
         {
-            uuid = stratagem.uuid,
+            id = id,
             hitData = args,
             activation = stratagem.activation,
         }
@@ -172,8 +174,7 @@ end
 function HelldiversBackend:client_onCreate()
     if g_cl_stratagemProgression then return end
 
-    self.cl_queuedStratagems = {}
-
+    g_cl_queuedStratagems = {}
     g_cl_loadout = {}
     g_cl_stratagemProgression = {}
     g_cl_cooldowns = {}
@@ -181,14 +182,14 @@ function HelldiversBackend:client_onCreate()
 end
 
 function HelldiversBackend:client_onFixedUpdate()
-    if not self.cl_queuedStratagems then return end
+    if not g_cl_queuedStratagems then return end
 
-    for k, v in pairs(self.cl_queuedStratagems) do
+    for k, v in pairs(g_cl_queuedStratagems) do
         v.activation = v.activation - 1
         if v.activation >= 0 then
-            v.gui:setText("Text", ("%.0fs"):format(v.activation/40))
+            v.gui:setText("Text", ("Inbound T-%.0fs"):format(v.activation/40))
         else
-            v.gui:setText("Text", "Activating...")
+            v.gui:setText("Text", "Ongoing...")
         end
     end
 end
@@ -218,7 +219,8 @@ end
 
 function HelldiversBackend:cl_OnStratagemHit(args)
     local pos = args.hitData.position
-    local userdata = GetStratagemUserdata(args.uuid)
+    local id = args.id
+    local userdata = GetStratagemUserdata(id:sub(3, #id))
 
     local beaconScale = sm.vec3.new(1,500,1)
     local beacon = sm.effect.createEffect("Stratagem - Beacon")
@@ -235,14 +237,14 @@ function HelldiversBackend:cl_OnStratagemHit(args)
     gui:open()
     args.gui = gui
 
-    table.insert(self.cl_queuedStratagems, args)
+    g_cl_queuedStratagems[id] = args
 end
 
 function HelldiversBackend:cl_DeleteStratagem(index)
-    local data = self.cl_queuedStratagems[index]
+    local data = g_cl_queuedStratagems[index]
     data.gui:close()
     data.beacon:destroy()
-    self.cl_queuedStratagems[index] = nil
+    g_cl_queuedStratagems[index] = nil
 end
 
 function HelldiversBackend:cl_recieveData(data)

@@ -78,6 +78,11 @@ function Stratagem:client_onCreate()
 
     self.activated = false
     self.pendingThrow = false
+
+    self.pData = {}
+    if sm.json.fileExists(PLAYERDATAPATH) then
+        self.pData = sm.json.open(PLAYERDATAPATH)
+    end
 end
 
 function Stratagem.loadAnimations( self )
@@ -134,6 +139,11 @@ function Stratagem.loadAnimations( self )
     self.blendTime = 0.2
 end
 
+function Stratagem:client_onFixedUpdate()
+    if not self.isLocal or not g_stratagemHud or not g_stratagemHud:isActive() or sm.game.getServerTick()%40 ~= 0 then return end
+
+    UpdateStratagemHud()
+end
 
 function Stratagem.client_onUpdate( self, dt )
 	if self.isLocal then
@@ -219,8 +229,12 @@ function Stratagem:client_onReload()
 end
 
 function Stratagem:client_onToggle()
+    if sm.exists(self.tutorialGui) then
+        self.tutorialGui:close()
+    end
+
     local lock = sm.localPlayer.getPlayer().character:getLockingInteractable()
-    if lock and lock.shape.uuid == sm.uuid.new("09a84352-04b2-47d1-9346-15ae4f768d03") then return end
+    if lock and lock.shape.uuid == sm.uuid.new("09a84352-04b2-47d1-9346-15ae4f768d03") then return true end
 
     self.available = {}
     self.selected = {}
@@ -255,10 +269,10 @@ function Stratagem:client_onToggle()
             layout = "$CONTENT_DATA/Gui/Layouts/Loadout_GridItem.layout",
             itemWidth = 44,
             itemHeight = 60,
-            itemCount = 4,
+            itemCount = STRATAGEMINVENTORYSIZE,
         }
     )
-    self:cl_refreshGrid("SelectedGrid", self.selected, 4)
+    self:cl_refreshGrid("SelectedGrid", self.selected, STRATAGEMINVENTORYSIZE)
 
     self.loadoutGui:setOnCloseCallback("cl_onClose")
 
@@ -284,7 +298,7 @@ end
 
 function Stratagem:cl_onSelect(button, id, data, gridName)
     if gridName == "AvailableGrid" then
-        if #self.selected == 4 then
+        if #self.selected == STRATAGEMINVENTORYSIZE then
             sm.audio.play("RaftShark")
             return
         end
@@ -297,7 +311,7 @@ function Stratagem:cl_onSelect(button, id, data, gridName)
     end
 
     self:cl_refreshGrid("AvailableGrid", self.available, self.originalLength)
-    self:cl_refreshGrid("SelectedGrid", self.selected, 4)
+    self:cl_refreshGrid("SelectedGrid", self.selected, STRATAGEMINVENTORYSIZE)
 end
 
 function Stratagem:cl_onClose()
@@ -319,6 +333,31 @@ function Stratagem:client_onEquip()
 	setTpAnimation( self.tpAnimations, "pickup", 0.0001 )
 	if self.isLocal then
 		swapFpAnimation( self.fpAnimations, "unequip", "equip", 0.2 )
+
+        if not self.pData.hasPlayedTutorial then
+            self.tutorialGui = sm.gui.createGuiFromLayout( "$GAME_DATA/Gui/Layouts/Tutorial/PopUp_Tutorial.layout", true, { isHud = true, isInteractive = false, needsCursor = false } )
+            self.tutorialGui:setText( "TextTitle", "HOW TO USE STRATAGEMS" )
+            self.tutorialGui:setText( "TextMessage",
+                ("1. Buy stratagems at #ff0000Stratagem Terminals#a5a5a5\n2. Press #df7f00%s#a5a5a5 to create your #ff0000loadout#a5a5a5\n3. Hold #df7f00%s#a5a5a5 to #ff0000type#a5a5a5\n4. #ff0000Type#a5a5a5 in the stratagem code with #df7f00%s%s%s%s#a5a5a5\n5. #ff0000Throw#a5a5a5 the stratagem with #df7f00%s#a5a5a5"):format(
+                    sm.gui.getKeyBinding("NextCreateRotation"),
+                    sm.gui.getKeyBinding("Create"),
+                    sm.gui.getKeyBinding("Forward"),
+                    sm.gui.getKeyBinding("Backward"),
+                    sm.gui.getKeyBinding("StrafeLeft"),
+                    sm.gui.getKeyBinding("StrafeRight"),
+                    sm.gui.getKeyBinding("Create")
+                )
+            )
+            local dismissText = string.format( sm.gui.translateLocalizationTags( "#{TUTORIAL_DISMISS}" ), sm.gui.getKeyBinding( "NextCreateRotation" ) )
+            self.tutorialGui:setText( "TextDismiss", dismissText )
+            self.tutorialGui:setImage( "ImageTutorial", "gui_tutorial_image_hunger.png" )
+            self.tutorialGui:open()
+
+            self.pData = { hasPlayedTutorial = true }
+            sm.json.save(self.pData, PLAYERDATAPATH)
+        end
+
+        g_stratagemHud = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/StratagemHud.layout", false, { isHud = true, isInteractive = false, needsCursor = false })
 	end
 end
 
@@ -336,8 +375,76 @@ function Stratagem.client_onUnequip( self )
 			if self.fpAnimations.currentAnimation ~= "unequip" then
 				swapFpAnimation( self.fpAnimations, "equip", "unequip", 0.2 )
 			end
+
+            if sm.exists(self.tutorialGui) then
+                self.tutorialGui:close()
+            end
+
+            self.activated = false
+            g_strataGemCode = nil
+
+            g_stratagemHud:close()
 		end
 	end
+end
+
+local indexToArrow = {
+    ["1"] = "<",
+    ["2"] = ">",
+    ["3"] = "^",
+    ["4"] = "˘"
+}
+
+function UpdateStratagemHud()
+    local progression = g_cl_loadout
+    local tick = sm.game.getServerTick()
+    local id = sm.localPlayer.getPlayer().id.."_"
+    for i = 1, STRATAGEMINVENTORYSIZE do
+        local uuid = progression[i]
+        local widget = "stratagem"..i
+        g_stratagemHud:setVisible(widget, uuid ~= nil)
+
+        if uuid then
+            local stratagem = GetStratagemUserdata(uuid)
+            g_stratagemHud:setText(widget.."_name", stratagem.name)
+            g_stratagemHud:setIconImage(widget.."_preview", sm.uuid.new(stratagem.icon))
+            g_stratagemHud:setText(widget.."_charges", tostring(GetClStratagemProgression(uuid).charges))
+
+            local stratagemInbound = g_cl_queuedStratagems[id..uuid]
+            if stratagemInbound then
+                local time = stratagemInbound.activation/40
+                if time > 0 then
+                    g_stratagemHud:setText(widget.."_code", ("Inbound T-%.0fs"):format(time))
+                else
+                    g_stratagemHud:setText(widget.."_code", "Ongoing...")
+                end
+
+                goto continue
+            end
+
+            local stratagemCooldown = g_cl_cooldowns[uuid] or 0
+            if stratagemCooldown > tick then
+                g_stratagemHud:setText(widget.."_code", ("Cooldown T-%.0fs"):format((stratagemCooldown - tick)/40))
+                goto continue
+            end
+
+            local code = stratagem.code
+            if not g_strataGemCode then
+                g_stratagemHud:setText(widget.."_code", code)
+                goto continue
+            end
+
+            local codeLength = #g_strataGemCode
+            local subCode = code:sub(1, codeLength)
+            if subCode == g_strataGemCode then
+                g_stratagemHud:setText(widget.."_code", subCode.."#000000"..code:sub(codeLength + 1, #code))
+            else
+                g_stratagemHud:setText(widget.."_code", "#000000"..code)
+            end
+
+            ::continue::
+        end
+    end
 end
 
 function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
@@ -354,25 +461,32 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
         sm.gui.setInteractionText(sm.gui.getKeyBinding("Create", true).."Throw\t", sm.gui.getKeyBinding("Attack", true).."Cancel", "")
     else
         if lmb == 1 then
+            if #g_cl_loadout == 0 then
+                sm.gui.displayAlertText("Your loadout is empty!")
+            end
+
+            UpdateStratagemHud()
+            g_stratagemHud:open()
             self.network:sendToServer("sv_prime")
         elseif lmb == 2 then
-            --sm.gui.setInteractionText(sm.gui.getKeyBinding("Forward", true).."UP\t", sm.gui.getKeyBinding("Backward", true).."DOWN\t", sm.gui.getKeyBinding("StrafeLeft", true).."LEFT\t", sm.gui.getKeyBinding("StrafeRight", true).."RIGHT", "")
             sm.gui.setInteractionText("Code:", g_strataGemCode or "", "")
         elseif lmb == 3 then
+            g_stratagemHud:close()
             self.network:sendToServer("sv_cancel")
 
             local stratagems = {}
             local tick = sm.game.getServerTick()
             for k, v in pairs(GetStratagems()) do
                 local uuid = v.uuid
-                if isAnyOf(uuid, g_cl_loadout) then
+                if isAnyOf(uuid, g_cl_loadout) and GetClStratagemProgression(uuid).charges > 0 and (g_cl_cooldowns[uuid] or tick) <= tick then
                     table.insert(stratagems, v)
                 end
             end
 
             local stratagem = GetStratagem(g_strataGemCode, stratagems)
+            --print(stratagems, stratagem)
             if stratagem then
-                if GetClStratagemProgression(stratagem.uuid).charges == 0 then
+                --[[if GetClStratagemProgression(stratagem.uuid).charges == 0 then
                     sm.gui.displayAlertText("#ff0000Out of charges!", 2.5)
                     sm.audio.play("RaftShark")
                     g_strataGemCode = nil
@@ -385,7 +499,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
                     sm.audio.play("RaftShark")
                     g_strataGemCode = nil
                     return true, false
-                end
+                end]]
 
                 self.activated = true
                 sm.effect.playHostedEffect("Stratagem - Armed", self.tool:getOwner().character)
@@ -446,6 +560,7 @@ function Input:client_onAction(action, state)
     local isBlocked = blockActions[action] == true and state
     if isBlocked then
         g_strataGemCode = (g_strataGemCode or "")..action
+        UpdateStratagemHud()
         sm.audio.play("PaintTool - ColorPick")
     end
 
