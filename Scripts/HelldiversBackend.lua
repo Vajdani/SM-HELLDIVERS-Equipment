@@ -101,7 +101,6 @@ function HelldiversBackend:server_onCreate()
 end
 
 function HelldiversBackend:server_onFixedUpdate()
-    local tick = sm.game.getServerTick()
     for k, stratagem in pairs(self.queuedStratagems) do
         stratagem.activation = stratagem.activation - 1
         if stratagem.activation <= 0 then
@@ -207,7 +206,7 @@ function HelldiversBackend:OnStratagemThrow(args)
     local tick = sm.game.getServerTick()
     if (self.cooldownsPerPlayer[pId][uuid] or tick) > tick then return end
 
-    self.cooldownsPerPlayer[pId][uuid] = sm.game.getServerTick() + stratagem.cooldown
+    self.cooldownsPerPlayer[pId][uuid] = tick + stratagem.cooldown
     progression.charges = progression.charges - 1
     g_sv_stratagemProgression[pId][uuid] = progression
 

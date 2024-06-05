@@ -1,24 +1,30 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Layout" version="3.2.0">
     <Widget type="Canvas" skin="Canvas" position="20 20 440 540" name="StratagemPanel">
-        <Widget type="Button" skin="SelectionFieldBox" position="5 5 430 80" name="stratagem1">
+        <Widget type="Canvas" skin="SelectionFieldBox" position="5 5 430 80" name="stratagem1">
             <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem1_preview">
                 <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem1_name">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem1_cooldown">
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="EditBox" skin="EditBoxEmpty" position="85 5 340 35" name="stratagem1_name">
                 <Property key="Caption" value="Challenge Name"/>
                 <Property key="TextAlign" value="Left VCenter"/>
                 <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
+                <Property key="ReadOnly" value="true"/>
+                <Property key="WordWrap" value="true"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem1_code">
+            <Widget type="TextBox" skin="TextBox" position="120 40 305 35" name="stratagem1_status">
                 <Property key="FontName" value="SM_ItemTitle"/>
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
-            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+            <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
                 <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem1_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
@@ -26,25 +32,44 @@
                     <Property key="TextColour" value="0 0 0"/>
                 </Widget>
             </Widget>
+            <Widget type="Canvas" skin="WhiteSkin" position="85 39 340 2">
+                <Property key="Colour" value="0.392157 0.392157 0.392157"/>
+            </Widget>
+            <Widget type="Canvas" skin="Canvas" position="120 40 305 35" name="stratagem1_codePanel">
+                <Widget type="ImageBox" skin="ImageBox" position="0 0 35 35" name="stratagem1_codeDigit1"/>
+                <Widget type="ImageBox" skin="ImageBox" position="35 0 35 35" name="stratagem1_codeDigit2"/>
+                <Widget type="ImageBox" skin="ImageBox" position="70 0 35 35" name="stratagem1_codeDigit3"/>
+                <Widget type="ImageBox" skin="ImageBox" position="105 0 35 35" name="stratagem1_codeDigit4"/>
+                <Widget type="ImageBox" skin="ImageBox" position="140 0 35 35" name="stratagem1_codeDigit5"/>
+                <Widget type="ImageBox" skin="ImageBox" position="175 0 35 35" name="stratagem1_codeDigit6"/>
+                <Widget type="ImageBox" skin="ImageBox" position="210 0 35 35" name="stratagem1_codeDigit7"/>
+                <Widget type="ImageBox" skin="ImageBox" position="245 0 35 35" name="stratagem1_codeDigit8"/>
+            </Widget>
         </Widget>
-        <Widget type="Button" skin="SelectionFieldBox" position="5 95 430 80" name="stratagem2">
+        <Widget type="Canvas" skin="SelectionFieldBox" position="5 95 430 80" name="stratagem2">
             <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem2_preview">
                 <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem2_name">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem2_cooldown">
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="EditBox" skin="EditBoxEmpty" position="85 5 340 35" name="stratagem2_name">
                 <Property key="Caption" value="Challenge Name"/>
                 <Property key="TextAlign" value="Left VCenter"/>
                 <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
+                <Property key="ReadOnly" value="true"/>
+                <Property key="WordWrap" value="true"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem2_code">
+            <Widget type="TextBox" skin="TextBox" position="120 40 305 35" name="stratagem2_status">
                 <Property key="FontName" value="SM_ItemTitle"/>
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
-            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+            <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
                 <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem2_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
@@ -52,25 +77,44 @@
                     <Property key="TextColour" value="0 0 0"/>
                 </Widget>
             </Widget>
+            <Widget type="Canvas" skin="WhiteSkin" position="85 39 340 2">
+                <Property key="Colour" value="0.392157 0.392157 0.392157"/>
+            </Widget>
+            <Widget type="Canvas" skin="Canvas" position="120 40 305 35" name="stratagem2_codePanel">
+                <Widget type="ImageBox" skin="ImageBox" position="0 0 35 35" name="stratagem2_codeDigit1"/>
+                <Widget type="ImageBox" skin="ImageBox" position="35 0 35 35" name="stratagem2_codeDigit2"/>
+                <Widget type="ImageBox" skin="ImageBox" position="70 0 35 35" name="stratagem2_codeDigit3"/>
+                <Widget type="ImageBox" skin="ImageBox" position="105 0 35 35" name="stratagem2_codeDigit4"/>
+                <Widget type="ImageBox" skin="ImageBox" position="140 0 35 35" name="stratagem2_codeDigit5"/>
+                <Widget type="ImageBox" skin="ImageBox" position="175 0 35 35" name="stratagem2_codeDigit6"/>
+                <Widget type="ImageBox" skin="ImageBox" position="210 0 35 35" name="stratagem2_codeDigit7"/>
+                <Widget type="ImageBox" skin="ImageBox" position="245 0 35 35" name="stratagem2_codeDigit8"/>
+            </Widget>
         </Widget>
-        <Widget type="Button" skin="SelectionFieldBox" position="5 185 430 80" name="stratagem3">
+        <Widget type="Canvas" skin="SelectionFieldBox" position="5 185 430 80" name="stratagem3">
             <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem3_preview">
                 <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem3_name">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem3_cooldown">
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="EditBox" skin="EditBoxEmpty" position="85 5 340 35" name="stratagem3_name">
                 <Property key="Caption" value="Challenge Name"/>
                 <Property key="TextAlign" value="Left VCenter"/>
                 <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
+                <Property key="ReadOnly" value="true"/>
+                <Property key="WordWrap" value="true"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem3_code">
+            <Widget type="TextBox" skin="TextBox" position="120 40 305 35" name="stratagem3_status">
                 <Property key="FontName" value="SM_ItemTitle"/>
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
-            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+            <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
                 <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem3_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
@@ -78,25 +122,44 @@
                     <Property key="TextColour" value="0 0 0"/>
                 </Widget>
             </Widget>
+            <Widget type="Canvas" skin="WhiteSkin" position="85 39 340 2">
+                <Property key="Colour" value="0.392157 0.392157 0.392157"/>
+            </Widget>
+            <Widget type="Canvas" skin="Canvas" position="120 40 305 35" name="stratagem3_codePanel">
+                <Widget type="ImageBox" skin="ImageBox" position="0 0 35 35" name="stratagem3_codeDigit1"/>
+                <Widget type="ImageBox" skin="ImageBox" position="35 0 35 35" name="stratagem3_codeDigit2"/>
+                <Widget type="ImageBox" skin="ImageBox" position="70 0 35 35" name="stratagem3_codeDigit3"/>
+                <Widget type="ImageBox" skin="ImageBox" position="105 0 35 35" name="stratagem3_codeDigit4"/>
+                <Widget type="ImageBox" skin="ImageBox" position="140 0 35 35" name="stratagem3_codeDigit5"/>
+                <Widget type="ImageBox" skin="ImageBox" position="175 0 35 35" name="stratagem3_codeDigit6"/>
+                <Widget type="ImageBox" skin="ImageBox" position="210 0 35 35" name="stratagem3_codeDigit7"/>
+                <Widget type="ImageBox" skin="ImageBox" position="245 0 35 35" name="stratagem3_codeDigit8"/>
+            </Widget>
         </Widget>
-        <Widget type="Button" skin="SelectionFieldBox" position="5 275 430 80" name="stratagem4">
+        <Widget type="Canvas" skin="SelectionFieldBox" position="5 275 430 80" name="stratagem4">
             <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem4_preview">
                 <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem4_name">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem4_cooldown">
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="EditBox" skin="EditBoxEmpty" position="85 5 340 35" name="stratagem4_name">
                 <Property key="Caption" value="Challenge Name"/>
                 <Property key="TextAlign" value="Left VCenter"/>
                 <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
+                <Property key="ReadOnly" value="true"/>
+                <Property key="WordWrap" value="true"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem4_code">
+            <Widget type="TextBox" skin="TextBox" position="120 40 305 35" name="stratagem4_status">
                 <Property key="FontName" value="SM_ItemTitle"/>
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
-            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+            <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
                 <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem4_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
@@ -104,25 +167,44 @@
                     <Property key="TextColour" value="0 0 0"/>
                 </Widget>
             </Widget>
+            <Widget type="Canvas" skin="WhiteSkin" position="85 39 340 2">
+                <Property key="Colour" value="0.392157 0.392157 0.392157"/>
+            </Widget>
+            <Widget type="Canvas" skin="Canvas" position="120 40 305 35" name="stratagem4_codePanel">
+                <Widget type="ImageBox" skin="ImageBox" position="0 0 35 35" name="stratagem4_codeDigit1"/>
+                <Widget type="ImageBox" skin="ImageBox" position="35 0 35 35" name="stratagem4_codeDigit2"/>
+                <Widget type="ImageBox" skin="ImageBox" position="70 0 35 35" name="stratagem4_codeDigit3"/>
+                <Widget type="ImageBox" skin="ImageBox" position="105 0 35 35" name="stratagem4_codeDigit4"/>
+                <Widget type="ImageBox" skin="ImageBox" position="140 0 35 35" name="stratagem4_codeDigit5"/>
+                <Widget type="ImageBox" skin="ImageBox" position="175 0 35 35" name="stratagem4_codeDigit6"/>
+                <Widget type="ImageBox" skin="ImageBox" position="210 0 35 35" name="stratagem4_codeDigit7"/>
+                <Widget type="ImageBox" skin="ImageBox" position="245 0 35 35" name="stratagem4_codeDigit8"/>
+            </Widget>
         </Widget>
-        <Widget type="Button" skin="SelectionFieldBox" position="5 365 430 80" name="stratagem5">
+        <Widget type="Canvas" skin="SelectionFieldBox" position="5 365 430 80" name="stratagem5">
             <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem5_preview">
                 <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem5_name">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem5_cooldown">
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="EditBox" skin="EditBoxEmpty" position="85 5 340 35" name="stratagem5_name">
                 <Property key="Caption" value="Challenge Name"/>
                 <Property key="TextAlign" value="Left VCenter"/>
                 <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
+                <Property key="ReadOnly" value="true"/>
+                <Property key="WordWrap" value="true"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem5_code">
+            <Widget type="TextBox" skin="TextBox" position="120 40 305 35" name="stratagem5_status">
                 <Property key="FontName" value="SM_ItemTitle"/>
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
-            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+            <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
                 <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem5_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
@@ -130,31 +212,63 @@
                     <Property key="TextColour" value="0 0 0"/>
                 </Widget>
             </Widget>
+            <Widget type="Canvas" skin="WhiteSkin" position="85 39 340 2">
+                <Property key="Colour" value="0.392157 0.392157 0.392157"/>
+            </Widget>
+            <Widget type="Canvas" skin="Canvas" position="120 40 305 35" name="stratagem5_codePanel">
+                <Widget type="ImageBox" skin="ImageBox" position="0 0 35 35" name="stratagem5_codeDigit1"/>
+                <Widget type="ImageBox" skin="ImageBox" position="35 0 35 35" name="stratagem5_codeDigit2"/>
+                <Widget type="ImageBox" skin="ImageBox" position="70 0 35 35" name="stratagem5_codeDigit3"/>
+                <Widget type="ImageBox" skin="ImageBox" position="105 0 35 35" name="stratagem5_codeDigit4"/>
+                <Widget type="ImageBox" skin="ImageBox" position="140 0 35 35" name="stratagem5_codeDigit5"/>
+                <Widget type="ImageBox" skin="ImageBox" position="175 0 35 35" name="stratagem5_codeDigit6"/>
+                <Widget type="ImageBox" skin="ImageBox" position="210 0 35 35" name="stratagem5_codeDigit7"/>
+                <Widget type="ImageBox" skin="ImageBox" position="245 0 35 35" name="stratagem5_codeDigit8"/>
+            </Widget>
         </Widget>
-        <Widget type="Button" skin="SelectionFieldBox" position="5 455 430 80" name="stratagem6">
+        <Widget type="Canvas" skin="SelectionFieldBox" position="5 455 430 80" name="stratagem6">
             <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem6_preview">
                 <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 5 340 35" name="stratagem6_name">
+            <Widget type="ImageBox" skin="ImageBox" position="5 5 70 70" name="stratagem6_cooldown">
+                <Property key="NeedKey" value="false"/>
+                <Property key="NeedMouse" value="false"/>
+            </Widget>
+            <Widget type="EditBox" skin="EditBoxEmpty" position="85 5 340 35" name="stratagem6_name">
                 <Property key="Caption" value="Challenge Name"/>
                 <Property key="TextAlign" value="Left VCenter"/>
                 <Property key="FontName" value="SM_HeaderLarge_Narrow"/>
                 <Property key="NeedKey" value="false"/>
                 <Property key="NeedMouse" value="false"/>
+                <Property key="ReadOnly" value="true"/>
+                <Property key="WordWrap" value="true"/>
             </Widget>
-            <Widget type="TextBox" skin="TextBox" position="85 40 340 35" name="stratagem6_code">
+            <Widget type="TextBox" skin="TextBox" position="120 40 305 35" name="stratagem6_status">
                 <Property key="FontName" value="SM_ItemTitle"/>
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
-            <Widget type="Canvas" skin="BeaconIconColor" position="48 48 30 30">
+            <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
                 <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem6_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
                     <Property key="Caption" value="69"/>
                     <Property key="TextColour" value="0 0 0"/>
                 </Widget>
+            </Widget>
+            <Widget type="Canvas" skin="WhiteSkin" position="85 39 340 2">
+                <Property key="Colour" value="0.392157 0.392157 0.392157"/>
+            </Widget>
+            <Widget type="Canvas" skin="Canvas" position="120 40 305 35" name="stratagem6_codePanel">
+                <Widget type="ImageBox" skin="ImageBox" position="0 0 35 35" name="stratagem6_codeDigit1"/>
+                <Widget type="ImageBox" skin="ImageBox" position="35 0 35 35" name="stratagem6_codeDigit2"/>
+                <Widget type="ImageBox" skin="ImageBox" position="70 0 35 35" name="stratagem6_codeDigit3"/>
+                <Widget type="ImageBox" skin="ImageBox" position="105 0 35 35" name="stratagem6_codeDigit4"/>
+                <Widget type="ImageBox" skin="ImageBox" position="140 0 35 35" name="stratagem6_codeDigit5"/>
+                <Widget type="ImageBox" skin="ImageBox" position="175 0 35 35" name="stratagem6_codeDigit6"/>
+                <Widget type="ImageBox" skin="ImageBox" position="210 0 35 35" name="stratagem6_codeDigit7"/>
+                <Widget type="ImageBox" skin="ImageBox" position="245 0 35 35" name="stratagem6_codeDigit8"/>
             </Widget>
         </Widget>
     </Widget>

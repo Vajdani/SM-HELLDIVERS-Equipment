@@ -5,7 +5,7 @@
             <Property key="NeedKey" value="false"/>
             <Property key="NeedMouse" value="false"/>
         </Widget>
-        <Widget type="TextBox" skin="TextBox" position_real="0 0.7324074074074074 1 0.26666666666666666" name="Quantity">
+        <Widget type="TextBox" skin="TextBox" position_real="0 0 0 0" name="Quantity">
             <Property key="Caption" value="*/0123456789"/>
             <Property key="FontName" value="SM_NumberTiny"/>
             <Property key="TextAlign" value="Center"/>

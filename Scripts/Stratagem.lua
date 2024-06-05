@@ -1,6 +1,7 @@
 dofile "$GAME_DATA/Scripts/game/AnimationUtil.lua"
 dofile "$SURVIVAL_DATA/Scripts/util.lua"
 dofile "$SURVIVAL_DATA/Scripts/game/survival_shapes.lua"
+dofile "ProgressBar.lua"
 
 ---@class Stratagem : ToolClass
 ---@field fpAnimations table
@@ -140,7 +141,7 @@ function Stratagem.loadAnimations( self )
 end
 
 function Stratagem:client_onFixedUpdate()
-    if not self.isLocal or not g_stratagemHud or not g_stratagemHud:isActive() or sm.game.getServerTick()%40 ~= 0 then return end
+    if not self.isLocal or not g_stratagemHud or not g_stratagemHud.gui:isActive() or sm.game.getServerTick()%40 ~= 0 then return end
 
     UpdateStratagemHud()
 end
@@ -168,6 +169,7 @@ function Stratagem.client_onUpdate( self, dt )
                 self.activated = false
                 self.pendingThrow = false
                 g_strataGemCode = nil
+                self.stratagemUserdata = nil
             end
         end
 	end
@@ -357,7 +359,10 @@ function Stratagem:client_onEquip()
             sm.json.save(self.pData, PLAYERDATAPATH)
         end
 
-        g_stratagemHud = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/StratagemHud.layout", false, { isHud = true, isInteractive = false, needsCursor = false })
+        g_stratagemHud = {
+            gui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/StratagemHud.layout", false, { isHud = true, isInteractive = false, needsCursor = false }),
+            progressbars = {}
+        }
 	end
 end
 
@@ -382,83 +387,115 @@ function Stratagem.client_onUnequip( self )
 
             self.activated = false
             g_strataGemCode = nil
+            self.stratagemUserdata = nil
 
-            g_stratagemHud:close()
+            g_stratagemHud.gui:close()
 		end
 	end
 end
 
 local indexToArrow = {
-    ["1"] = "<",
-    ["2"] = ">",
-    ["3"] = "^",
-    ["4"] = "˘"
+    ["1"] = "icon_keybinds_arrow_left.png",
+    ["2"] = "icon_keybinds_arrow_right.png",
+    ["3"] = "icon_keybinds_arrow_up.png",
+    ["4"] = "icon_keybinds_arrow_down.png"
 }
 
+local col_bright = sm.color.new("ffffff")
+local col_dark = sm.color.new("999999")
 function UpdateStratagemHud()
     local progression = g_cl_loadout
     local tick = sm.game.getServerTick()
     local id = sm.localPlayer.getPlayer().id.."_"
+    local gui = g_stratagemHud.gui
     for i = 1, STRATAGEMINVENTORYSIZE do
         local uuid = progression[i]
         local widget = "stratagem"..i
-        g_stratagemHud:setVisible(widget, uuid ~= nil)
+        gui:setVisible(widget, uuid ~= nil)
 
         if uuid then
             local stratagem = GetStratagemUserdata(uuid)
-            g_stratagemHud:setText(widget.."_name", stratagem.name)
-            g_stratagemHud:setIconImage(widget.."_preview", sm.uuid.new(stratagem.icon))
-            g_stratagemHud:setText(widget.."_charges", tostring(GetClStratagemProgression(uuid).charges))
+            gui:setText(widget.."_name", stratagem.name)
+            gui:setIconImage(widget.."_preview", sm.uuid.new(stratagem.icon))
+            gui:setText(widget.."_charges", tostring(GetClStratagemProgression(uuid).charges))
 
             local stratagemInbound = g_cl_queuedStratagems[id..uuid]
             if stratagemInbound then
                 local time = stratagemInbound.activation/40
                 if time > 0 then
-                    g_stratagemHud:setText(widget.."_code", ("Inbound T-%.0fs"):format(time))
+                    gui:setText(widget.."_status", ("Inbound T-%.0fs"):format(time))
                 else
-                    g_stratagemHud:setText(widget.."_code", "Ongoing...")
+                    gui:setText(widget.."_status", "Ongoing...")
                 end
+            end
 
-                goto continue
+            local bar = g_stratagemHud.progressbars[i]
+            if not bar then
+                bar = ProgressBar():init(gui, widget.."_cooldown", "$CONTENT_DATA/Gui/StratagemCooldown", 100)
+                g_stratagemHud.progressbars[i] = bar
             end
 
             local stratagemCooldown = g_cl_cooldowns[uuid] or 0
-            if stratagemCooldown > tick then
-                g_stratagemHud:setText(widget.."_code", ("Cooldown T-%.0fs"):format((stratagemCooldown - tick)/40))
-                goto continue
-            end
+            local isOnCooldown = stratagemCooldown > tick
+            gui:setVisible(widget.."_codePanel", not isOnCooldown)
+            if isOnCooldown then
+                local seconds = (stratagemCooldown - tick)/40
+                if not stratagemInbound then
+                    gui:setText(widget.."_status", ("Cooldown T-%.0fs"):format(seconds))
+                end
 
-            local code = stratagem.code
-            if not g_strataGemCode then
-                g_stratagemHud:setText(widget.."_code", code)
-                goto continue
-            end
-
-            local codeLength = #g_strataGemCode
-            local subCode = code:sub(1, codeLength)
-            if subCode == g_strataGemCode then
-                g_stratagemHud:setText(widget.."_code", subCode.."#000000"..code:sub(codeLength + 1, #code))
+                bar:update_percentage(1 - seconds/(GetStratagemByUUUID(uuid).cooldown/40))
             else
-                g_stratagemHud:setText(widget.."_code", "#000000"..code)
-            end
+                gui:setText(widget.."_status", "")
+                bar:update_percentage(1)
 
-            ::continue::
+                local code = stratagem.code
+                if g_strataGemCode then
+                    local codeLength = #g_strataGemCode
+                    local subCode = code:sub(1, codeLength)
+                    if subCode == g_strataGemCode then
+                        for j = 1, math.min(#code, 8) do
+                            local box = widget.."_codeDigit"..j
+                            gui:setImage(box, indexToArrow[code:sub(j, j)])
+                            gui:setColor(box, j <= codeLength and col_bright or col_dark)
+                        end
+                    else
+                        for j = 1, math.min(#code, 8) do
+                            local box = widget.."_codeDigit"..j
+                            gui:setImage(box, indexToArrow[code:sub(j, j)])
+                            gui:setColor(box, col_dark)
+                        end
+                    end
+                else
+                    for j = 1, math.min(#code, 8) do
+                        local box = widget.."_codeDigit"..j
+                        gui:setImage(box, indexToArrow[code:sub(j, j)])
+                        gui:setColor(box, col_bright)
+                    end
+                end
+            end
         end
     end
 end
 
 function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
     if self.activated then
+        if self.pendingThrow then return true, true end
+
         if lmb == 1 then
             self.network:sendToServer("sv_throwAnim")
         end
 
+        sm.gui.setInteractionText("", sm.gui.getKeyBinding("Create", true), "Throw "..self.stratagemUserdata.name)
+        sm.gui.setInteractionText("", sm.gui.getKeyBinding("Attack", true), "Cancel")
+
         if rmb == 1 and not self.pendingThrow then
             self.activated = false
             g_strataGemCode = nil
+            self.stratagemUserdata = nil
         end
 
-        sm.gui.setInteractionText(sm.gui.getKeyBinding("Create", true).."Throw\t", sm.gui.getKeyBinding("Attack", true).."Cancel", "")
+        return true, true
     else
         if lmb == 1 then
             if #g_cl_loadout == 0 then
@@ -466,13 +503,16 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             end
 
             UpdateStratagemHud()
-            g_stratagemHud:open()
+            g_stratagemHud.gui:open()
             self.network:sendToServer("sv_prime")
-        elseif lmb == 2 then
-            sm.gui.setInteractionText("Code:", g_strataGemCode or "", "")
+        --[[elseif lmb == 2 then
+            local code = (g_strataGemCode or ""):gsub("1", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_left.png</img>"):gsub("2", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_right.png</img>"):gsub("3", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_up.png</img>"):gsub("4", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_down.png</img>")
+            sm.gui.setInteractionText(code, "")]]
         elseif lmb == 3 then
-            g_stratagemHud:close()
+            g_stratagemHud.gui:close()
             self.network:sendToServer("sv_cancel")
+
+            if not g_strataGemCode then return true, false end
 
             local stratagems = {}
             local tick = sm.game.getServerTick()
@@ -484,24 +524,9 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             end
 
             local stratagem = GetStratagem(g_strataGemCode, stratagems)
-            --print(stratagems, stratagem)
             if stratagem then
-                --[[if GetClStratagemProgression(stratagem.uuid).charges == 0 then
-                    sm.gui.displayAlertText("#ff0000Out of charges!", 2.5)
-                    sm.audio.play("RaftShark")
-                    g_strataGemCode = nil
-                    return true, false
-                end
-
-                local cooldownTick = (g_cl_cooldowns[stratagem.uuid] or tick)
-                if tick < cooldownTick then
-                    sm.gui.displayAlertText("#ff0000Stratagem is on cooldown! "..math.ceil((cooldownTick - tick)/40).." seconds left.", 2.5)
-                    sm.audio.play("RaftShark")
-                    g_strataGemCode = nil
-                    return true, false
-                end]]
-
                 self.activated = true
+                self.stratagemUserdata = GetStratagemUserdata(GetStratagem(g_strataGemCode).uuid)
                 sm.effect.playHostedEffect("Stratagem - Armed", self.tool:getOwner().character)
             else
                 sm.audio.play("RaftShark")
