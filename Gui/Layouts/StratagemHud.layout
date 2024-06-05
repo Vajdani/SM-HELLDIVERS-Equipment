@@ -25,7 +25,7 @@
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
             <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
-                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem1_charges">
+                <Widget type="TextBox" skin="TextBox" position="1 1 28 28" name="stratagem1_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
                     <Property key="Caption" value="69"/>
@@ -70,7 +70,7 @@
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
             <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
-                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem2_charges">
+                <Widget type="TextBox" skin="TextBox" position="1 1 28 28" name="stratagem2_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
                     <Property key="Caption" value="69"/>
@@ -115,7 +115,7 @@
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
             <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
-                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem3_charges">
+                <Widget type="TextBox" skin="TextBox" position="1 1 28 28" name="stratagem3_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
                     <Property key="Caption" value="69"/>
@@ -160,7 +160,7 @@
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
             <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
-                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem4_charges">
+                <Widget type="TextBox" skin="TextBox" position="1 1 28 28" name="stratagem4_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
                     <Property key="Caption" value="69"/>
@@ -205,7 +205,7 @@
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
             <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
-                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem5_charges">
+                <Widget type="TextBox" skin="TextBox" position="1 1 28 28" name="stratagem5_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
                     <Property key="Caption" value="69"/>
@@ -250,7 +250,7 @@
                 <Property key="TextAlign" value="Left VCenter"/>
             </Widget>
             <Widget type="Canvas" skin="BeaconIconColor" position="85 45 30 30">
-                <Widget type="TextBox" skin="TextBox" position="5 5 20 20" name="stratagem6_charges">
+                <Widget type="TextBox" skin="TextBox" position="1 1 28 28" name="stratagem6_charges">
                     <Property key="TextAlign" value="Center"/>
                     <Property key="FontName" value="SM_ItemTitle"/>
                     <Property key="Caption" value="69"/>
