@@ -6,8 +6,8 @@
             {
                "material" : "DifAsgNor",
                "textureList" : [
-                  "$CONTENT_DATA/Characters/Textures/outfit_helldiver_gloves_dif.tga",
-                  "$CONTENT_DATA/Characters/Textures/outfit_helldiver_gloves_asg.tga",
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_gloves_dif.tga",
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_gloves_asg.tga",
                   "$CONTENT_DATA/Objects/Textures/armour/obj_outfit_helldiver_gloves_nor.tga"
                ]
             }

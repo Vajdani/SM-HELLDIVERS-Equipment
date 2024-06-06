@@ -86,57 +86,6 @@ local stratagems =  {
             return self.tick >= 160
         end,
         tick = 0
-    },
-    {
-        uuid = "7e196787-92c7-4f1e-9dad-1b494d27d7f1",
-        cooldown = 80 * 40,
-        activation = 1 * 40,
-        summon = function(self)
-            if self.tick%2 == 0 then
-                local origin = self.hitData.position + sm.vec3.new(0,0,20)
-                local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(math.random(0, 359)), vec3_up)
-                sm.projectile.projectileAttack(projectile_potato, 100, origin, dir * 100, self.hitData.shooter)
-                sm.effect.playEffect("SpudgunSpinner - SpinnerMuzzel", origin, sm.vec3.zero(), sm.vec3.getRotation(dir, vec3_up))
-            end
-
-            self.tick = self.tick + 1
-            return self.tick >= 160
-        end,
-        tick = 0
-    },
-    {
-        uuid = "c0b1618e-79b7-404f-8f6c-6da4a1f4e217",
-        cooldown = 80 * 40,
-        activation = 1 * 40,
-        summon = function(self)
-            if self.tick%2 == 0 then
-                local origin = self.hitData.position + sm.vec3.new(0,0,20)
-                local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(math.random(0, 359)), vec3_up)
-                sm.projectile.projectileAttack(projectile_potato, 100, origin, dir * 100, self.hitData.shooter)
-                sm.effect.playEffect("SpudgunSpinner - SpinnerMuzzel", origin, sm.vec3.zero(), sm.vec3.getRotation(dir, vec3_up))
-            end
-
-            self.tick = self.tick + 1
-            return self.tick >= 160
-        end,
-        tick = 0
-    },
-    {
-        uuid = "416b47fb-1b7a-4936-b940-2abc94ae1100",
-        cooldown = 80 * 40,
-        activation = 1 * 40,
-        summon = function(self)
-            if self.tick%2 == 0 then
-                local origin = self.hitData.position + sm.vec3.new(0,0,20)
-                local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(math.random(0, 359)), vec3_up)
-                sm.projectile.projectileAttack(projectile_potato, 100, origin, dir * 100, self.hitData.shooter)
-                sm.effect.playEffect("SpudgunSpinner - SpinnerMuzzel", origin, sm.vec3.zero(), sm.vec3.getRotation(dir, vec3_up))
-            end
-
-            self.tick = self.tick + 1
-            return self.tick >= 160
-        end,
-        tick = 0
     }
 }
 
@@ -200,58 +149,6 @@ local stratagemUserdata = {
         }
     },
     ["53d9dc66-e90c-4ea2-9795-7522206a0549"] = {
-        name = "Orbital Gatling Barrage",
-        description = "ratatatatatata",
-        icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
-        type = "offensive",
-        code = "24133",
-        cost = {
-            {
-                uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
-                amount = 5
-            },
-            {
-                uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
-                amount = 5
-            }
-        }
-    },
-
-    ["7e196787-92c7-4f1e-9dad-1b494d27d7f1"] = {
-        name = "Orbital Gatling Barrage",
-        description = "ratatatatatata",
-        icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
-        type = "offensive",
-        code = "24133",
-        cost = {
-            {
-                uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
-                amount = 5
-            },
-            {
-                uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
-                amount = 5
-            }
-        }
-    },
-    ["c0b1618e-79b7-404f-8f6c-6da4a1f4e217"] = {
-        name = "Orbital Gatling Barrage",
-        description = "ratatatatatata",
-        icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
-        type = "offensive",
-        code = "24133",
-        cost = {
-            {
-                uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
-                amount = 5
-            },
-            {
-                uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
-                amount = 5
-            }
-        }
-    },
-    ["416b47fb-1b7a-4936-b940-2abc94ae1100"] = {
         name = "Orbital Gatling Barrage",
         description = "ratatatatatata",
         icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
