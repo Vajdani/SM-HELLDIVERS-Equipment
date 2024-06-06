@@ -29,6 +29,8 @@ sm.game.bindChatCommand = bindHook
 ---@class HelldiversBackend : ToolClass
 HelldiversBackend = class()
 
+local dropPodStartHeight = sm.vec3.new(0,0,500)
+
 function HelldiversBackend:server_onCreate()
     if setupComplete then return end
 
@@ -104,7 +106,7 @@ function HelldiversBackend:server_onFixedUpdate()
     for k, stratagem in pairs(self.queuedStratagems) do
         stratagem.activation = stratagem.activation - 1
         if stratagem.activation <= 0 then
-            if stratagem:summon() then
+            if stratagem:update() then
                 self.queuedStratagems[k] = nil
                 self.network:sendToClients("cl_DeleteStratagem", k)
             end
@@ -124,6 +126,7 @@ function HelldiversBackend:OnStratagemHit(args)
             id = id,
             hitData = args,
             activation = stratagem.activation,
+            dropEffect = stratagem.dropEffect
         }
     )
 end
@@ -186,6 +189,17 @@ function HelldiversBackend:client_onFixedUpdate()
     for k, v in pairs(g_cl_queuedStratagems) do
         v.activation = v.activation - 1
         if v.activation >= 0 then
+            if v.pod then
+                if v.activation <= v.dropStartTime and not v.pod:isPlaying() then
+                    v.pod:start()
+                end
+
+                local pos = v.hitData.position
+                if v.pod:isPlaying() then
+                    v.pod:setPosition(sm.vec3.lerp(pos, pos + dropPodStartHeight, math.max(v.activation, 1)/v.dropStartTime))
+                end
+            end
+
             v.gui:setText("Text", ("Inbound T-%.0fs"):format(v.activation/40))
         else
             v.gui:setText("Text", "Ongoing...")
@@ -236,6 +250,24 @@ function HelldiversBackend:cl_OnStratagemHit(args)
     gui:open()
     args.gui = gui
 
+    local dropEffect = args.dropEffect
+    if dropEffect then
+        local pod
+        if type(dropEffect) == "string" then
+            pod = sm.effect.createEffect(dropEffect)
+        else
+            pod = sm.effect.createEffect("ShapeRenderable")
+            pod:setParameter("uuid", dropEffect)
+            pod:setRotation(sm.quat.angleAxis(math.rad(90), vec3_right))
+        end
+
+        pod:setScale(sm.vec3.one() * 0.25)
+
+        args.pod = pod
+    end
+
+    args.dropStartTime = args.activation * 0.75
+
     g_cl_queuedStratagems[id] = args
 end
 
@@ -243,6 +275,11 @@ function HelldiversBackend:cl_DeleteStratagem(index)
     local data = g_cl_queuedStratagems[index]
     data.gui:close()
     data.beacon:destroy()
+
+    if data.pod then
+        data.pod:destroy()
+    end
+
     g_cl_queuedStratagems[index] = nil
 end
 

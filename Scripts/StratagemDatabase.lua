@@ -2,7 +2,8 @@
 ---@field uuid string
 ---@field cooldown number
 ---@field activation number
----@field summon function
+---@field dropEffect? string|Uuid
+---@field update function
 
 ---@type StratagemObj[]
 local stratagems =  {
@@ -10,43 +11,19 @@ local stratagems =  {
         uuid = "5fe2e519-9c05-4b4d-b0d6-3dc6fa7357c8",
         cooldown = 160 * 40,
         activation = 12 * 40,
-        summon = function(self)
-            local uuid = sm.uuid.new("ad35f7e6-af8f-40fa-aef4-77d827ac8a8a")
+        dropEffect = sm.uuid.new("b63d99e5-06e5-4397-bb3d-27c396124334"),
+        update = function(self)
             local rotation = sm.quat.angleAxis(math.rad(90), vec3_right)
-            local chest = sm.shape.createPart(uuid, self.hitData.position - rotation * sm.item.getShapeOffset(uuid), rotation, false, true)
-            local container = chest.interactable:getContainer(0)
-            for k, v in pairs(self.items) do
-                sm.container.beginTransaction()
-                sm.container.collect(container, v.uuid, v.amount)
-                sm.container.endTransaction()
-            end
+            sm.shape.createPart(self.dropEffect, self.hitData.position + self.hitData.normal * 0.5 - rotation * sm.item.getShapeOffset(self.dropEffect), rotation, false, true)
 
             return true
-        end,
-        items = {
-            {
-                uuid = sm.uuid.new( "bfcfac34-db0f-42d6-bd0c-74a7a5c95e82" ), --potato
-                amount = 500
-            },
-            {
-                uuid = sm.uuid.new( "3a3280e4-03b6-4a4d-9e02-e348478213c9" ), --glowstick
-                amount = 100
-            },
-            {
-                uuid = sm.uuid.new( "24001201-40dd-4950-b99f-17d878a9e07b" ), --large explosive
-                amount = 5
-            },
-            {
-                uuid = sm.uuid.new( "8d3b98de-c981-4f05-abfe-d22ee4781d33" ), --small explosive
-                amount = 10
-            }
-        }
+        end
     },
     {
         uuid = "4778cafb-d7d0-44cd-bca0-a2494018108b",
         cooldown = 160 * 40,
         activation = 3 * 40,
-        summon = function(self)
+        update = function(self)
             sm.physics.explode(self.hitData.position, 100, 50, 75, 1000, "PropaneTank - ExplosionBig")
             return true
         end
@@ -55,7 +32,7 @@ local stratagems =  {
         uuid = "bd7e37ba-844c-4c57-b660-e93048cd48a6",
         cooldown = 120 * 40,
         activation = 3 * 40,
-        summon = function(self)
+        update = function(self)
             if self.tick%80 == 0 then
                 local origin = self.hitData.position + sm.vec3.new(0,0,20)
                 for i = 0, 6 do
@@ -74,7 +51,7 @@ local stratagems =  {
         uuid = "53d9dc66-e90c-4ea2-9795-7522206a0549",
         cooldown = 80 * 40,
         activation = 1 * 40,
-        summon = function(self)
+        update = function(self)
             if self.tick%2 == 0 then
                 local origin = self.hitData.position + sm.vec3.new(0,0,20)
                 local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(math.random(0, 359)), vec3_up)

@@ -12,6 +12,26 @@
             "uuid": "265b7242-6bfb-438c-8da5-534f5fa722e5",
             "color": "ff4d00"
         },
+		{
+            "name": "obj_interactive_droppod",
+            "physicsMaterial": "Metal",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_droppod.rend",
+            "rotationSet": "PropY",
+			"sticky" : "-Y",
+            "box": {
+                "x": 2,
+                "y": 4,
+                "z": 2
+            },
+			"scripted": {
+				"filename": "$CONTENT_DATA/Scripts/DropPod.lua",
+				"classname": "ResupplyPod",
+				"data": {}
+			},
+            "uuid": "b63d99e5-06e5-4397-bb3d-27c396124334",
+            "color": "ff4d00",
+			"showInInventory": true
+        },
         {
 			"uuid": "09a84352-04b2-47d1-9346-15ae4f768d03",
 			"name": "obj_interactive_stratagem_input",
