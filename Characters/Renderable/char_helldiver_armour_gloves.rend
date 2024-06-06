@@ -12,14 +12,14 @@
          "maxViewDistance" : 1000.0,
          "mesh" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Mesh/char_helldiver_armour_gloves.dae",
          "subMeshMap" : {
-            "black": {
-					"material": "DifAsgNor",
-					"textureList": [
-						"$GAME_DATA/Textures/black.png",
-						"$GAME_DATA/Textures/Default/default_asg.tga",
-						"$GAME_DATA/Textures/Default/default_nor.tga"
-					]
-				}
+            "black" : {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_gloves_dif.tga",
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_gloves_asg.tga",
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_gloves_nor.tga"
+               ]
+            }
          }
       }
    ]
