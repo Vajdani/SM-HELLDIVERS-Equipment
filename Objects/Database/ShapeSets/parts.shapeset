@@ -1,38 +1,18 @@
 {
-    "partList": [
-        {
-            "autoTool": "e3b77d7e-05b6-493c-b6c3-a264f342519a",
-            "name": "obj_interactive_stratagem",
-            "physicsMaterial": "Metal",
-            "renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_stratagem.rend",
-            "rotationSet": "Default",
-            "sphere": {
-                "diameter": 2
-            },
-            "uuid": "265b7242-6bfb-438c-8da5-534f5fa722e5",
-            "color": "ff4d00"
-        },
+	"partList": [
 		{
-            "name": "obj_interactive_droppod",
-            "physicsMaterial": "Metal",
-            "renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_droppod.rend",
-            "rotationSet": "PropY",
-			"sticky" : "-Y",
-            "box": {
-                "x": 2,
-                "y": 4,
-                "z": 2
-            },
-			"scripted": {
-				"filename": "$CONTENT_DATA/Scripts/DropPod.lua",
-				"classname": "ResupplyPod",
-				"data": {}
+			"autoTool": "e3b77d7e-05b6-493c-b6c3-a264f342519a",
+			"name": "obj_interactive_stratagem",
+			"physicsMaterial": "Metal",
+			"renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_stratagem.rend",
+			"rotationSet": "Default",
+			"sphere": {
+				"diameter": 2
 			},
-            "uuid": "b63d99e5-06e5-4397-bb3d-27c396124334",
-            "color": "ff4d00",
-			"showInInventory": true
-        },
-        {
+			"uuid": "265b7242-6bfb-438c-8da5-534f5fa722e5",
+			"color": "ff4d00"
+		},
+		{
 			"uuid": "09a84352-04b2-47d1-9346-15ae4f768d03",
 			"name": "obj_interactive_stratagem_input",
 			"renderable": {
@@ -52,7 +32,7 @@
 					}
 				]
 			},
-            "rotationSet": "Default",
+			"rotationSet": "Default",
 			"color": "ffffff",
 			"box": {
 				"x": 1,
@@ -73,48 +53,48 @@
 				"classname": "StratagemTerminal",
 				"data": {}
 			},
-			"color" : "9f2600",
-			"density" : 1250.0,
-			"hull" : {
-			   "col" : "$CHALLENGE_DATA/Objects/Collision/obj_challenge_interactive_mapinspector.obj",
-			   "x" : 4,
-			   "y" : 8,
-			   "z" : 4
+			"color": "9f2600",
+			"density": 1250.0,
+			"hull": {
+				"col": "$CHALLENGE_DATA/Objects/Collision/obj_challenge_interactive_mapinspector.obj",
+				"x": 4,
+				"y": 8,
+				"z": 4
 			},
-			"name" : "obj_challenge_interactive_mapinspector",
-			"physicsMaterial" : "Metal",
-			"qualityLevel" : 0,
-			"ratings" : {
-			   "friction" : 4
+			"name": "obj_challenge_interactive_mapinspector",
+			"physicsMaterial": "Metal",
+			"qualityLevel": 0,
+			"ratings": {
+				"friction": 4
 			},
-			"renderable" : {
-			   "lodList" : [
-				  {
-					 "mesh" : "$CHALLENGE_DATA/Objects/Mesh/interactive/obj_interactive_mapinspector.fbx",
-					 "subMeshList" : [
-						{
-						   "material" : "DifAsgNor",
-						   "textureList" : [
-							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_dif.tga",
-							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_asg.tga",
-							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_nor.tga"
-						   ]
-						},
-						{
-						   "material" : "DifAsg",
-						   "textureList" : [
-							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_screen_dif.tga",
-							  "$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_screen_asg.tga",
-							  ""
-						   ]
-						}
-					 ]
-				  }
-			   ]
+			"renderable": {
+				"lodList": [
+					{
+						"mesh": "$CHALLENGE_DATA/Objects/Mesh/interactive/obj_interactive_mapinspector.fbx",
+						"subMeshList": [
+							{
+								"material": "DifAsgNor",
+								"textureList": [
+									"$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_dif.tga",
+									"$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_asg.tga",
+									"$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_nor.tga"
+								]
+							},
+							{
+								"material": "DifAsg",
+								"textureList": [
+									"$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_screen_dif.tga",
+									"$CHALLENGE_DATA/Objects/Textures/interactive/obj_interactive_mapinspector_screen_asg.tga",
+									""
+								]
+							}
+						]
+					}
+				]
 			},
-			"rotationSet" : "PropY",
-			"sticky" : "-Y",
-			"uuid" : "1204064f-437e-4054-870f-4027d05d791b"
-		 }
-    ]
+			"rotationSet": "PropY",
+			"sticky": "-Y",
+			"uuid": "1204064f-437e-4054-870f-4027d05d791b"
+		}
+	]
 }

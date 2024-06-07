@@ -5,19 +5,36 @@
 ---@field dropEffect? string|Uuid
 ---@field update function
 
+local function SpawnStaticDropPod(self, position)
+    sm.shape.createPart(self.dropEffect, position - dropPodRotation * sm.item.getShapeOffset(self.dropEffect), dropPodRotation, false, true)
+end
+
+local function SpawnDropPod(self, override)
+    if type(override) == "RaycastResult" then
+        local shape = override:getShape()
+        if not shape.isBlock then
+            SpawnStaticDropPod(self, override.pointWorld)
+            return true
+        end
+
+        shape.body:createPart(self.dropEffect, shape:getClosestBlockLocalPosition(override.pointWorld + override.normalLocal), dropPodRotation * vec3_up, dropPodRotation * vec3_right)
+
+        return true
+    end
+
+    SpawnStaticDropPod(self, override or self.hitData.position)
+
+    return true
+end
+
 ---@type StratagemObj[]
 local stratagems =  {
     {
         uuid = "5fe2e519-9c05-4b4d-b0d6-3dc6fa7357c8",
-        cooldown = 160 * 40,
-        activation = 12 * 40,
+        cooldown = 1,--160 * 40,
+        activation = 3 * 40, --12 * 40,
         dropEffect = sm.uuid.new("b63d99e5-06e5-4397-bb3d-27c396124334"),
-        update = function(self)
-            local rotation = sm.quat.angleAxis(math.rad(90), vec3_right)
-            sm.shape.createPart(self.dropEffect, self.hitData.position + self.hitData.normal * 0.5 - rotation * sm.item.getShapeOffset(self.dropEffect), rotation, false, true)
-
-            return true
-        end
+        update = SpawnDropPod
     },
     {
         uuid = "4778cafb-d7d0-44cd-bca0-a2494018108b",
@@ -190,6 +207,10 @@ function GetTypeFullName(type)
 end
 
 function GetClStratagemProgression(uuid)
+    if not sm.game.getLimitedInventory() then
+        return { unlocked = true, charges = 1000 }
+    end
+
     return g_cl_stratagemProgression[uuid] or { unlocked = false, charges = 0 }
 end
 
@@ -198,9 +219,20 @@ function GetSvStratagemProgression(player, uuid)
     return playerData[uuid] or { unlocked = false, charges = 0 }
 end
 
+function GetFullStratagemProgression()
+    local progression = {}
+    for k, v in pairs(stratagems) do
+        local uuid = v.uuid
+        progression[uuid] = GetClStratagemProgression(uuid)
+    end
+
+    return progression
+end
+
 function GetStratagemsFromClProgression()
+    local progression = sm.game.getLimitedInventory() and g_cl_stratagemProgression or GetFullStratagemProgression()
     local stratagems_ = {}
-    for k, v in pairs(g_cl_stratagemProgression) do
+    for k, v in pairs(progression) do
         local userdata = GetStratagemUserdata(k)
         table.insert(stratagems_, { uuid = k, charges = v.charges, icon = userdata.icon, code = userdata.code })
     end

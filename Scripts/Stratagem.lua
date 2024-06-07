@@ -388,6 +388,7 @@ function Stratagem.client_onUnequip( self )
             self.activated = false
             g_strataGemCode = nil
             self.stratagemUserdata = nil
+            self.pendingThrow = false
 
             g_stratagemHud.gui:close()
 		end
@@ -479,6 +480,15 @@ function UpdateStratagemHud()
 end
 
 function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
+    if f then
+        return false, false
+    end
+
+    if sm.world.getCurrentWorld():isIndoor() then
+        sm.gui.setInteractionText("<p bg='gui_keybinds_bg' spacing='0'>Stratagems are disabled indoors!</p>")
+        return true, false
+    end
+
     if self.activated then
         if self.pendingThrow then return true, true end
 
@@ -505,9 +515,6 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             UpdateStratagemHud()
             g_stratagemHud.gui:open()
             self.network:sendToServer("sv_prime")
-        --[[elseif lmb == 2 then
-            local code = (g_strataGemCode or ""):gsub("1", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_left.png</img>"):gsub("2", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_right.png</img>"):gsub("3", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_up.png</img>"):gsub("4", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_down.png</img>")
-            sm.gui.setInteractionText(code, "")]]
         elseif lmb == 3 then
             g_stratagemHud.gui:close()
             self.network:sendToServer("sv_cancel")

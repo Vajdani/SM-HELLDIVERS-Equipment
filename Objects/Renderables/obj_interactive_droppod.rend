@@ -1,11 +1,16 @@
 {
    "lodList" : [
       {
+         "animationList" : [
+            {
+               "file" : "$CONTENT_DATA/Objects/Mesh/parts/obj_interactive_droppod.fbx",
+               "name" : "unfold"
+            }
+         ],
          "mesh" : "$CONTENT_DATA/Objects/Mesh/parts/obj_interactive_droppod.fbx",
-         "pose0" : "$CONTENT_DATA/Objects/Mesh/parts/obj_interactive_droppod_pose0.fbx",
          "subMeshList" : [
             {
-               "material" : "PoseAnimDifAsgNor",
+               "material" : "SkelAnimDifAsgNor",
                "textureList" : [
                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_dif.tga",
                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_asg.tga",

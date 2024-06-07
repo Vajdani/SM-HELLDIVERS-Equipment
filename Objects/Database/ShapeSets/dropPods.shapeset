@@ -1,0 +1,64 @@
+{
+	"partList": [
+		{
+			"color": "ff4d00",
+			"cylinder": {
+				"axis": "Y",
+				"depth": 4,
+				"diameter": 2
+			},
+			"name": "obj_interactive_droppod_collision",
+			"physicsMaterial": "Metal",
+			"renderable": "$SURVIVAL_DATA/Character/Char_Male/char_male_empty.rend",
+			"restrictions": {
+				"buildable": true,
+				"connectable": true,
+				"convertibleToDynamic": true,
+				"destructable": true,
+				"erasable": false,
+				"liftable": true,
+				"paintable": true,
+				"usable": true
+			},
+			"rotationSet": "PropY",
+			"scripted": {
+				"classname": "DropPod_collision",
+				"data": {},
+				"filename": "$CONTENT_DATA/Scripts/DropPod.lua"
+			},
+			"showInInventory": true,
+			"sticky": "-Y",
+			"uuid": "70cc47b6-429b-482f-bf83-765da7a1a3db"
+		},
+		{
+			"cylinder": {
+				"axis": "Y",
+				"depth": 1,
+				"diameter": 4
+			},
+			"color": "ff4d00",
+			"name": "obj_interactive_droppod",
+			"physicsMaterial": "Metal",
+			"renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_droppod.rend",
+			"restrictions": {
+				"buildable": true,
+				"connectable": true,
+				"convertibleToDynamic": true,
+				"destructable": true,
+				"erasable": false,
+				"liftable": true,
+				"paintable": true,
+				"usable": true
+			},
+			"rotationSet": "PropY",
+			"scripted": {
+				"classname": "ResupplyPod",
+				"data": {},
+				"filename": "$CONTENT_DATA/Scripts/DropPod.lua"
+			},
+			"showInInventory": true,
+			"sticky": "-Y+Y",
+			"uuid": "b63d99e5-06e5-4397-bb3d-27c396124334"
+		}
+	]
+}

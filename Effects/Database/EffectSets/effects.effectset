@@ -21,5 +21,41 @@
 				"delay": 0.0
 			}
 		]
+	},
+	"DropPod - Land": {
+		"parameterList": {
+			"shakeRadius": 10.0,
+			"shakeStrength": 0.1
+		},
+		"effectList":
+		[
+			{
+				"type": "audio",
+				"name": "event:/char/npc/bots/enemies/farmbot/farmbot_takedamage",
+				"offset": { "x": 0.0, "y": 0.0, "z": 0.0 },
+				"delay": 0.0
+			},
+			{
+				"type": "audio",
+				"name": "event:/char/npc/bots/utility/refinery/refinery_unpack",
+				"offset": { "x": 0.0, "y": 0.0, "z": 0.0 },
+				"delay": 0.25
+			},
+			{
+				"delay": 0.0,
+				"duration": 0.40,
+				"name": "",
+				"offset": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"parameters": [
+					"shakeStrength",
+					"shakeRadius"
+				],
+				"type": "cameraShake"
+			}
+		]
 	}
 }
