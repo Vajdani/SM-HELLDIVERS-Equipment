@@ -169,9 +169,9 @@
             // HELLDIVER TORSO START
             {
                "female" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_chestplate.rend",
-               "femaleCode" : 2846173508,
+               "femaleCode" : 1822276308,
                "male" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_chestplate.rend",
-               "maleCode" : 2846173508,
+               "maleCode" : 1822276308,
                "projection" : [
                   -132.2363433837891,
                   132.1551513671875,
@@ -1132,9 +1132,9 @@
             // HELLDIVER LEGS START
             {
                "female" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_leggings.rend",
-               "femaleCode" : 2249883057,
+               "femaleCode" : 978754601,
                "male" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_leggings.rend",
-               "maleCode" : 2249883057,
+               "maleCode" : 978754601,
                "projection" : [
                   -179.0561981201172,
                   165.8750762939453,
