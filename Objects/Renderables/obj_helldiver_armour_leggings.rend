@@ -1,17 +1,17 @@
 {
-	"lodList": [
-		{
-			"mesh": "$CONTENT_DATA/Objects/Mesh/armour/obj_helldiver_armour_leggings.fbx",
-			"subMeshMap": {
-				"black": {
-					"material": "DifAsgNor",
-					"textureList": [
-						"$GAME_DATA/Textures/black.png",
-						"$GAME_DATA/Textures/Default/default_asg.tga",
-						"$GAME_DATA/Textures/Default/default_nor.tga"
-					]
-				}
-			}
-		}
-	]
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/armour/obj_helldiver_armour_leggings.fbx",
+         "subMeshMap" : {
+            "black" : {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_pants_dif.tga",
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_pants_asg.tga",
+                  "$CONTENT_DATA/Objects/Textures/armour/obj_outfit_helldiver_pants_nor.tga"
+               ]
+            }
+         }
+      }
+   ]
 }
