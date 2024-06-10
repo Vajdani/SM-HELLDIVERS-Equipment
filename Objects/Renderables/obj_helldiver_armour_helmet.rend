@@ -10,6 +10,14 @@
                   "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_hat_asg.tga",
                   "$CONTENT_DATA/Objects/Textures/armour/obj_outfit_helldiver_hat_nor.tga"
                ]
+            },
+            "visor" : {
+               "material" : "MatCap_AsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_glass_mcap.tga",
+                  "$CONTENT_DATA/Characters/Textures/char_outfit_helldiver_hat_asg.tga",
+                  "$CONTENT_DATA/Objects/Textures/armour/obj_outfit_helldiver_hat_nor.tga"
+               ]
             }
          }
       }
