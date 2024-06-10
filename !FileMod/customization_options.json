@@ -1863,9 +1863,9 @@
             {
                "allowHair" : false,
                "female" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_helmet.rend",
-               "femaleCode" : 1110932133,
+               "femaleCode" : 1773079987,
                "male" : "$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Characters/Renderable/char_helldiver_armour_helmet.rend",
-               "maleCode" : 1110932133,
+               "maleCode" : 1773079987,
                "projection" : [
                   -73.88831329345703,
                   57.92886352539063,
