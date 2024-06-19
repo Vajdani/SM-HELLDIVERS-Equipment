@@ -476,22 +476,22 @@ function UpdateStratagemHud()
                     local codeLength = #g_strataGemCode
                     local subCode = code:sub(1, codeLength)
                     if subCode == g_strataGemCode then
-                        for j = 1, math.min(#code, 8) do
+                        for j = 1, 8 do
                             local box = widget.."_codeDigit"..j
-                            gui:setImage(box, indexToArrow[code:sub(j, j)])
+                            gui:setImage(box, indexToArrow[code:sub(j, j)] or "$GAME_DATA/Textures/transparent.tga")
                             gui:setColor(box, j <= codeLength and col_bright or col_dark)
                         end
                     else
-                        for j = 1, math.min(#code, 8) do
+                        for j = 1, 8 do
                             local box = widget.."_codeDigit"..j
-                            gui:setImage(box, indexToArrow[code:sub(j, j)])
+                            gui:setImage(box, indexToArrow[code:sub(j, j)] or "$GAME_DATA/Textures/transparent.tga")
                             gui:setColor(box, col_dark)
                         end
                     end
                 else
-                    for j = 1, math.min(#code, 8) do
+                    for j = 1, 8 do
                         local box = widget.."_codeDigit"..j
-                        gui:setImage(box, indexToArrow[code:sub(j, j)])
+                        gui:setImage(box, indexToArrow[code:sub(j, j)] or "$GAME_DATA/Textures/transparent.tga")
                         gui:setColor(box, col_bright)
                     end
                 end

@@ -1,5 +1,10 @@
 sm.log.info("[HELLDIVERS] Override script loaded")
 
+local bounceShapes = {}
+for k, shape in pairs(sm.json.open("$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Database/ShapeSets/dropPods.shapeset").partList) do
+    bounceShapes[shape.uuid] = true
+end
+
 local projectile_stratagem = sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9")
 
 ---@param worldScript WorldClass
@@ -7,6 +12,18 @@ local function setupProjectiles(worldScript)
     local oldProjectile = worldScript.server_onProjectile
     function projectileHook(world, position, airTime, velocity, projectileName, shooter, damage, customData, normal, target, uuid)
         if uuid == projectile_stratagem then
+            local bounce = false
+            if type(target) == "Shape" then
+                bounce = bounceShapes[tostring(target.uuid)] == true
+            else
+                bounce = normal.z <= 0.5
+            end
+
+            if bounce then
+                sm.projectile.customProjectileAttack(customData, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, position, normal * 10, shooter )
+                return
+            end
+
             sm.event.sendToTool(sm.HELLDIVERSBACKEND, "OnStratagemHit",
                 {
                     position = position,
