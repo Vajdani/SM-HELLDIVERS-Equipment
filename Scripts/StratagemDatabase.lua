@@ -80,7 +80,14 @@ local stratagems =  {
             return self.tick >= 160
         end,
         tick = 0
-    }
+    },
+    {
+        uuid = "59a3c3e8-4c75-4f68-b550-22eed1b0ec53",
+        cooldown = 1,--160 * 40,
+        activation = 3 * 40, --12 * 40,
+        dropEffect = sm.uuid.new("a8d6cc6d-dec6-4ba4-ac78-cc6fe3130d9f"),
+        update = SpawnDropPod
+    },
 }
 
 local stratagemUUIDToIndex = {}
@@ -148,6 +155,23 @@ local stratagemUserdata = {
         icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
         type = "offensive",
         code = "24133",
+        cost = {
+            {
+                uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
+                amount = 5
+            },
+            {
+                uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
+                amount = 5
+            }
+        }
+    },
+    ["59a3c3e8-4c75-4f68-b550-22eed1b0ec53"] = {
+        name = "Heavy MachineGun",
+        description = "ratatatatatata",
+        icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
+        type = "defensive",
+        code = "44344",
         cost = {
             {
                 uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit

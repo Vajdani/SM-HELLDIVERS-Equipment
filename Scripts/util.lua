@@ -1,7 +1,7 @@
 STRATAGEMTYPETOCOLOUR = {
     supply    = sm.color.new(0,1,1),
     mission   = sm.color.new(1,1,0),
-    defensive = sm.color.new(0,1,0),
+    defensive = sm.color.new(0,0,1),
     offensive = sm.color.new(1,0,0),
 }
 
@@ -35,6 +35,16 @@ function CreateEffect(data)
     return effect
 end
 
+function FormatStratagemTimer( seconds )
+	local time = seconds / DAYCYCLE_TIME
+	local minute = ( time * 24 ) % 24
+	local second = ( minute % 1 ) * 60
+	local minute1 = math.floor( minute / 10 )
+	local minute2 = math.floor( minute - minute1 * 10 )
+	local second1 = math.floor( second / 10 )
+	local second2 = math.floor( second - second1 * 10 )
+	return minute1..minute2..":"..second1..second2
+end
 
 
 dofile "StratagemDatabase.lua"

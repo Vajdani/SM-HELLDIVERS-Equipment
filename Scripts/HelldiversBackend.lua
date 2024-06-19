@@ -232,7 +232,7 @@ function HelldiversBackend:client_onFixedUpdate()
     for k, v in pairs(g_cl_queuedStratagems) do
         v.activation = v.activation - 1
         if v.activation >= 0 then
-            v.gui:setText("Text", ("Inbound T-%.0fs"):format(v.activation/40))
+            v.gui:setText("Text", ("Inbound T-%s"):format(FormatStratagemTimer(v.activation/40)))
         else
             v.gui:setText("Text", "Ongoing...")
         end

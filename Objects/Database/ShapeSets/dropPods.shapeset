@@ -37,7 +37,7 @@
 				"diameter": 4
 			},
 			"color": "ff4d00",
-			"name": "obj_interactive_droppod",
+			"name": "obj_interactive_droppod_resupply",
 			"physicsMaterial": "Metal",
 			"renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_droppod.rend",
 			"restrictions": {
@@ -59,6 +59,36 @@
 			"showInInventory": true,
 			"sticky": "-Y+Y",
 			"uuid": "b63d99e5-06e5-4397-bb3d-27c396124334"
+		},
+		{
+			"cylinder": {
+				"axis": "Y",
+				"depth": 1,
+				"diameter": 4
+			},
+			"color": "ff4d00",
+			"name": "obj_interactive_droppod_hmg",
+			"physicsMaterial": "Metal",
+			"renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_droppod.rend",
+			"restrictions": {
+				"buildable": true,
+				"connectable": true,
+				"convertibleToDynamic": true,
+				"destructable": true,
+				"erasable": false,
+				"liftable": true,
+				"paintable": true,
+				"usable": true
+			},
+			"rotationSet": "PropY",
+			"scripted": {
+				"classname": "HMG",
+				"data": {},
+				"filename": "$CONTENT_DATA/Scripts/DropPod.lua"
+			},
+			"showInInventory": true,
+			"sticky": "-Y+Y",
+			"uuid": "a8d6cc6d-dec6-4ba4-ac78-cc6fe3130d9f"
 		}
 	]
 }

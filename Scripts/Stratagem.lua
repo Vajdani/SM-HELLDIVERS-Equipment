@@ -77,13 +77,20 @@ function Stratagem:client_onCreate()
 
     if not self.isLocal then return end
 
-    self.activated = false
+    g_stratagemActivated = false
     self.pendingThrow = false
 
     self.pData = {}
     if sm.json.fileExists(PLAYERDATAPATH) then
         self.pData = sm.json.open(PLAYERDATAPATH)
     end
+end
+
+function Stratagem:client_onDestroy()
+    if not self.isLocal then return end
+
+    g_stratagemHud.gui:destroy()
+    g_stratagemHud = nil
 end
 
 function Stratagem.loadAnimations( self )
@@ -166,8 +173,8 @@ function Stratagem.client_onUpdate( self, dt )
                     }
                 )
 
-                self.activated = false
                 self.pendingThrow = false
+                g_stratagemActivated = false
                 g_strataGemCode = nil
                 self.stratagemUserdata = nil
             end
@@ -359,10 +366,19 @@ function Stratagem:client_onEquip()
             sm.json.save(self.pData, PLAYERDATAPATH)
         end
 
-        g_stratagemHud = {
-            gui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/StratagemHud.layout", false, { isHud = true, isInteractive = false, needsCursor = false }),
-            progressbars = {}
-        }
+        if not g_stratagemHud then
+            g_stratagemHud = {
+                gui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/StratagemHud.layout", false, { isHud = true, isInteractive = false, needsCursor = false }),
+                progressbars = {}
+            }
+
+            for i = 1, STRATAGEMINVENTORYSIZE do
+                g_stratagemHud.progressbars[i] = ProgressBar():init(g_stratagemHud.gui, "stratagem"..i.."_cooldown", "$CONTENT_DATA/Gui/StratagemCooldown", 100)
+            end
+        end
+
+        UpdateStratagemHud()
+        g_stratagemHud.gui:open()
 	end
 end
 
@@ -385,7 +401,7 @@ function Stratagem.client_onUnequip( self )
                 self.tutorialGui:close()
             end
 
-            self.activated = false
+            g_stratagemActivated = false
             g_strataGemCode = nil
             self.stratagemUserdata = nil
             self.pendingThrow = false
@@ -409,40 +425,45 @@ function UpdateStratagemHud()
     local tick = sm.game.getServerTick()
     local id = sm.localPlayer.getPlayer().id.."_"
     local gui = g_stratagemHud.gui
+    local open = g_stratagemHud.isOpen
     for i = 1, STRATAGEMINVENTORYSIZE do
         local uuid = progression[i]
         local widget = "stratagem"..i
-        gui:setVisible(widget, uuid ~= nil)
 
         if uuid then
             local stratagem = GetStratagemUserdata(uuid)
+            local isActive = g_stratagemActivated and stratagem.code == g_strataGemCode
+            gui:setVisible(widget, open or isActive)
+
             gui:setText(widget.."_name", stratagem.name)
             gui:setIconImage(widget.."_preview", sm.uuid.new(stratagem.icon))
             gui:setText(widget.."_charges", tostring(GetClStratagemProgression(uuid).charges))
+
+            if isActive then
+                gui:setText(widget.."_status", "Activating...")
+                gui:setVisible(widget.."_codePanel", false)
+
+                goto continue
+            end
 
             local stratagemInbound = g_cl_queuedStratagems[id..uuid]
             if stratagemInbound then
                 local time = stratagemInbound.activation/40
                 if time > 0 then
-                    gui:setText(widget.."_status", ("Inbound T-%.0fs"):format(time))
+                    gui:setText(widget.."_status", ("Inbound T-%s"):format(FormatStratagemTimer(time)))
                 else
                     gui:setText(widget.."_status", "Ongoing...")
                 end
             end
 
             local bar = g_stratagemHud.progressbars[i]
-            if not bar then
-                bar = ProgressBar():init(gui, widget.."_cooldown", "$CONTENT_DATA/Gui/StratagemCooldown", 100)
-                g_stratagemHud.progressbars[i] = bar
-            end
-
             local stratagemCooldown = g_cl_cooldowns[uuid] or 0
             local isOnCooldown = stratagemCooldown > tick
             gui:setVisible(widget.."_codePanel", not isOnCooldown)
             if isOnCooldown then
                 local seconds = (stratagemCooldown - tick)/40
                 if not stratagemInbound then
-                    gui:setText(widget.."_status", ("Cooldown T-%.0fs"):format(seconds))
+                    gui:setText(widget.."_status", ("Cooldown T-%s"):format(FormatStratagemTimer(seconds)))
                 end
 
                 bar:update_percentage(1 - seconds/(GetStratagemByUUUID(uuid).cooldown/40))
@@ -475,7 +496,10 @@ function UpdateStratagemHud()
                     end
                 end
             end
+        else
+            gui:setVisible(widget, false)
         end
+        ::continue::
     end
 end
 
@@ -489,7 +513,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
         return true, false
     end
 
-    if self.activated then
+    if g_stratagemActivated then
         if self.pendingThrow then return true, true end
 
         if lmb == 1 then
@@ -500,9 +524,10 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
         sm.gui.setInteractionText("", sm.gui.getKeyBinding("Attack", true), "Cancel")
 
         if rmb == 1 and not self.pendingThrow then
-            self.activated = false
+            g_stratagemActivated = false
             g_strataGemCode = nil
             self.stratagemUserdata = nil
+            UpdateStratagemHud()
         end
 
         return true, true
@@ -512,33 +537,37 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
                 sm.gui.displayAlertText("Your loadout is empty!")
             end
 
+            g_stratagemHud.isOpen = true
             UpdateStratagemHud()
-            g_stratagemHud.gui:open()
+            --g_stratagemHud.gui:open()
             self.network:sendToServer("sv_prime")
         elseif lmb == 3 then
-            g_stratagemHud.gui:close()
+            g_stratagemHud.isOpen = false
+            --g_stratagemHud.gui:close()
             self.network:sendToServer("sv_cancel")
 
-            if not g_strataGemCode then return true, false end
+            if g_strataGemCode then
+                local stratagems = {}
+                local tick = sm.game.getServerTick()
+                for k, v in pairs(GetStratagems()) do
+                    local uuid = v.uuid
+                    if isAnyOf(uuid, g_cl_loadout) and GetClStratagemProgression(uuid).charges > 0 and (g_cl_cooldowns[uuid] or tick) <= tick then
+                        table.insert(stratagems, v)
+                    end
+                end
 
-            local stratagems = {}
-            local tick = sm.game.getServerTick()
-            for k, v in pairs(GetStratagems()) do
-                local uuid = v.uuid
-                if isAnyOf(uuid, g_cl_loadout) and GetClStratagemProgression(uuid).charges > 0 and (g_cl_cooldowns[uuid] or tick) <= tick then
-                    table.insert(stratagems, v)
+                local stratagem = GetStratagem(g_strataGemCode, stratagems)
+                if stratagem then
+                    g_stratagemActivated = true
+                    self.stratagemUserdata = GetStratagemUserdata(GetStratagem(g_strataGemCode).uuid)
+                    sm.effect.playHostedEffect("Stratagem - Armed", self.tool:getOwner().character)
+                else
+                    sm.audio.play("RaftShark")
+                    g_strataGemCode = nil
                 end
             end
 
-            local stratagem = GetStratagem(g_strataGemCode, stratagems)
-            if stratagem then
-                self.activated = true
-                self.stratagemUserdata = GetStratagemUserdata(GetStratagem(g_strataGemCode).uuid)
-                sm.effect.playHostedEffect("Stratagem - Armed", self.tool:getOwner().character)
-            else
-                sm.audio.play("RaftShark")
-                g_strataGemCode = nil
-            end
+            UpdateStratagemHud()
         else
             sm.gui.setInteractionText(sm.gui.getKeyBinding("Create", true).."Call", "")
         end

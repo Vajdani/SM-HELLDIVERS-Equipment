@@ -65,6 +65,7 @@ end
 dofile = dofileHook
 
 
+
 dofile "$GAME_DATA/Scripts/game/interactable/Package.lua"
 function Package.sv_tryUnpack( self, delete )
     if not self.destroyed and self.shape.body.destructable then
