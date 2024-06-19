@@ -12,17 +12,17 @@
             {
                "material" : "SkelAnimDifAsgNor",
                "textureList" : [
-                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_dif.tga",
+                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_droppod_dif.tga",
                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_asg.tga",
-                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_nor.tga"
+                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_droppod_nor.tga"
                ]
             },
             {
                "material" : "SkelAnimDifAsgNor",
                "textureList" : [
-                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_dif.tga",
+                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_supplypod_dif.tga",
                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_asg.tga",
-                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_nor.tga"
+                  "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_supplypod_nor.tga"
                ]
             }
          ]
