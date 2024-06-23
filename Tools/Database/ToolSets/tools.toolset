@@ -8,7 +8,7 @@
          "script" : {
             "class" : "HelldiversBackend",
             "data" : {},
-            "file" : "$CONTENT_DATA/Scripts/HelldiversBackend.lua"
+            "file" : "$CONTENT_DATA/Scripts/tools/HelldiversBackend.lua"
          },
          "uuid" : "9266ebb2-2954-4466-9832-8075ae0eb10c"
       },
@@ -19,9 +19,20 @@
          "script" : {
             "class" : "Stratagem",
             "data" : {},
-            "file" : "$CONTENT_DATA/Scripts/Stratagem.lua"
+            "file" : "$CONTENT_DATA/Scripts/tools/Stratagem.lua"
          },
          "uuid" : "e3b77d7e-05b6-493c-b6c3-a264f342519a"
-      }
+      },
+      {
+			"uuid": "552b4ced-ca96-4a71-891c-ab54fe9c6873",
+         "name": "Heavy Machine Gun",
+			"previewRenderable": "$GAME_DATA/Character/Char_Tools/char_spudgun_spinner_preview.rend",
+			"previewRotation": [ 1, 0, 0, 0, 0, -1, 0, 1, 0 ],
+			"script": { 
+            "file": "$CONTENT_DATA/Scripts/tools/HMG.lua",
+            "data" : {},
+            "class": "HMG"
+         }
+		}
    ]
 }

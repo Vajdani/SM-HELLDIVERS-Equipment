@@ -1,0 +1,20 @@
+{
+	"partList": [
+		{
+			"uuid": "d48e6383-200a-4aa8-9901-47fdf7969ad9",
+			"name": "obj_tool_hmg",
+			"renderable": "$GAME_DATA/Character/Char_Tools/char_spudgun_spinner_preview.rend",
+			"color": "ffffff",
+			"box": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"physicsMaterial": "Plastic",
+			"rotationSet": "Default",
+			"ratings": {},
+			"stackSize": 1,
+			"showInInventory": false
+		}
+	]
+}

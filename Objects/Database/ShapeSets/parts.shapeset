@@ -28,7 +28,7 @@
 				"z": 1
 			},
 			"scripted": {
-				"filename": "$CONTENT_DATA/Scripts/Stratagem.lua",
+				"filename": "$CONTENT_DATA/Scripts/tools/Stratagem.lua",
 				"classname": "Input",
 				"data": {}
 			},
@@ -37,7 +37,7 @@
 		},
 		{
 			"scripted": {
-				"filename": "$CONTENT_DATA/Scripts/StratagemTerminal.lua",
+				"filename": "$CONTENT_DATA/Scripts/interactables/StratagemTerminal.lua",
 				"classname": "StratagemTerminal",
 				"data": {}
 			},

@@ -290,15 +290,15 @@ ResupplyPod.pickupRegions = {
 
 
 
-HMG = class(DropPod)
-HMG.pickupRegions = {
+HMGPod = class(DropPod)
+HMGPod.pickupRegions = {
     {
         hitbox = {
             offset = sm.vec3.new(0, 0.624984, 0.214221),
             size   = sm.vec3.new(0.2, 0.45, 0.2),
         },
         effect = {
-            name     = sm.uuid.new( "b633c3ee-2cda-4096-989a-60e90cd220aa" ),
+            name     = sm.uuid.new( "d48e6383-200a-4aa8-9901-47fdf7969ad9" ),
             size     = sm.vec3.one() * 0.9,
             offset   = sm.vec3.new(0.15, 0.27, 0.0625),
             rotation = sm.quat.angleAxis(math.rad(90), vec3_right) * sm.quat.angleAxis(math.rad(90), vec3_up)
@@ -306,7 +306,7 @@ HMG.pickupRegions = {
         bone   = "jnt_right_middle",
         items  = {
             {
-                uuid = sm.uuid.new( "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b" ), --gatling
+                uuid = sm.uuid.new( "552b4ced-ca96-4a71-891c-ab54fe9c6873" ),
                 amount = 1
             }
         }

@@ -1,10 +1,8 @@
-dofile "util.lua"
+dofile "$CONTENT_DATA/Scripts/util.lua"
 
 gameHooked = gameHooked or false
 local function attemptHook()
     if not gameHooked then
-        dofile("$SURVIVAL_DATA/Scripts/game/worlds/Overworld.lua")
-        dofile("$SURVIVAL_DATA/Scripts/game/worlds/WarehouseWorld.lua")
         dofile("$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Scripts/vanilla_override.lua")
         gameHooked = true
     end
@@ -151,8 +149,45 @@ function HelldiversBackend:server_onFixedUpdate()
     end
 end
 
+function HelldiversBackend:OnStratagemThrow(args)
+    local player, stratagem = args.player, GetStratagem(args.code)
+    local pId, uuid = player.id, stratagem.uuid
+
+    if sm.game.getLimitedInventory() and GetSvStratagemProgression(player, uuid).charges == 0 then
+        return
+    end
+
+    if not self.cooldownsPerPlayer[pId] then
+        self.cooldownsPerPlayer[pId] = {}
+    end
+
+    local tick = sm.game.getServerTick()
+    if (self.cooldownsPerPlayer[pId][uuid] or tick) > tick then return end
+
+    sm.projectile.customProjectileAttack({ code = args.code, bouncesLeft = STRATAGEMMAXBOUNCEOUNT }, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, args.pos, player.character.direction * 35, player )
+
+    self:sv_save()
+    self:sv_requestData(nil, player)
+end
+
 function HelldiversBackend:OnStratagemHit(args)
     local stratagem = shallowcopy(GetStratagem(args.data.code))
+    local player = args.shooter
+    local pId, uuid = player.id, stratagem.uuid
+    local id = ("%s_%s"):format(pId, uuid)
+
+    local tick = sm.game.getServerTick()
+    if self.queuedStratagems[id] or (self.cooldownsPerPlayer[pId][uuid] or tick) > tick then
+        return
+    end
+
+    if sm.game.getLimitedInventory() then
+        local progression = GetSvStratagemProgression(player, uuid)
+        progression.charges = progression.charges - 1
+        g_sv_stratagemProgression[pId][uuid] = progression
+    end
+
+    self.cooldownsPerPlayer[pId][uuid] = sm.game.getServerTick() + stratagem.cooldown
 
     args.data = nil
     stratagem.hitData = args
@@ -161,7 +196,6 @@ function HelldiversBackend:OnStratagemHit(args)
         stratagem.dropStartTime = math.min(stratagem.activation, 3 * 40)
     end
 
-    local id = ("%s_%s"):format(args.shooter.id, stratagem.uuid)
     self.queuedStratagems[id] = stratagem
 
     self.network:sendToClients("cl_OnStratagemHit",
@@ -172,6 +206,9 @@ function HelldiversBackend:OnStratagemHit(args)
             dropEffect = stratagem.dropEffect
         }
     )
+
+    self:sv_save()
+    self:sv_requestData(nil, player)
 end
 
 function HelldiversBackend:sv_save()
@@ -253,33 +290,6 @@ function HelldiversBackend:client_onUpdate(dt)
             v.pod:setPosition(sm.vec3.lerp(pos + dropPodStartHeight, pos, v.dropTime))
         end
     end
-end
-
-function HelldiversBackend:OnStratagemThrow(args)
-    local player, stratagem = args.player, GetStratagem(args.code)
-    local pId, uuid = player.id, stratagem.uuid
-
-    if not self.cooldownsPerPlayer[pId] then
-        self.cooldownsPerPlayer[pId] = {}
-    end
-
-    local tick = sm.game.getServerTick()
-    if (self.cooldownsPerPlayer[pId][uuid] or tick) > tick then return end
-
-    self.cooldownsPerPlayer[pId][uuid] = tick + stratagem.cooldown
-
-    if sm.game.getLimitedInventory() then
-        local progression = GetSvStratagemProgression(player, uuid)
-        if progression.charges == 0 then return end
-
-        progression.charges = progression.charges - 1
-        g_sv_stratagemProgression[pId][uuid] = progression
-    end
-
-    sm.projectile.customProjectileAttack({ code = args.code }, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, args.pos, player.character.direction * 35, player )
-
-    self:sv_save()
-    self:sv_requestData(nil, player)
 end
 
 function HelldiversBackend:cl_OnStratagemHit(args)

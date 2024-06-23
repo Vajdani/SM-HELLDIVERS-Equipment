@@ -24,9 +24,9 @@
 			"scripted": {
 				"classname": "DropPod_collision",
 				"data": {},
-				"filename": "$CONTENT_DATA/Scripts/DropPod.lua"
+				"filename": "$CONTENT_DATA/Scripts/interactables/DropPod.lua"
 			},
-			"showInInventory": true,
+			"showInInventory": false,
 			"sticky": "-Y",
 			"uuid": "70cc47b6-429b-482f-bf83-765da7a1a3db"
 		},
@@ -54,7 +54,7 @@
 			"scripted": {
 				"classname": "ResupplyPod",
 				"data": {},
-				"filename": "$CONTENT_DATA/Scripts/DropPod.lua"
+				"filename": "$CONTENT_DATA/Scripts/interactables/DropPod.lua"
 			},
 			"showInInventory": true,
 			"sticky": "-Y+Y",
@@ -82,9 +82,9 @@
 			},
 			"rotationSet": "PropY",
 			"scripted": {
-				"classname": "HMG",
+				"classname": "HMGPod",
 				"data": {},
-				"filename": "$CONTENT_DATA/Scripts/DropPod.lua"
+				"filename": "$CONTENT_DATA/Scripts/interactables/DropPod.lua"
 			},
 			"showInInventory": true,
 			"sticky": "-Y+Y",

@@ -1,7 +1,12 @@
 dofile "$GAME_DATA/Scripts/game/AnimationUtil.lua"
 dofile "$SURVIVAL_DATA/Scripts/util.lua"
 dofile "$SURVIVAL_DATA/Scripts/game/survival_shapes.lua"
-dofile "ProgressBar.lua"
+dofile "$CONTENT_DATA/Scripts/ProgressBar.lua"
+
+---@class StratagemHUD
+---@field gui GuiInterface
+---@field isOpen boolean
+---@field progressbars ProgressBar[]
 
 ---@class Stratagem : ToolClass
 ---@field fpAnimations table
@@ -84,9 +89,9 @@ function Stratagem:client_onCreate()
     g_stratagemActivated = false
     self.pendingThrow = false
 
-    self.pData = {}
+    g_playerData = { hasPlayedTutorial = false, controlScheme = 1 }
     if sm.json.fileExists(PLAYERDATAPATH) then
-        self.pData = sm.json.open(PLAYERDATAPATH)
+        g_playerData = sm.json.open(PLAYERDATAPATH)
     end
 end
 
@@ -348,7 +353,7 @@ function Stratagem:client_onEquip()
 	if self.isLocal then
 		swapFpAnimation( self.fpAnimations, "unequip", "equip", 0.2 )
 
-        if not self.pData.hasPlayedTutorial then
+        if not g_playerData.hasPlayedTutorial then
             self.tutorialGui = sm.gui.createGuiFromLayout( "$GAME_DATA/Gui/Layouts/Tutorial/PopUp_Tutorial.layout", true, { isHud = true, isInteractive = false, needsCursor = false } )
             self.tutorialGui:setText( "TextTitle", "HOW TO USE STRATAGEMS" )
             self.tutorialGui:setText( "TextMessage",
@@ -367,14 +372,16 @@ function Stratagem:client_onEquip()
             self.tutorialGui:setImage( "ImageTutorial", "gui_tutorial_image_hunger.png" )
             self.tutorialGui:open()
 
-            self.pData = { hasPlayedTutorial = true }
-            sm.json.save(self.pData, PLAYERDATAPATH)
+            g_playerData.hasPlayedTutorial = true
+            sm.json.save(g_playerData, PLAYERDATAPATH)
         end
 
         if not g_stratagemHud then
+            ---@type StratagemHUD
             g_stratagemHud = {
                 gui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/StratagemHud.layout", false, { isHud = true, isInteractive = false, needsCursor = false }),
-                progressbars = {}
+                progressbars = {},
+                isOpen = false
             }
 
             for i = 1, STRATAGEMINVENTORYSIZE do
@@ -411,7 +418,10 @@ function Stratagem.client_onUnequip( self )
             self.stratagemUserdata = nil
             self.pendingThrow = false
 
+            g_stratagemHud.isOpen = false
             g_stratagemHud.gui:close()
+
+            self.network:sendToServer("sv_cancel")
 		end
 	end
 end
@@ -518,6 +528,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
         if self.pendingThrow then return true, true end
 
         if lmb == 1 then
+            self.pendingThrow = true
             self.network:sendToServer("sv_throwAnim")
         end
 
@@ -626,16 +637,40 @@ end
 Input = class()
 
 local blockActions = {
-    [1] = true,
-    [2] = true,
-    [3] = true,
-    [4] = true
+    [1] = {
+        [1] = true,
+        [2] = true,
+        [3] = true,
+        [4] = true
+    },
+    [2] = {
+        [5] = true,
+        [6] = true,
+        [7] = true,
+        [8] = true
+    }
+}
+
+local convertInputs = {
+    [1] = "1",
+    [2] = "2",
+    [3] = "3",
+    [4] = "4",
+    [5] = "1",
+    [6] = "2",
+    [7] = "3",
+    [8] = "4"
 }
 
 function Input:client_onAction(action, state)
-    local isBlocked = blockActions[action] == true and state
+    if g_stratagemActivated then
+        sm.log.warning("[HELLDIVERS] Blocked invalid stratagem input")
+        return false
+    end
+
+    local isBlocked = blockActions[g_playerData.controlScheme][action] == true and state
     if isBlocked then
-        g_strataGemCode = (g_strataGemCode or "")..action
+        g_strataGemCode = (g_strataGemCode or "")..convertInputs[action]
         UpdateStratagemHud()
         sm.audio.play("PaintTool - ColorPick")
     end

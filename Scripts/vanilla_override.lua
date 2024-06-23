@@ -1,5 +1,47 @@
 sm.log.info("[HELLDIVERS] Override script loaded")
 
+local ToolItems = {
+	["552b4ced-ca96-4a71-891c-ab54fe9c6873"] = sm.uuid.new("d48e6383-200a-4aa8-9901-47fdf7969ad9"), --HMG
+}
+
+oldGetToolProxyItem = oldGetToolProxyItem or GetToolProxyItem
+local function getToolProxyItemHook( toolUuid )
+	local item = oldGetToolProxyItem( toolUuid )
+	if not item then
+		item = ToolItems[tostring( toolUuid )]
+	end
+
+	return item
+end
+GetToolProxyItem = getToolProxyItemHook
+
+if _GetToolProxyItem then
+	oldGetToolProxyItem2 = oldGetToolProxyItem2 or _GetToolProxyItem
+	local function getToolProxyItemHook2( toolUuid )
+		local item = oldGetToolProxyItem2( toolUuid )
+		if not item then
+			item = ToolItems[tostring( toolUuid )]
+		end
+
+		return item
+	end
+	_GetToolProxyItem = getToolProxyItemHook2
+end
+
+if FantGetToolProxyItem then
+	oldGetToolProxyItem3 = oldGetToolProxyItem3 or FantGetToolProxyItem
+	local function getToolProxyItemHook3( toolUuid )
+		local item = oldGetToolProxyItem3( toolUuid )
+		if not item then
+			item = ToolItems[tostring( toolUuid )]
+		end
+
+		return item
+	end
+	FantGetToolProxyItem = getToolProxyItemHook3
+end
+
+
 local bounceShapes = {}
 for k, shape in pairs(sm.json.open("$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7d/Objects/Database/ShapeSets/dropPods.shapeset").partList) do
     bounceShapes[shape.uuid] = true
@@ -9,18 +51,27 @@ local projectile_stratagem = sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9")
 
 ---@param worldScript WorldClass
 local function setupProjectiles(worldScript)
+    if worldScript.PROJECTILESETUPCOMPLETE then return end
+
     local oldProjectile = worldScript.server_onProjectile
     function projectileHook(world, position, airTime, velocity, projectileName, shooter, damage, customData, normal, target, uuid)
         if uuid == projectile_stratagem then
             local bounce = false
-            if type(target) == "Shape" then
+            local type = type(target)
+            if type == "Shape" and sm.exists(target) then
                 bounce = bounceShapes[tostring(target.uuid)] == true
+            elseif type == "Character" then
+                bounce = true
             else
                 bounce = normal.z <= 0.5
             end
 
             if bounce then
-                sm.projectile.customProjectileAttack(customData, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, position, normal * 10, shooter )
+                if customData.bouncesLeft > 0 then
+                    customData.bouncesLeft = customData.bouncesLeft - 1
+                    sm.projectile.customProjectileAttack(customData, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, position, normal * 10, shooter )
+                end
+
                 return
             end
 
@@ -37,6 +88,7 @@ local function setupProjectiles(worldScript)
         return oldProjectile(world, position, airTime, velocity, projectileName, shooter, damage, customData, normal, target, uuid)
     end
     worldScript.server_onProjectile = projectileHook
+    worldScript.PROJECTILESETUPCOMPLETE = true
 end
 
 
@@ -45,16 +97,10 @@ for k, obj in pairs(_G) do
         if obj.cellMaxX and not obj.PROJECTILESETUPCOMPLETE then
             sm.log.info("[HELLDIVERS] Hooking projectile function...")
             setupProjectiles(obj)
-            obj.PROJECTILESETUPCOMPLETE = true
         elseif obj.server_onUnitUpdate then
             sm.log.info("[HELLDIVERS] Adding external takeDamage to unit...")
             obj.sv_e_takeDamage = function(obj, args)
                 obj:sv_takeDamage(args.damage or 0, args.impact or sm.vec3.zero(), args.hitPos or obj.unit.character.worldPosition)
-            end
-        elseif obj.server_onShapeRemoved then
-            sm.log.info("[HELLDIVERS] Adding external takeDamage to player...")
-            obj.sv_e_takeDamage = function(obj, args)
-                obj:sv_takeDamage(args.damage or 0, args.source or "impact")
             end
         end
     end
@@ -62,20 +108,24 @@ end
 
 
 
-local playerPaths = {
-    ["$GAME_DATA/Scripts/game/CreativePlayer.lua"] = "CreativePlayer",
-    ["$SURVIVAL_DATA/Scripts/game/SurvivalPlayer.lua"] = "SurvivalPlayer",
-    ["$CONTENT_DATA/Scripts/Player.lua"] = "Player",
+local hooks = {
+    ["BasePlayer"] = function(class)
+        class.sv_e_takeDamage = function(self, args)
+            self:sv_takeDamage(args.damage or 0, args.source or "impact")
+        end
+    end,
+    ["BaseWorld"] = setupProjectiles,
+    ["CreativeBaseWorld"] = setupProjectiles,
 }
 oldDofile = oldDofile or dofile
 local function dofileHook(path)
     oldDofile(path)
 
-    local class = playerPaths[path]
-    if class then
-        sm.log.warning("[HELLDIVERS] Adding external takeDamage to player...")
-        _G[class].sv_e_takeDamage = function(self, args)
-            self:sv_takeDamage(args.damage or 0, args.source or "impact")
+    for k, v in pairs(hooks) do
+        if path:find(k) then
+            sm.log.info("[HELLDIVERS] Adding hook to", path)
+            v(_G[k])
+            break
         end
     end
 end
