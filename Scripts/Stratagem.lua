@@ -14,7 +14,7 @@ dofile "ProgressBar.lua"
 Stratagem = class()
 
 local renderables = {
-    "$CONTENT_DATA/Tools/Renderables/char_stratagem.rend"
+    "$CONTENT_DATA/Tools/Stratagem/char_stratagem.rend"
 }
 local renderablesTp = {
     "$SURVIVAL_DATA/Character/Char_Male/Animations/char_male_tp_eattool.rend",
@@ -68,6 +68,10 @@ end
 
 function Stratagem:sv_saveLoadout(loadout, caller)
     sm.event.sendToTool(sm.HELLDIVERSBACKEND, "sv_setLoadout", { player = caller, loadout = loadout })
+end
+
+function Stratagem:sv_updateStratagemColour(type)
+    self.network:sendToClients("cl_updateStratagemColour", type)
 end
 
 
@@ -177,6 +181,7 @@ function Stratagem.client_onUpdate( self, dt )
                 g_stratagemActivated = false
                 g_strataGemCode = nil
                 self.stratagemUserdata = nil
+                self:cl_updateStratagemColour()
             end
         end
 	end
@@ -504,10 +509,6 @@ function UpdateStratagemHud()
 end
 
 function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
-    if f then
-        return false, false
-    end
-
     if sm.world.getCurrentWorld():isIndoor() then
         sm.gui.setInteractionText("<p bg='gui_keybinds_bg' spacing='0'>Stratagems are disabled indoors!</p>")
         return true, false
@@ -527,6 +528,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             g_stratagemActivated = false
             g_strataGemCode = nil
             self.stratagemUserdata = nil
+            self.network:sendToServer("sv_updateStratagemColour")
             UpdateStratagemHud()
         end
 
@@ -560,7 +562,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
                 if stratagem then
                     g_stratagemActivated = true
                     self.stratagemUserdata = GetStratagemUserdata(GetStratagem(g_strataGemCode).uuid)
-                    sm.effect.playHostedEffect("Stratagem - Armed", self.tool:getOwner().character)
+                    self.network:sendToServer("sv_updateStratagemColour", self.stratagemUserdata.type)
                 else
                     sm.audio.play("RaftShark")
                     g_strataGemCode = nil
@@ -603,6 +605,19 @@ function Stratagem:cl_throwAnim()
     self.tpAnimations.animations.use.time = 0.6
 
     sm.audio.play("Sledgehammer - Swing", self.tool:getPosition())
+end
+
+function Stratagem:cl_updateStratagemColour(type)
+    local col = sm.color.new("ffffff")
+    if type then
+        sm.effect.playHostedEffect("Stratagem - Armed", self.tool:getOwner().character)
+        col = STRATAGEMTYPETOCOLOUR[type]
+    end
+
+    self.tool:setTpColor(col)
+    if self.isLocal then
+        self.tool:setFpColor(col)
+    end
 end
 
 

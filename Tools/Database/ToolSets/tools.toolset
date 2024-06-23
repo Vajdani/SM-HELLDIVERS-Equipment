@@ -13,9 +13,8 @@
          "uuid" : "9266ebb2-2954-4466-9832-8075ae0eb10c"
       },
       {
-         "autoTool" : true,
          "name" : "Stratagem",
-         "previewRenderable" : "$GAME_DATA/Character/Char_Tools/char_connecttool_preview.rend",
+         "previewRenderable" : "$CONTENT_DATA/Objects/Renderables/obj_interactive_stratagem.rend",
          "previewRotation" : [ 1, 0, 0, 0, 0, -1, 0, 1, 0 ],
          "script" : {
             "class" : "Stratagem",

@@ -1,18 +1,6 @@
 {
 	"partList": [
 		{
-			"autoTool": "e3b77d7e-05b6-493c-b6c3-a264f342519a",
-			"name": "obj_interactive_stratagem",
-			"physicsMaterial": "Metal",
-			"renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_stratagem.rend",
-			"rotationSet": "Default",
-			"sphere": {
-				"diameter": 2
-			},
-			"uuid": "265b7242-6bfb-438c-8da5-534f5fa722e5",
-			"color": "ff4d00"
-		},
-		{
 			"uuid": "09a84352-04b2-47d1-9346-15ae4f768d03",
 			"name": "obj_interactive_stratagem_input",
 			"renderable": {
