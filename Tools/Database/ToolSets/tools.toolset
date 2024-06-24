@@ -33,6 +33,17 @@
             "data" : {},
             "class": "HMG"
          }
+		},
+      {
+			"uuid": "b3ad837a-2235-476e-9408-4b5321b1032f",
+         "name": "AutoCannon",
+			"previewRenderable": "$CONTENT_DATA/Tools/AutoCannon/char_autocannon.rend",
+			"previewRotation": [ 1, 0, 0, 0, 0, -1, 0, 1, 0 ],
+			"script": { 
+            "file": "$CONTENT_DATA/Scripts/tools/AutoCannon.lua",
+            "data" : {},
+            "class": "AutoCannon"
+         }
 		}
    ]
 }
