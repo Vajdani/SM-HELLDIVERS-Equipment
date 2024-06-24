@@ -96,6 +96,37 @@ function HelldiversBackend:server_onCreate()
     g_sv_stratagemProgression = storage.progression or {}
     self.loadouts = storage.loadouts or {}
     self.cooldownsPerPlayer = storage.cooldowns or {}
+    self.customStratagems = storage.customStratagems or {
+        {
+            uuid = tostring(sm.uuid.generateRandom()),
+            obj = {
+                cooldown = 1,
+                activation = 7 * 40,
+                pelicanEffect = sm.uuid.new("687465a4-d956-4001-9163-1eab2a7798e0"),
+                update = "VehicleSpawn",
+                blueprint = "$CONTENT_DATA/UserBlueprints/bp1.json",
+                tick = 0,
+                lifeTime = 4 * 40
+            },
+            userdata = {
+                name = "Car",
+                description = "Custom creation stratagem",
+                icon = "ad35f7e6-af8f-40fa-aef4-77d827ac8a8a",
+                type = "supply",
+                code = "444444",
+                cost = {
+                    {
+                        uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
+                        amount = 5
+                    },
+                    {
+                        uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
+                        amount = 5
+                    }
+                }
+            }
+        }
+    }
 
     self.queuedStratagems = {}
 end
@@ -137,14 +168,9 @@ function HelldiversBackend:server_onFixedUpdate()
             end
         end
 
-        if skip then
+        if stratagem.activation <= 0 and stratagem:update() or skip then
             self.queuedStratagems[k] = nil
             self.network:sendToClients("cl_DeleteStratagem", k)
-        elseif stratagem.activation <= 0 then
-            if stratagem:update() then
-                self.queuedStratagems[k] = nil
-                self.network:sendToClients("cl_DeleteStratagem", k)
-            end
         end
     end
 end
@@ -203,7 +229,8 @@ function HelldiversBackend:OnStratagemHit(args)
             id = id,
             hitData = args,
             activation = stratagem.activation,
-            dropEffect = stratagem.dropEffect
+            dropEffect = stratagem.dropEffect,
+            pelicanEffect = stratagem.pelicanEffect
         }
     )
 
@@ -216,7 +243,8 @@ function HelldiversBackend:sv_save()
         {
             loadouts = self.loadouts,
             progression = g_sv_stratagemProgression,
-            cooldowns = self.cooldownsPerPlayer
+            cooldowns = self.cooldownsPerPlayer,
+            customStratagems = self.customStratagems
         }
     )
 end
@@ -225,7 +253,8 @@ function HelldiversBackend:sv_requestData(args, caller)
     self.network:sendToClient(caller, "cl_recieveData",{
         loadout = self.loadouts[caller.id] or {},
         progression = g_sv_stratagemProgression[caller.id] or {},
-        cooldowns = self.cooldownsPerPlayer[caller.id] or {}
+        cooldowns = self.cooldownsPerPlayer[caller.id] or {},
+        customStratagems = self.customStratagems
     })
 end
 
@@ -254,13 +283,15 @@ end
 
 
 function HelldiversBackend:client_onCreate()
-    if g_cl_stratagemProgression then return end
+    if cl_setupComplete then return end
 
     g_cl_queuedStratagems = {}
     g_cl_loadout = {}
     g_cl_stratagemProgression = {}
     g_cl_cooldowns = {}
     self.network:sendToServer("sv_requestData")
+
+    cl_setupComplete = true
 end
 
 function HelldiversBackend:client_onFixedUpdate()
@@ -276,6 +307,7 @@ function HelldiversBackend:client_onFixedUpdate()
     end
 end
 
+local pelicanCargoOffset = vec3_forward * 2.25
 function HelldiversBackend:client_onUpdate(dt)
     if not g_cl_queuedStratagems then return end
 
@@ -288,6 +320,21 @@ function HelldiversBackend:client_onUpdate(dt)
             v.dropTime = math.min(v.dropTime + dt / v.dropStartTime, 1)
             local pos = v.hitData.position
             v.pod:setPosition(sm.vec3.lerp(pos + dropPodStartHeight, pos, v.dropTime))
+        end
+
+        if v.pelicanMovement then
+            local pos, rot = v.pelicanMovement:getCameraPosition() or v.hitData.position, (v.pelicanMovement:getCameraRotation() or sm.quat.identity())
+            v.pelican:setPosition(pos)
+            v.pelican:setRotation(rot)
+
+            if v.activation <= 0 then
+                if v.pelicanCargo:isPlaying() then
+                    v.pelicanCargo:stop()
+                end
+            else
+                v.pelicanCargo:setPosition(pos - rot * pelicanCargoOffset)
+                v.pelicanCargo:setRotation(rot)
+            end
         end
     end
 end
@@ -323,6 +370,31 @@ function HelldiversBackend:cl_OnStratagemHit(args)
         args.dropTime = 0
     end
 
+    local pelicanEffect = args.pelicanEffect
+    if pelicanEffect then
+        local pelicanMovement = sm.effect.createEffect("Pelican - Movement")
+        pelicanMovement:setRotation(dropPodRotation)
+        pelicanMovement:setPosition(pos)
+        pelicanMovement:start()
+
+        local _pos, rot = pelicanMovement:getCameraPosition(), pelicanMovement:getCameraRotation()
+        local pelican = sm.effect.createEffect("Pelican")
+        pelican:setScale(sm.vec3.one() * 0.25 * 0.5)
+        pelican:setPosition(_pos)
+        pelican:setRotation(rot)
+        pelican:start()
+
+        local pelicanCargo = CreateEffect(pelicanEffect)
+        pelicanCargo:setScale(sm.vec3.one() * 0.25)
+        pelicanCargo:setPosition(_pos - rot * pelicanCargoOffset)
+        pelicanCargo:setRotation(rot)
+        pelicanCargo:start()
+
+        args.pelicanMovement = pelicanMovement
+        args.pelican = pelican
+        args.pelicanCargo = pelicanCargo
+    end
+
     g_cl_queuedStratagems[id] = args
 end
 
@@ -337,6 +409,12 @@ function HelldiversBackend:cl_DeleteStratagem(index)
         data.pod:destroy()
     end
 
+    if data.pelicanMovement then
+        data.pelicanMovement:destroy()
+        data.pelican:destroy()
+        data.pelicanCargo:destroy()
+    end
+
     g_cl_queuedStratagems[index] = nil
 end
 
@@ -344,6 +422,8 @@ function HelldiversBackend:cl_recieveData(data)
     g_cl_loadout = data.loadout
     g_cl_stratagemProgression = data.progression
     g_cl_cooldowns = data.cooldowns
+
+    ParseCustomStratagems(data.customStratagems)
 
     if g_stratagemTerminal then
         sm.event.sendToInteractable(g_stratagemTerminal, "cl_refresh")

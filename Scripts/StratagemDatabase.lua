@@ -6,7 +6,7 @@
 ---@field update function
 
 local function SpawnStaticDropPod(self, position)
-    sm.shape.createPart(self.dropEffect, position - dropPodRotation * sm.item.getShapeOffset(self.dropEffect), dropPodRotation, false, true)
+    return sm.shape.createPart(self.dropEffect, position - dropPodRotation * sm.item.getShapeOffset(self.dropEffect), dropPodRotation, false, true)
 end
 
 local function SpawnDropPod(self, override)
@@ -28,7 +28,7 @@ local function SpawnDropPod(self, override)
 end
 
 ---@type StratagemObj[]
-local stratagems =  {
+local stratagems = {
     {
         uuid = "5fe2e519-9c05-4b4d-b0d6-3dc6fa7357c8",
         cooldown = 1,--160 * 40,
@@ -91,9 +91,12 @@ local stratagems =  {
 }
 
 local stratagemUUIDToIndex = {}
-for k, v in pairs(stratagems) do
-    stratagemUUIDToIndex[v.uuid] = k
+local function BakeUUIDToIndex()
+    for k, v in pairs(stratagems) do
+        stratagemUUIDToIndex[v.uuid] = k
+    end
 end
+BakeUUIDToIndex()
 
 
 
@@ -167,9 +170,9 @@ local stratagemUserdata = {
         }
     },
     ["59a3c3e8-4c75-4f68-b550-22eed1b0ec53"] = {
-        name = "Heavy MachineGun",
+        name = "Heavy Machine Gun",
         description = "ratatatatatata",
-        icon = "9fde0601-c2ba-4c70-8d5c-2a7a9fdd122b", --Gatling
+        icon = "552b4ced-ca96-4a71-891c-ab54fe9c6873", --HMG
         type = "defensive",
         code = "44344",
         cost = {
@@ -184,6 +187,22 @@ local stratagemUserdata = {
         }
     }
 }
+
+
+
+local customStratagemFunctions = {
+    VehicleSpawn = function(self)
+        if self.tick == 0 then
+            local builder = SpawnStaticDropPod({ dropEffect = self.pelicanEffect }, self.hitData.position)
+            builder.interactable:setParams(self.blueprint)
+        end
+
+        self.tick = self.tick + 1
+        return self.tick >= self.lifeTime
+    end
+}
+
+
 
 function GetStratagem(id, override)
     override = override or stratagems
@@ -262,4 +281,20 @@ function GetStratagemsFromClProgression()
     end
 
     return stratagems_
+end
+
+function ParseCustomStratagems(data)
+    for k, v in pairs(data) do
+        local uuid = v.uuid
+        if not stratagemUUIDToIndex[uuid] then
+            local stratagem = shallowcopy(v.obj)
+            stratagem.uuid = uuid
+            stratagem.update = customStratagemFunctions[stratagem.update]
+            table.insert(stratagems, stratagem)
+
+            stratagemUserdata[uuid] = v.userdata
+        end
+    end
+
+    BakeUUIDToIndex()
 end

@@ -1,23 +1,28 @@
 {
-	"Stratagem - Armed":
-	{
-		"effectList":
-		[
+	"Stratagem - Armed": {
+		"effectList": [
 			{
 				"type": "audio",
 				"name": "event:/props/installations/powercore_insert",
-				"offset": { "x": 0.0, "y": 0.0, "z": 0.0 },
+				"offset": {
+					"x": 0.0,
+					"y": 0.0,
+					"z": 0.0
+				},
 				"delay": 0.0
 			}
 		]
 	},
 	"Stratagem - Beacon": {
-		"effectList":
-		[
+		"effectList": [
 			{
 				"type": "particle",
 				"name": "stratagem_beacon",
-				"offset": { "x": 0.0, "y": 0.0, "z": 0.0 },
+				"offset": {
+					"x": 0.0,
+					"y": 0.0,
+					"z": 0.0
+				},
 				"delay": 0.0
 			}
 		]
@@ -27,18 +32,25 @@
 			"shakeRadius": 10.0,
 			"shakeStrength": 0.1
 		},
-		"effectList":
-		[
+		"effectList": [
 			{
 				"type": "audio",
 				"name": "event:/char/npc/bots/enemies/farmbot/farmbot_takedamage",
-				"offset": { "x": 0.0, "y": 0.0, "z": 0.0 },
+				"offset": {
+					"x": 0.0,
+					"y": 0.0,
+					"z": 0.0
+				},
 				"delay": 0.0
 			},
 			{
 				"type": "audio",
 				"name": "event:/char/npc/bots/utility/refinery/refinery_unpack",
-				"offset": { "x": 0.0, "y": 0.0, "z": 0.0 },
+				"offset": {
+					"x": 0.0,
+					"y": 0.0,
+					"z": 0.0
+				},
 				"delay": 0.25
 			},
 			{
@@ -55,6 +67,107 @@
 					"shakeRadius"
 				],
 				"type": "cameraShake"
+			}
+		]
+	},
+	"Pelican - Movement": {
+		"effectList": [
+			{
+				"cameraTrack": [
+					{
+						"fov": 0,
+    					"overrideFOV": false,
+					    "jumpCut": false,
+						"rotation" : [ 0, 0, 0 ],
+						"duration" : 3,
+						"easing" : "linear",
+						"position" : [ 20, 50, 200 ]
+					},
+					{
+						"fov": 0,
+    					"overrideFOV": false,
+					    "jumpCut": false,
+						"position" : [ 19.561, 16.2066, -1.93762 ],
+						"rotation" : [ 0, 0, 0 ],
+						"duration" : 2,
+						"easing" : "linear",
+						"tangents" : [
+							{
+								"position" : [ 19.9571, 16.2066, -28.9127 ],
+								"rotation" : [ 179.999, 34.5932, 179.995 ]
+							}
+						]
+					},
+					{
+						"fov": 0,
+    					"overrideFOV": false,
+					    "jumpCut": false,
+						"rotation" : [ -180, 0, -180 ],
+						"duration" : 1,
+						"easing" : "linear",
+						"position" : [ 1.06494e-12, 16.2066, -29.9753 ]
+					},
+					{
+						"fov": 0,
+    					"overrideFOV": false,
+					    "jumpCut": false,
+						"position" : [ 3.9519e-13, 7, 0 ],
+						"rotation" : [ -180, 1.11278e-12, -180 ],
+						"duration" : 2,
+						"easing" : "linear",
+						"tangents" : [
+							{
+								"position" : [ 0.515726, 7, -1.52588e-05 ],
+								"rotation" : [ -180, 1.11278e-12, -180 ]
+							},
+							{
+								"position" : [ -0.800247, 7, -0.795557 ],
+								"rotation" : [ -180, 1.11278e-12, -180 ]
+							},
+							{
+								"position" : [ -1.2747, 7, 0.808842 ],
+								"rotation" : [ -180, 1.11278e-12, -180 ]
+							}
+						]
+					},
+					{
+						"fov": 0,
+    					"overrideFOV": false,
+					    "jumpCut": false,
+						"rotation" : [ -180, 1.11278e-12, -180 ],
+						"duration" : 2,
+						"easing" : "linear",
+						"position" : [ 3.9519e-13, 7, 0 ]
+					},
+					{
+						"fov": 0,
+    					"overrideFOV": false,
+					    "jumpCut": false,
+						"rotation" : [ 180, 1.72345e-12, 180 ],
+						"duration" : 1,
+						"easing" : "linear",
+						"position" : [ -1.04209e-12, 15.0518, 40.4559 ]
+					},
+					{
+						"fov": 0,
+    					"overrideFOV": false,
+					    "jumpCut": false,
+						"rotation" : [ -180, 2.13056e-12, -180 ],
+						"duration" : 2,
+						"easing" : "linear",
+						"position" : [ -6.27124e-12, 62.8026, 187.643 ]
+					}
+				],
+				"type": "cameraTrack"
+			}
+		]
+	},
+	"Pelican": {
+		"effectList": [
+			{
+				"type": "renderable",
+				"name": "$CONTENT_DATA/Effects/Pelican/obj_pelican.rend",
+				"offset": { "x": 0.0, "y": 0.0, "z": 0.0 }
 			}
 		]
 	}
