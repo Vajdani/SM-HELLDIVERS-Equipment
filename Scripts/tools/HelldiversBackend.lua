@@ -132,6 +132,8 @@ function HelldiversBackend:server_onCreate()
 end
 
 function HelldiversBackend:server_onFixedUpdate()
+    if not self.queuedStratagems then return end
+
     for k, stratagem in pairs(self.queuedStratagems) do
         local skip = false
 

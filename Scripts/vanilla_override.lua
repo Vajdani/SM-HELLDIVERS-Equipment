@@ -51,7 +51,7 @@ local projectile_stratagem = sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9")
 
 ---@param worldScript WorldClass
 local function setupProjectiles(worldScript)
-    if worldScript.PROJECTILESETUPCOMPLETE then return end
+    if worldScript or worldScript.PROJECTILESETUPCOMPLETE then return end
 
     local oldProjectile = worldScript.server_onProjectile
     function projectileHook(world, position, airTime, velocity, projectileName, shooter, damage, customData, normal, target, uuid)
