@@ -24,7 +24,6 @@ function VehicleBuilder:sv_interact(state, player)
     if self.sv_complete then return end
 
     if state and not self.sv_controller then
-        player.character:setLockingInteractable(self.interactable)
         self.sv_controller = player
 
         self.sv_currentCode = ""
@@ -32,7 +31,6 @@ function VehicleBuilder:sv_interact(state, player)
 
         self.network:sendToClients("cl_interact", self.sv_controller)
     elseif not state and self.sv_controller == player then
-        player.character:setLockingInteractable(nil)
         self.sv_controller = nil
         self.sv_currentCode = ""
         self.sv_correctCode = ""
@@ -142,6 +140,13 @@ function VehicleBuilder:client_onClientDataUpdate(data, channel)
 end
 
 function VehicleBuilder:cl_interact(controller)
+    local player = sm.localPlayer.getPlayer()
+    if controller and controller == player then
+        player.character:setLockingInteractable(self.interactable)
+    elseif not controller and self.cl_controller == player then
+        player.character:setLockingInteractable(nil)
+    end
+
     self.cl_controller = controller
     self.cl_currentCode = ""
 end

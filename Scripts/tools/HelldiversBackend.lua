@@ -132,7 +132,7 @@ function HelldiversBackend:server_onCreate()
 end
 
 function HelldiversBackend:server_onFixedUpdate()
-    if not self.queuedStratagems then return end
+    if sm.HELLDIVERSBACKEND ~= self.tool then return end
 
     for k, stratagem in pairs(self.queuedStratagems) do
         local skip = false
@@ -287,6 +287,10 @@ end
 function HelldiversBackend:client_onCreate()
     if cl_setupComplete then return end
 
+    if not sm.HELLDIVERSBACKEND then
+        sm.HELLDIVERSBACKEND = self.tool
+    end
+
     g_cl_queuedStratagems = {}
     g_cl_loadout = {}
     g_cl_stratagemProgression = {}
@@ -297,7 +301,7 @@ function HelldiversBackend:client_onCreate()
 end
 
 function HelldiversBackend:client_onFixedUpdate()
-    if not g_cl_queuedStratagems then return end
+    if sm.HELLDIVERSBACKEND ~= self.tool or not g_cl_queuedStratagems then return end
 
     for k, v in pairs(g_cl_queuedStratagems) do
         v.activation = v.activation - 1

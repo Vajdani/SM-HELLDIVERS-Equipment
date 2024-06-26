@@ -632,6 +632,11 @@ function Stratagem:cl_updateStratagemColour(type)
 end
 
 function Stratagem:cl_lock(shape)
+    if not shape then
+        sm.localPlayer.getPlayer().character:setLockingInteractable(nil)
+        return
+    end
+
     if not sm.exists(shape) then
         sm.event.sendToTool(self.tool, "cl_lock", shape)
         return
