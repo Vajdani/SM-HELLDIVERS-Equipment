@@ -315,7 +315,7 @@ end
 
 local pelicanCargoOffset = vec3_forward * 2.25
 function HelldiversBackend:client_onUpdate(dt)
-    if not g_cl_queuedStratagems then return end
+    if sm.HELLDIVERSBACKEND ~= self.tool or not g_cl_queuedStratagems then return end
 
     for k, v in pairs(g_cl_queuedStratagems) do
         if v.pod and v.activation <= v.dropStartTime * 40 then
