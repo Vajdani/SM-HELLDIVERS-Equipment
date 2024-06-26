@@ -66,7 +66,7 @@ end
 function Stratagem:sv_prime(args, caller)
     local char = caller.character
     local shape = sm.shape.createPart(sm.uuid.new("09a84352-04b2-47d1-9346-15ae4f768d03"), char.worldPosition - sm.vec3.new(0,0,250), sm.quat.identity(), false, true)
-    self.network:sendToClient(caller, "cl_lock", shape.interactable)
+    self.network:sendToClient(caller, "cl_lock", shape)
 
     self.input = shape
 end
@@ -631,8 +631,13 @@ function Stratagem:cl_updateStratagemColour(type)
     end
 end
 
-function Stratagem:cl_lock(int)
-    sm.localPlayer.getPlayer().character:setLockingInteractable(int)
+function Stratagem:cl_lock(shape)
+    if not sm.exists(shape) then
+        sm.event.sendToTool(self.tool, "cl_lock", shape)
+        return
+    end
+
+    sm.localPlayer.getPlayer().character:setLockingInteractable(shape.interactable)
 end
 
 
