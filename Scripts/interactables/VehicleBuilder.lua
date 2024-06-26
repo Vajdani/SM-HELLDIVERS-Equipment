@@ -75,7 +75,12 @@ function VehicleBuilder:sv_generateCode()
 end
 
 function VehicleBuilder:sv_codeSuccess()
-    local bodies = sm.creation.importFromFile(sm.world.getCurrentWorld(), self.sv_blueprint, self.shape.worldPosition, self.shape.worldRotation * sm.quat.angleAxis(math.rad(-90), vec3_right))
+    local json = sm.json.open(self.sv_blueprint)
+    for k, v in pairs(json.bodies) do
+        v.type = 0
+    end
+
+    sm.creation.importFromString(sm.world.getCurrentWorld(), sm.json.writeJsonString(json), self.shape.worldPosition, self.shape.worldRotation * sm.quat.angleAxis(math.rad(-90), vec3_right))
     self.network:sendToClients("cl_OnComplete")
 end
 
@@ -160,7 +165,7 @@ function VehicleBuilder:cl_updateState(state)
 end
 
 function VehicleBuilder:cl_OnComplete()
-    if sm.exists(self.blueprint) then
+    if self.blueprint then
         self.blueprint:destroy()
         self.blueprint = nil
     end
