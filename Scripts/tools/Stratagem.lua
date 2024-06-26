@@ -56,7 +56,7 @@ end
 function Stratagem:sv_cancel(args, caller)
     if not self.input then return end
 
-    caller.character:setLockingInteractable(nil)
+    self.network:sendToClient(caller, "cl_lock", nil)
     self.input:destroyShape()
     self.input = nil
 end
@@ -66,7 +66,7 @@ end
 function Stratagem:sv_prime(args, caller)
     local char = caller.character
     local shape = sm.shape.createPart(sm.uuid.new("09a84352-04b2-47d1-9346-15ae4f768d03"), char.worldPosition - sm.vec3.new(0,0,250), sm.quat.identity(), false, true)
-    char:setLockingInteractable(shape.interactable)
+    self.network:sendToClient(caller, "cl_lock", shape.interactable)
 
     self.input = shape
 end
@@ -629,6 +629,10 @@ function Stratagem:cl_updateStratagemColour(type)
     if self.isLocal then
         self.tool:setFpColor(col)
     end
+end
+
+function Stratagem:cl_lock(int)
+    sm.localPlayer.getPlayer().character:setLockingInteractable(int)
 end
 
 
