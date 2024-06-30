@@ -1,0 +1,44 @@
+{
+	"AutoCannon - ShootTP": {
+		"effectList": [
+			{
+				"delay": 0.0,
+				"duration": 0.330,
+				"name": "event:/char/npc/bots/enemies/farmbot/farmbot_shoot",
+				"type": "audio"
+			},
+			{
+				"type": "particle",
+				"name": "p_spudgun_muzzel_spinner",
+				"offset": {
+					"x": 0.0,
+					"y": 0.0,
+					"z": 0.0
+				},
+				"attached": false,
+				"delay": 0.00
+			}
+		]
+	},
+	"AutoCannon - ShootFP": {
+		"effectList": [
+			{
+				"delay": 0.0,
+				"duration": 0.330,
+				"name": "event:/char/npc/bots/enemies/farmbot/farmbot_shoot",
+				"type": "audio"
+			},
+			{
+				"type": "particle",
+				"name": "p_spudgun_fp_muzzel_spinner",
+				"offset": {
+					"x": 0.0,
+					"y": 0.0,
+					"z": 0.0
+				},
+				"attached": true,
+				"delay": 0.00
+			}
+		]
+	}
+}

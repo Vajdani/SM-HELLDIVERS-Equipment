@@ -27,6 +27,22 @@ local Damage = 150
 ---@field equipped boolean
 ---@field wantEquipped boolean
 AutoCannon = class()
+AutoCannon.settings = {
+	fireMode = {
+		{
+			name = "Automatic",
+			icon = ""
+		},
+		{
+			name = "Semi-Automatic",
+			icon = ""
+		}
+	},
+	flasLight = {},
+	sight = {}
+}
+AutoCannon.magCapacity = 10
+AutoCannon.magAmount = 1
 
 local renderables = {
 	"$CONTENT_DATA/Tools/AutoCannon/char_autocannon.rend"
@@ -34,24 +50,54 @@ local renderables = {
 
 local renderablesTp = {
 	"$GAME_DATA/Character/Char_Male/Animations/char_male_tp_spudgun.rend",
-	"$GAME_DATA/Character/Char_Tools/Char_spudgun/char_spudgun_tp_animlist.rend"
+	"$CONTENT_DATA/Tools/AutoCannon/char_autocannon_tp_animlist.rend",
+	"$CONTENT_DATA/Tools/char_male_recoil.rend"
 }
 local renderablesFp = {
-	"$GAME_DATA/Character/Char_Tools/Char_spudgun/char_spudgun_fp_animlist.rend"
+	"$CONTENT_DATA/Tools/AutoCannon/char_autocannon_fp_animlist.rend",
+	"$CONTENT_DATA/Tools/char_male_recoil.rend"
 }
 
 sm.tool.preloadRenderables(renderables)
 sm.tool.preloadRenderables(renderablesTp)
 sm.tool.preloadRenderables(renderablesFp)
 
-function AutoCannon:client_onCreate()
-	self.isLocal = self.tool:isLocal()
-	self.shootEffect = sm.effect.createEffect("SpudgunSpinner - SpinnerMuzzel")
-	self.shootEffectFP = sm.effect.createEffect("SpudgunSpinner - FPSpinnerMuzzel")
+function AutoCannon:server_onCreate()
+	local data = self.storage:load() or {}
+	self.sv_ammo = data.ammo or self.magCapacity
+	self.sv_mags = data.mags or self.magAmount
+	self.sv_settings = data.settings or {}
+
+	self.network:setClientData({
+		ammo = self.sv_ammo,
+		mags = self.sv_mags,
+		settings = self.sv_settings
+	})
 end
 
-function AutoCannon:client_onRefresh()
-	self:loadAnimations()
+
+
+function AutoCannon:client_onCreate()
+	self.isLocal = self.tool:isLocal()
+	self.shootEffect = sm.effect.createEffect("AutoCannon - ShootTP")
+	self.shootEffectFP = sm.effect.createEffect("AutoCannon - ShootFP")
+
+	self.recoil_target_x = 0
+	self.recoil_target_y = 0
+	self.recoil_x = 0
+	self.recoil_y = 0
+
+	if not self.isLocal then return end
+
+	self.cl_ammo = 0
+	self.cl_mags = 0
+	self.cl_settings = {}
+end
+
+function AutoCannon:client_onClientDataUpdate(data)
+	self.cl_ammo = data.ammo
+	self.cl_mags = data.mags
+	self.cl_settings = data.settings
 end
 
 function AutoCannon:loadAnimations()
@@ -121,7 +167,7 @@ function AutoCannon:loadAnimations()
 		spreadIncrement = 3.9,
 		spreadMinAngle = 0.25,
 		spreadMaxAngle = 32,
-		fireVelocity = 130.0,
+		fireVelocity = 300.0,
 
 		minDispersionStanding = 0.1,
 		minDispersionCrouching = 0.04,
@@ -136,7 +182,7 @@ function AutoCannon:loadAnimations()
 		spreadIncrement = 1.95,
 		spreadMinAngle = 0.25,
 		spreadMaxAngle = 24,
-		fireVelocity = 130.0,
+		fireVelocity = 300.0,
 
 		minDispersionStanding = 0.01,
 		minDispersionCrouching = 0.01,
@@ -182,6 +228,9 @@ function AutoCannon:client_onUpdate(dt)
 			if not self.aiming and isAnyOf(currentAnim, { "aimInto", "aimIdle", "aimShoot" }) then
 				swapFpAnimation(self.fpAnimations, "aimInto", "aimExit", 0.0)
 			end
+
+			self.tool:updateFpAnimation("recoil_horizontal", 0.5 + self.recoil_x, 1, false)
+			self.tool:updateFpAnimation("recoil_vertical", 0.5 - self.recoil_y, 1, false)
 		end
 		updateFpAnimations(self.fpAnimations, self.equipped, dt)
 	end
@@ -193,6 +242,15 @@ function AutoCannon:client_onUpdate(dt)
 		end
 		return
 	end
+
+	self.tool:updateAnimation("recoil_horizontal", 0.5 + self.recoil_x, 1)
+	self.tool:updateAnimation("recoil_vertical", 0.5 - self.recoil_y, 1)
+
+	self.recoil_x = sm.util.lerp(self.recoil_x, self.recoil_target_x, dt * 10)
+	self.recoil_y = sm.util.lerp(self.recoil_y, self.recoil_target_y, dt * 10)
+
+	self.recoil_target_x = sm.util.lerp(self.recoil_target_x, 0, dt * 5)
+	self.recoil_target_y = sm.util.lerp(self.recoil_target_y, 0, dt * 5)
 
 	if self.isLocal then
 		local effectPos
@@ -398,11 +456,19 @@ function AutoCannon:client_onUnequip(animate)
 			sm.audio.play("PotatoRifle - Unequip", self.tool:getPosition())
 		end
 		setTpAnimation(self.tpAnimations, "putdown")
+
+		self.tool:updateAnimation("recoil_horizontal", 0, 0)
+		self.tool:updateAnimation("recoil_vertical", 0, 0)
+
 		if self.isLocal then
 			self.tool:setMovementSlowDown(false)
 			self.tool:setBlockSprint(false)
 			self.tool:setCrossHairAlpha(1.0)
 			self.tool:setInteractionTextSuppressed(false)
+
+			self.tool:updateFpAnimation("recoil_horizontal", 0.5, 0, false)
+			self.tool:updateFpAnimation("recoil_vertical", 0.5, 0, false)
+
 			if self.fpAnimations.currentAnimation ~= "unequip" then
 				swapFpAnimation(self.fpAnimations, "equip", "unequip", 0.2)
 			end
@@ -427,22 +493,25 @@ function AutoCannon:onAim(aiming)
 	end
 end
 
-function AutoCannon:sv_n_onShoot()
-	self.network:sendToClients("cl_n_onShoot")
+function AutoCannon:sv_n_onShoot(recoil)
+	self.network:sendToClients("cl_n_onShoot", recoil)
 end
 
-function AutoCannon:cl_n_onShoot()
+function AutoCannon:cl_n_onShoot(recoil)
 	if not self.isLocal and self.tool:isEquipped() then
-		self:onShoot()
+		self:onShoot(recoil)
 	end
 end
 
-function AutoCannon:onShoot()
+function AutoCannon:onShoot(recoil)
 	self.tpAnimations.animations.idle.time = 0
 	self.tpAnimations.animations.shoot.time = 0
 	self.tpAnimations.animations.aimShoot.time = 0
 
 	setTpAnimation(self.tpAnimations, self.aiming and "aimShoot" or "shoot", 10.0)
+
+	self.recoil_target_x = sm.util.clamp(self.recoil_target_x + recoil.x, -0.5, 0.5)
+	self.recoil_target_y = sm.util.clamp(self.recoil_target_y + recoil.y, -0.5, 0.5)
 
 	if self.tool:isInFirstPersonView() then
 		self.shootEffectFP:start()
@@ -549,7 +618,7 @@ function AutoCannon:cl_onPrimaryUse(state)
 	if not sm.game.getEnableAmmoConsumption() or sm.container.canSpend(sm.localPlayer.getInventory(), obj_plantables_potato, 1) then
 		local firstPerson = self.tool:isInFirstPersonView()
 
-		local dir = sm.localPlayer.getDirection()
+		local dir = firstPerson and GetFpBoneDir(self.tool, "pejnt_barrel") or self.tool:getTpBoneDir("pejnt_barrel")
 
 		local firePos = self:calculateFirePosition()
 		local fakePosition = self:calculateTpMuzzlePos()
@@ -600,8 +669,9 @@ function AutoCannon:cl_onPrimaryUse(state)
 		self.sprintCooldownTimer = self.sprintCooldown
 
 		-- Send TP shoot over network and dircly to self
-		self:onShoot()
-		self.network:sendToServer("sv_n_onShoot", dir)
+		local recoil = self:getRecoil()
+		self:onShoot(recoil)
+		self.network:sendToServer("sv_n_onShoot", recoil)
 
 		-- Play FP shoot animation
 		setFpAnimation(self.fpAnimations, self.aiming and "aimShoot" or "shoot", 0.05)
@@ -636,4 +706,13 @@ function AutoCannon:client_onEquippedUpdate(lmb, rmb, f)
 	end
 
 	return true, true
+end
+
+
+
+--- +x -> right +y -> up
+function AutoCannon:getRecoil()
+	local x = math.random(20, 40) * 0.01
+	local y = 0.2
+	return { x = x, y = y }
 end

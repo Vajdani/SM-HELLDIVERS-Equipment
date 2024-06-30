@@ -243,7 +243,20 @@ function Stratagem.client_onUpdate( self, dt )
 	end
 end
 
+function Stratagem:sv_export(body)
+    sm.event.sendToTool(sm.HELLDIVERSBACKEND, "AddCustomStratagem", {
+        type = "VehicleSpawn",
+        name = "sussy",
+        body = body
+    })
+end
+
 function Stratagem:client_onReload()
+    local hit, result = sm.localPlayer.getRaycast(7.5)
+    if hit and result.type == "body" then
+        self.network:sendToServer("sv_export", result:getBody())
+    end
+
     return true
 end
 
@@ -318,7 +331,7 @@ end
 function Stratagem:cl_onSelect(button, id, data, gridName)
     if gridName == "AvailableGrid" then
         if #self.selected == STRATAGEMINVENTORYSIZE then
-            sm.audio.play("RaftShark")
+            sm.effect.playHostedEffect("Stratagem - Fail", self.tool:getOwner().character)
             return
         end
 
@@ -575,7 +588,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
                     self.stratagemUserdata = GetStratagemUserdata(GetStratagem(g_strataGemCode).uuid)
                     self.network:sendToServer("sv_updateStratagemColour", self.stratagemUserdata.type)
                 else
-                    sm.audio.play("RaftShark")
+                    sm.effect.playHostedEffect("Stratagem - Fail", self.tool:getOwner().character)
                     g_strataGemCode = nil
                 end
             end
@@ -686,7 +699,7 @@ function Input:client_onAction(action, state)
     if isBlocked then
         g_strataGemCode = (g_strataGemCode or "")..convertInputs[action]
         UpdateStratagemHud()
-        sm.audio.play("PaintTool - ColorPick")
+        sm.effect.playHostedEffect("Stratagem - Input", sm.localPlayer.getPlayer().character)
     end
 
     return isBlocked

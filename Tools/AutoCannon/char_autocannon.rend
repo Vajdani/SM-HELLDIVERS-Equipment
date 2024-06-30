@@ -1,18 +1,28 @@
 {
-    "lodList" : [
-       {
-          "mesh" : "$CONTENT_DATA/Tools/AutoCannon/char_autocannon.dae",
-          "subMeshList" : [
-             {
-                "material" : "DifAsgNor",
-                "textureList" : [
-                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_dif.tga",
-                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_stratagem_asg.tga",
-                   "$CONTENT_DATA/Tools/Stratagem/char_stratagem_nor.tga"
-                ]
-             }
-          ]
-       }
-    ]
- }
- 
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Tools/AutoCannon/char_autocannon.dae",
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$GAME_DATA/Textures/Default/default_dif.tga",
+                  "$GAME_DATA/Textures/Default/default_asg.tga",
+                  "$GAME_DATA/Textures/Default/default_nor.tga"
+               ]
+            },
+            {
+               "custom" : {
+                  "shadow" : false
+               },
+               "material" : "DifAsgNorAlpha",
+               "textureList" : [
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_sight_dif.png",
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_sight_asg.png",
+                  "$GAME_DATA/Textures/Default/default_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

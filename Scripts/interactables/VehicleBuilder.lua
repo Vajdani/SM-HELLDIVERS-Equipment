@@ -7,7 +7,7 @@ function VehicleBuilder:server_onCreate()
     self.sv_currentCode = ""
 
     local storage = self.storage:load() or {}
-    local blueprint = storage.blueprint or self.params or "$CONTENT_DATA/UserBlueprints/bp1.json"
+    local blueprint = storage.blueprint or self.params or "$CONTENT_DATA/UserBlueprints/default.json"
     self.sv_blueprint = blueprint
 
     self.sv_complete = storage.complete or false
@@ -63,14 +63,11 @@ function VehicleBuilder:sv_codeInput(input)
         end
     end
 
-    self.network:sendToClients("cl_codeInput", self.sv_currentCode)
+    self.network:sendToClients("cl_codeInput", { code = self.sv_currentCode, fail = fail })
 end
 
 function VehicleBuilder:sv_generateCode()
-    self.sv_correctCode = ""
-    for i = 1, math.random(4, 8) do
-        self.sv_correctCode = self.sv_correctCode..math.random(1, 4)
-    end
+    self.sv_correctCode = GetRandomStratagemCode()
     self.network:setClientData(self.sv_correctCode, 2)
 end
 
@@ -80,7 +77,7 @@ function VehicleBuilder:sv_codeSuccess()
         v.type = 0
     end
 
-    sm.creation.importFromString(sm.world.getCurrentWorld(), sm.json.writeJsonString(json), self.shape.worldPosition, self.shape.worldRotation * sm.quat.angleAxis(math.rad(-90), vec3_right))
+    sm.creation.importFromString(sm.world.getCurrentWorld(), sm.json.writeJsonString(json), self.shape.worldPosition + self.shape.at * 5, self.shape.worldRotation * sm.quat.angleAxis(math.rad(-90), vec3_right))
     self.network:sendToClients("cl_OnComplete")
 end
 
@@ -97,11 +94,15 @@ function VehicleBuilder:client_onDestroy()
 end
 
 function VehicleBuilder:client_onUpdate()
+    if self.blueprint then
+        self.blueprint:setPosition(self.shape.worldPosition + self.shape.at * 5)
+        self.blueprint:setRotation(self.shape.worldRotation * sm.quat.angleAxis(math.rad(-90), vec3_right))
+    end
+
     if self.cl_controller ~= sm.localPlayer.getPlayer() then return end
 
     local correctCode = self.cl_correctCode:gsub("1", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_left.png</img>"):gsub("2", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_right.png</img>"):gsub("3", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_up.png</img>"):gsub("4", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_down.png</img>")
     local currentCode = self.cl_currentCode:gsub("1", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_left.png</img>"):gsub("2", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_right.png</img>"):gsub("3", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_up.png</img>"):gsub("4", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_down.png</img>")
-    --sm.gui.setInteractionText(correctCode)
     sm.gui.setInteractionText(correctCode, "|\t|", currentCode)
 end
 
@@ -156,8 +157,14 @@ function VehicleBuilder:cl_interact(controller)
     self.cl_currentCode = ""
 end
 
-function VehicleBuilder:cl_codeInput(code)
-    self.cl_currentCode = code
+function VehicleBuilder:cl_codeInput(args)
+    self.cl_currentCode = args.code
+
+    if args.fail then
+        sm.effect.playHostedEffect("Stratagem - Fail", self.interactable)
+    else
+        sm.effect.playHostedEffect("Stratagem - Input", self.interactable)
+    end
 end
 
 function VehicleBuilder:cl_updateState(state)

@@ -28,6 +28,8 @@ sm.game.bindChatCommand = bindHook
 HelldiversBackend = class()
 
 local dropPodStartHeight = sm.vec3.new(0,0,500)
+local blueprintsPath = "$CONTENT_DATA/UserBlueprints/"
+local blueprintTracker = blueprintsPath.."blueprintTracker.json"
 
 function HelldiversBackend:server_onCreate()
     if setupComplete then return end
@@ -96,39 +98,13 @@ function HelldiversBackend:server_onCreate()
     g_sv_stratagemProgression = storage.progression or {}
     self.loadouts = storage.loadouts or {}
     self.cooldownsPerPlayer = storage.cooldowns or {}
-    self.customStratagems = storage.customStratagems or {
-        {
-            uuid = tostring(sm.uuid.generateRandom()),
-            obj = {
-                cooldown = 1,
-                activation = 7 * 40,
-                pelicanEffect = sm.uuid.new("687465a4-d956-4001-9163-1eab2a7798e0"),
-                update = "VehicleSpawn",
-                blueprint = "$CONTENT_DATA/UserBlueprints/bp1.json",
-                tick = 0,
-                lifeTime = 4 * 40
-            },
-            userdata = {
-                name = "Car",
-                description = "Custom creation stratagem",
-                icon = "ad35f7e6-af8f-40fa-aef4-77d827ac8a8a",
-                type = "supply",
-                code = "444444",
-                cost = {
-                    {
-                        uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
-                        amount = 5
-                    },
-                    {
-                        uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
-                        amount = 5
-                    }
-                }
-            }
-        }
-    }
+    self.customStratagems = storage.customStratagems or {}
 
     self.queuedStratagems = {}
+
+    if not sm.json.fileExists(blueprintTracker) then
+        sm.json.save({}, blueprintTracker)
+    end
 end
 
 function HelldiversBackend:server_onFixedUpdate()
@@ -238,6 +214,81 @@ function HelldiversBackend:OnStratagemHit(args)
 
     self:sv_save()
     self:sv_requestData(nil, player)
+end
+
+function HelldiversBackend:AddCustomStratagem(args)
+    local stratagemType = args.type
+    local stratagem = GetCustomStratagemTemplate(stratagemType)
+    stratagem.uuid = tostring(sm.uuid.generateRandom())
+    stratagem.userdata.code = GetRandomStratagemCode()
+
+    if stratagemType == "VehicleSpawn" then
+        local bpName = args.name
+        local tracker = sm.json.open(blueprintTracker) or {}
+        local blueprintPath = ("%s%s.json"):format(blueprintsPath, bpName)
+
+        --[[if isAnyOf(blueprintPath, tracker) then
+            return
+        end]]
+
+        local creation = sm.creation.exportToTable(args.body, false, true)
+        local com = sm.vec3.zero()
+        local count = 0
+        for k, body in pairs(creation.bodies) do
+            for _k, shape in pairs(body.childs) do
+                local controller = shape.controller
+                if controller then
+                    if controller.containers then
+                        for __k, data in pairs(controller.containers) do
+                            data.container = {}
+                        end
+                    end
+
+                    if controller.container then
+                        controller.container = {}
+                    end
+                end
+
+                com = com + sm.vec3.new(shape.pos.x, shape.pos.y, shape.pos.z)
+                count = count + 1
+            end
+        end
+
+        com = com / count
+
+        for k, body in pairs(creation.bodies) do
+            for _k, shape in pairs(body.childs) do
+                shape.pos.x = round(shape.pos.x - com.x)
+                shape.pos.y = round(shape.pos.y - com.y)
+                shape.pos.z = round(shape.pos.z - com.z)
+            end
+        end
+
+        for _k, shape in pairs(creation.joints or {}) do
+            shape.posA.x = round(shape.posA.x - com.x)
+            shape.posA.y = round(shape.posA.y - com.y)
+            shape.posA.z = round(shape.posA.z - com.z)
+
+            shape.posB.x = round(shape.posB.x - com.x)
+            shape.posB.y = round(shape.posB.y - com.y)
+            shape.posB.z = round(shape.posB.z - com.z)
+        end
+
+        --if true then return end
+        sm.json.save(creation, blueprintPath)
+
+        table.insert(tracker, blueprintPath)
+        sm.json.save(tracker, blueprintTracker)
+
+        stratagem.obj.blueprint = blueprintPath
+        stratagem.userdata.name = bpName
+    end
+
+    table.insert(self.customStratagems, stratagem)
+    self:sv_save()
+    for k, v in pairs(sm.player.getAllPlayers()) do
+        self:sv_requestData(nil, v)
+    end
 end
 
 function HelldiversBackend:sv_save()

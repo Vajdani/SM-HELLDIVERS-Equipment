@@ -1,0 +1,13 @@
+{
+	"lodList": [
+		{
+			"mesh": "$GAME_DATA/Character/Char_Male/Animations/Animationrefs/aniref_char_male_tpose.dae",
+			"includes": [ "POSITION", "UV0", "NORMAL", "TANGENTS", "BLEND_INDICES", "BLEND_WEIGHTS" ],
+			"maxViewDistance": 1000.0,
+			"animationList": [
+				{ "name": "recoil_horizontal",  "file": "$GAME_DATA/Character/Char_Male/Animations/Thirdperson/Posetarget/ani_posetarget_spine_turn.dae" },
+				{ "name": "recoil_vertical",	"file": "$GAME_DATA/Character/Char_Male/Animations/Thirdperson/Posetarget/ani_posetarget_spine_bend.dae" }
+			]
+		}
+	]
+} 

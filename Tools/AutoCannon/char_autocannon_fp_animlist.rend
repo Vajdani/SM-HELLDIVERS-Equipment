@@ -1,0 +1,16 @@
+{
+	"lodList": [
+		{
+			"mesh": "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_position.dae",
+			"includes": [
+				"POSITION",
+				"UV0",
+				"NORMAL",
+				"TANGENTS",
+				"BLEND_INDICES",
+				"BLEND_WEIGHTS"
+			],
+			"maxViewDistance": 1000.0
+		}
+	]
+}

@@ -202,6 +202,37 @@ local customStratagemFunctions = {
     end
 }
 
+local customStratagemTemplates = {
+    VehicleSpawn = {
+        obj = {
+            cooldown = 1,
+            activation = 7 * 40,
+            pelicanEffect = sm.uuid.new("687465a4-d956-4001-9163-1eab2a7798e0"),
+            update = "VehicleSpawn",
+            blueprint = "",
+            tick = 0,
+            lifeTime = 4 * 40
+        },
+        userdata = {
+            name = "",
+            description = "Custom creation stratagem",
+            icon = "ad35f7e6-af8f-40fa-aef4-77d827ac8a8a",
+            type = "supply",
+            code = "",
+            cost = {
+                {
+                    uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
+                    amount = 5
+                },
+                {
+                    uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
+                    amount = 5
+                }
+            }
+        }
+    }
+}
+
 
 
 function GetStratagem(id, override)
@@ -297,4 +328,8 @@ function ParseCustomStratagems(data)
     end
 
     BakeUUIDToIndex()
+end
+
+function GetCustomStratagemTemplate(name)
+    return shallowcopy(customStratagemTemplates[name])
 end

@@ -1,4 +1,32 @@
 {
+	"Stratagem - Input": {
+		"effectList": [
+			{
+				"type": "audio",
+				"name": "event:/tools/painttool/pt_colourpick",
+				"offset": {
+					"x": 0.0,
+					"y": 0.0,
+					"z": 0.0
+				},
+				"delay": 0.0
+			}
+		]
+	},
+	"Stratagem - Fail": {
+		"effectList": [
+			{
+				"type": "audio",
+				"name": "event:/props/sharktrophy",
+				"offset": {
+					"x": 0.0,
+					"y": 0.0,
+					"z": 0.0
+				},
+				"delay": 0.0
+			}
+		]
+	},
 	"Stratagem - Armed": {
 		"effectList": [
 			{

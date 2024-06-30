@@ -47,5 +47,17 @@ function FormatStratagemTimer( seconds )
 	return minute1..minute2..":"..second1..second2
 end
 
+function GetRandomStratagemCode()
+    local code = ""
+    for i = 1, math.random(4, 8) do
+        code = code..math.random(1, 4)
+    end
+
+    return code
+end
+
+function GetFpBoneDir(tool, bone)
+	return (tool:getFpBonePos(bone.."_end") - tool:getFpBonePos(bone)):normalize()
+end
 
 dofile "StratagemDatabase.lua"
