@@ -48,6 +48,14 @@ for k, shape in pairs(sm.json.open("$CONTENT_e35b1c4e-d434-4102-88bf-95a16b8cff7
 end
 
 local projectile_stratagem = sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9")
+local canExplode = {
+    ["07b1550e-e844-4bbe-b1c3-99e77e097965"] = {
+        level = 6,
+        destructionRadius = 0.5,
+        impulseRadius = 1,
+        magnitude = 15,
+    } --AutoCannon
+}
 
 ---@param worldScript WorldClass
 local function setupProjectiles(worldScript)
@@ -83,6 +91,9 @@ local function setupProjectiles(worldScript)
                     data = customData
                 }
             )
+        elseif canExplode[tostring(uuid)] ~= nil then
+            local data = canExplode[tostring(uuid)]
+            sm.physics.explode(position, data.level, data.destructionRadius, data.impulseRadius, data.magnitude, data.effect, nil, data.params)
         end
 
         return oldProjectile(world, position, airTime, velocity, projectileName, shooter, damage, customData, normal, target, uuid)

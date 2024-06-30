@@ -22,6 +22,50 @@
          "radius": 0.250,
          "spin": 7.0,
          "uuid": "6411767a-8882-4b94-aae5-381057cde9f9"
-      }
+      },
+		{
+			"uuid": "07b1550e-e844-4bbe-b1c3-99e77e097965",
+			"name": "projectile_autocannon",
+			"mass": 0.75,
+			"radius": 0.0625,
+			"friction": 0.2,
+			"spin": 0.0,
+			"mesh": "$GAME_DATA/Projectiles/Renderables/projectile_fries.rend",
+			"effect": "PotatoProjectile - Hit",
+			"audiomass": 250.0,
+			"effectmaterial": "Potato",
+			"amount": 1,
+			"destruction":
+			{
+				"destructionLevels":
+				[
+					{
+						"qualityLevel": 1,
+						"chance": 1.0
+					},
+               {
+						"qualityLevel": 2,
+						"chance": 1.0
+					},
+               {
+						"qualityLevel": 3,
+						"chance": 1.0
+					},
+               {
+						"qualityLevel": 4,
+						"chance": 0.7
+					},
+               {
+						"qualityLevel": 5,
+						"chance": 0.5
+					},
+               {
+						"qualityLevel": 6,
+						"chance": 0.2
+					}
+				]
+			},
+			"enableImpactEffect": false
+		}
    ]
 }

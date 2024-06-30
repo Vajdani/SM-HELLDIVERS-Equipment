@@ -1,4 +1,4 @@
-dofile "$GAME_DATA/Scripts/game/AnimationUtil.lua"
+dofile("$CONTENT_DATA/Scripts/AnimationUtil.lua")
 dofile "$SURVIVAL_DATA/Scripts/util.lua"
 dofile "$SURVIVAL_DATA/Scripts/game/survival_shapes.lua"
 dofile "$CONTENT_DATA/Scripts/ProgressBar.lua"
@@ -164,7 +164,7 @@ end
 
 function Stratagem.client_onUpdate( self, dt )
 	if self.isLocal then
-		updateFpAnimations( self.fpAnimations, self.equipped, dt )
+		updateFpAnimations( self, self.equipped, dt )
 
         if self.pendingThrow then
             local time, frameTime = 0, 0

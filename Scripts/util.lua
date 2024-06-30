@@ -57,7 +57,12 @@ function GetRandomStratagemCode()
 end
 
 function GetFpBoneDir(tool, bone)
-	return (tool:getFpBonePos(bone.."_end") - tool:getFpBonePos(bone)):normalize()
+    local endPos = tool:getFpBonePos(bone.."_end")
+    if endPos == sm.vec3.zero() then
+        return tool:getDirection()
+    end
+
+	return (endPos - tool:getFpBonePos(bone)):normalize()
 end
 
 dofile "StratagemDatabase.lua"
