@@ -6,25 +6,25 @@
             {
                "material" : "DifAsgNor",
                "textureList" : [
-                  "$GAME_DATA/Textures/Default/default_dif.tga",
-                  "$GAME_DATA/Textures/Default/default_asg.tga",
-                  "$GAME_DATA/Textures/Default/default_nor.tga"
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_dif.tga",
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_asg.tga",
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_nor.tga"
                ]
             },
             {
                "material" : "DifAsgNor",
                "textureList" : [
-                  "$GAME_DATA/Textures/Default/default_dif.tga",
-                  "$GAME_DATA/Textures/Default/default_asg.tga",
-                  "$GAME_DATA/Textures/Default/default_nor.tga"
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_detail_dif.tga",
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_detail_asg.tga",
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_detail_nor.tga"
                ]
             },
             {
                "material" : "Glass",
                "textureList" : [
-                  "$GAME_DATA/Objects/Textures/Blocks/blk_glass_dif.tga",
-			         "$GAME_DATA/Objects/Textures/Blocks/blk_glass_asg.tga",
-			         "$GAME_DATA/Textures/Materialtextures/normal_nor.tga"
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_glass_dif.tga",
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_glass_asg.tga",
+                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_glass_nor.tga"
                ]
             }
          ]
