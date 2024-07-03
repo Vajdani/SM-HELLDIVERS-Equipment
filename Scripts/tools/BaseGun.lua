@@ -237,15 +237,15 @@ function BaseGun:client_onUpdate(dt)
 				swapFpAnimation(self.fpAnimations, "aimInto", "aimExit", 0.0)
 			end
 
-            local x, y = sm.localPlayer.getMouseDelta()
+           --[[local x, y = sm.localPlayer.getMouseDelta()
             self.x = (self.x or 0) + x * 0.5
-            self.y = (self.y or 0) + y * 0.5
+            self.y = (self.y or 0) + y * 0.5]]
 
-			self.tool:updateFpAnimation("recoil_horizontal", 0.5 + self.recoil_x + self.x, 1, false)
-			self.tool:updateFpAnimation("recoil_vertical", 0.5 - self.recoil_y + self.y, 1, false)
+			self.tool:updateFpAnimation("recoil_horizontal", 0.5 + self.recoil_x --[[+ self.x]], 1, false)
+			self.tool:updateFpAnimation("recoil_vertical", 0.5 - self.recoil_y --[[+ self.y]], 1, false)
 
-            self.x = sm.util.lerp(self.x, 0, dt * 10)
-            self.y = sm.util.lerp(self.y, 0, dt * 10)
+            --[[self.x = sm.util.lerp(self.x, 0, dt * 10)
+            self.y = sm.util.lerp(self.y, 0, dt * 10)]]
 		end
 		updateFpAnimations(self, self.equipped, dt)
 	end

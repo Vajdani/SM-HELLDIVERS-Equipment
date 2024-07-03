@@ -12,14 +12,19 @@
                ]
             },
             {
-               "custom" : {
-                  "shadow" : false
-               },
-               "material" : "DifAsgNorAlpha",
+               "material" : "DifAsgNor",
                "textureList" : [
-                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_sight_dif.png",
-                  "$CONTENT_DATA/Tools/AutoCannon/char_autocannon_sight_asg.png",
+                  "$GAME_DATA/Textures/Default/default_dif.tga",
+                  "$GAME_DATA/Textures/Default/default_asg.tga",
                   "$GAME_DATA/Textures/Default/default_nor.tga"
+               ]
+            },
+            {
+               "material" : "Glass",
+               "textureList" : [
+                  "$GAME_DATA/Objects/Textures/Blocks/blk_glass_dif.tga",
+			         "$GAME_DATA/Objects/Textures/Blocks/blk_glass_asg.tga",
+			         "$GAME_DATA/Textures/Materialtextures/normal_nor.tga"
                ]
             }
          ]

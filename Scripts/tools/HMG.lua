@@ -3,6 +3,8 @@ dofile("$SURVIVAL_DATA/Scripts/util.lua")
 dofile("$SURVIVAL_DATA/Scripts/game/survival_shapes.lua")
 dofile("$SURVIVAL_DATA/Scripts/game/survival_projectiles.lua")
 
+dofile "BaseGun.lua"
+
 local rpm = {
 	[1] = 1 / (450/60),
 	[2] = 1 / (750/60),
