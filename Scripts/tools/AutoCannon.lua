@@ -53,7 +53,7 @@ AutoCannon.shootData = {
 		jumpDispersionMultiplier = 2
 	}
 }
-AutoCannon.magCapacity = 10
+AutoCannon.magCapacity = 100000
 AutoCannon.magAmount = 0
 AutoCannon.hipRecoilRecoverySpeed = 5
 AutoCannon.aimRecoilRecoverySpeed = 7.5
@@ -63,12 +63,12 @@ AutoCannon.renderables = {
 	"$CONTENT_DATA/Tools/AutoCannon/char_autocannon.rend"
 }
 AutoCannon.renderablesTp = {
-	"$CONTENT_DATA/Tools/AutoCannon/char_male_tp_autocannon.rend",
-	"$CONTENT_DATA/Tools/AutoCannon/char_autocannon_tp_animlist.rend",
+	"$CONTENT_DATA/Tools/AutoCannon/Renderables/char_male_tp_autocannon.rend",
+	"$CONTENT_DATA/Tools/AutoCannon/Renderables/char_autocannon_tp_animlist.rend",
 }
 AutoCannon.renderablesFp = {
-	"$CONTENT_DATA/Tools/AutoCannon/char_male_fp_autocannon.rend",
-	"$CONTENT_DATA/Tools/AutoCannon/char_autocannon_fp_animlist.rend",
+	"$CONTENT_DATA/Tools/AutoCannon/Renderables/char_male_fp_autocannon.rend",
+	"$CONTENT_DATA/Tools/AutoCannon/Renderables/char_autocannon_fp_animlist.rend",
 }
 
 function AutoCannon:loadAnimations()
@@ -118,8 +118,8 @@ function AutoCannon:loadAnimations()
 				equip = { "spudgun_pickup", { nextAnimation = "idle" } },
 				unequip = { "spudgun_putdown" },
 
-				idle = { "spudgun_idle", { looping = true } },
-				shoot = { "spudgun_shoot", { nextAnimation = "idle" } },
+				idle = { "autocannon_idle", { looping = true } },
+				shoot = { "autocannon_shoot", { nextAnimation = "idle" } },
 
 				aimInto = { "spudgun_aim_into", { nextAnimation = "aimIdle" } },
 				aimExit = { "spudgun_aim_exit", { nextAnimation = "idle", blendNext = 0 } },

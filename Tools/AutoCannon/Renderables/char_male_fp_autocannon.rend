@@ -1,8 +1,8 @@
 {
 	"lodList": [{
 		"animationList" : [
-			{ "name" : "spudgun_idle", 					"file" : "$GAME_DATA/Character/Char_Male/Animations/Firstperson/Spudgun/ani_char_male_fp_spudgun_normal_idle.dae" },
-			{ "name" : "spudgun_shoot", 				"file" : "$GAME_DATA/Character/Char_Male/Animations/Firstperson/Spudgun/ani_char_male_fp_spudgun_normal_shoot.dae" },
+			{ "name" : "autocannon_idle", 				"file" : "$CONTENT_DATA/Tools/AutoCannon/Animations/Character/char_male_fp_autocannon_idle.dae" },
+			{ "name" : "autocannon_shoot", 				"file" : "$CONTENT_DATA/Tools/AutoCannon/Animations/Character/char_male_fp_autocannon_idle.dae" },
 
 			{ "name" : "spudgun_pickup", 				"file" : "$GAME_DATA/Character/Char_Male/Animations/Firstperson/Spudgun/ani_char_male_fp_spudgun_normal_pickup.dae" },
 			{ "name" : "spudgun_putdown", 				"file" : "$GAME_DATA/Character/Char_Male/Animations/Firstperson/Spudgun/ani_char_male_fp_spudgun_normal_putdown.dae" },

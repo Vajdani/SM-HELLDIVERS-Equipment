@@ -8,7 +8,7 @@
 			{ "name": "spudgun_putdown", 				"file": "$GAME_DATA/Character/Char_Male/Animations/Thirdperson/Spudgun/ani_char_male_spudgun_putdown.dae" },
 
 			{ "name": "spudgun_relax", 					"file": "$GAME_DATA/Character/Char_Male/Animations/Thirdperson/Spudgun/ani_char_male_spudgun_idle_relaxed.dae", "looping": true },
-			{ "name": "spudgun_idle", 					"file": "$GAME_DATA/Character/Char_Male/Animations/Thirdperson/Spudgun/ani_char_male_spudgun_idle.dae", "looping": true },
+			{ "name": "spudgun_idle", 					"file": "$CONTENT_DATA/Tools/AutoCannon/Animations/Character/char_male_fp_autocannon_idle.dae", "looping": true },
 			{ "name": "spudgun_shoot", 					"file": "$GAME_DATA/Character/Char_Male/Animations/Thirdperson/Spudgun/ani_char_male_spudgun_shoot.dae" },
 			{ "name": "spudgun_aim", 					"file": "$GAME_DATA/Character/Char_Male/Animations/Thirdperson/Spudgun/ani_char_male_spudgun_aim_idle.dae", "looping": true },
 			{ "name": "spudgun_aim_shoot", 				"file": "$GAME_DATA/Character/Char_Male/Animations/Thirdperson/Spudgun/ani_char_male_spudgun_aim_shoot.dae" },
