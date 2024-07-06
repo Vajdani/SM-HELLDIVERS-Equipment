@@ -68,7 +68,7 @@ function BaseGun:server_onCreate()
 	local data = self.storage:load() or {}
 	self.sv_ammo = data.ammo or self.magCapacity
 	self.sv_mags = data.mags or self.magAmount
-	self.sv_settings = data.settings or self.defaultSettings
+	self.sv_settings = data.settings or shallowcopy(self.defaultSettings)
 
 	self:sv_saveAndSync()
 end

@@ -102,6 +102,8 @@ function HelldiversBackend:server_onCreate()
 
     self.queuedStratagems = {}
 
+    self.playerInventories = {}
+
     if not sm.json.fileExists(blueprintTracker) then
         sm.json.save({}, blueprintTracker)
     end
@@ -333,7 +335,44 @@ function HelldiversBackend:sv_setLoadout(args)
     self:sv_requestData(nil, args.player)
 end
 
+function HelldiversBackend:sv_switchedToItem(args)
+    self.network:sendToClients("cl_n_switchedToItem", args)
+end
 
+
+
+local holsterItems = {
+    ["552b4ced-ca96-4a71-891c-ab54fe9c6873"] = {
+        item     = sm.uuid.new("d48e6383-200a-4aa8-9901-47fdf7969ad9"),
+        bone     = "jnt_backpack",
+        offset   = sm.vec3.new(0.25,0.15,0.1),
+        rotation = sm.quat.angleAxis(math.rad(190), vec3_forward) * sm.quat.angleAxis(math.rad(90), vec3_right),
+        size     = sm.vec3.one()
+    }, --HMG
+    ["b3ad837a-2235-476e-9408-4b5321b1032f"] = {
+        item     = sm.uuid.new("eac17336-0356-4a9f-b531-a6d44391a83b"),
+        bone     = "jnt_backpack",
+        offset   = sm.vec3.new(0.2,0,0.1),
+        rotation = sm.quat.angleAxis(math.rad(170), vec3_forward),
+        size     = sm.vec3.one()
+    }, --AutoCannon
+    --[[
+    ["e4ed32d5-d891-40e3-b82e-db975884dbb3"] = {
+        item     = sm.uuid.new("db67924a-39b0-4522-a3a5-270ef2a8538b"),
+        bone     = "jnt_hips",
+        offset   = sm.vec3.new(-0.225,0.1,-0.05),
+        rotation = sm.quat.angleAxis(math.rad(90), vec3_right) * sm.quat.angleAxis(math.rad(-10), vec3_forward),
+        size     = sm.vec3.one()
+    }, --M1911
+    ["96f3b45c-8729-4573-bc14-bbe1cc7fd2bb"] = {
+        item     = sm.uuid.new("d9d3c67a-0186-45c2-af76-4bb1b0951c21"),
+        bone     = "jnt_hips",
+        offset   = sm.vec3.new(-0.225,0.1,-0.05),
+        rotation = sm.quat.angleAxis(math.rad(90), vec3_right) * sm.quat.angleAxis(math.rad(-10), vec3_forward),
+        size     = sm.vec3.one()
+    }, --Magnum44
+    ]]
+}
 
 function HelldiversBackend:client_onCreate()
     if cl_setupComplete then return end
@@ -346,13 +385,98 @@ function HelldiversBackend:client_onCreate()
     g_cl_loadout = {}
     g_cl_stratagemProgression = {}
     g_cl_cooldowns = {}
+
+    self.cl_holsteredItems = {}
+
     self.network:sendToServer("sv_requestData")
 
     cl_setupComplete = true
 end
 
+function HelldiversBackend:cl_n_switchedToItem(args)
+    if args.player ~= sm.localPlayer.getPlayer() then
+        self:cl_switchedToItem(args)
+    end
+end
+
+function HelldiversBackend:cl_switchedToItem(args)
+    local player = args.player
+    local pId = player.id
+    local newItem =args.item
+
+    if not self.cl_holsteredItems[pId] then
+        self.cl_holsteredItems[pId] = {}
+    end
+
+    local newHolster = holsterItems[tostring(newItem)]
+    if newHolster and (self.cl_holsteredItems[pId][newHolster.bone] or {}).item ~= newItem then
+        local holster = self.cl_holsteredItems[pId][newHolster.bone]
+        if holster then
+            local effect = holster.effect
+            if sm.exists(effect) then
+                effect:destroy()
+            end
+        end
+
+        self.cl_holsteredItems[pId][newHolster.bone] = {
+            effect = self:cl_createHolsterItemEffect(player, newHolster),
+            item = newItem,
+            enabled = false
+        }
+    end
+
+    for slot, holster in pairs(self.cl_holsteredItems[pId] or {}) do
+        holster.enabled = holster.item ~= newItem
+    end
+
+    self.activeItem = newItem
+end
+
 function HelldiversBackend:client_onFixedUpdate()
     if sm.HELLDIVERSBACKEND ~= self.tool or not g_cl_queuedStratagems then return end
+
+    local localPlayer = sm.localPlayer.getPlayer()
+    local activeItem = sm.localPlayer.getActiveItem()
+    if activeItem ~= self.activeItem then
+        local args = { player = localPlayer, item = activeItem }
+        self:cl_switchedToItem(args)
+        self.network:sendToServer("sv_switchedToItem", args)
+    end
+
+    for k, player in pairs(sm.player.getAllPlayers()) do
+        local items = self.cl_holsteredItems[player.id] or {}
+        for _k, v in pairs(items) do
+            if not sm.exists(v.effect) then
+                local inv = sm.game.getLimitedInventory() and player:getInventory() or player:getHotbar()
+                if inv:canSpend(v.item, 1) then
+                    v.effect = self:cl_createHolsterItemEffect(player, holsterItems[tostring(v.item)])
+                else
+                    local holsterItem = self:GetFirstHolsterItem(player)
+                    if holsterItem then
+                        v.effect = self:cl_createHolsterItemEffect(player, holsterItem)
+                    else
+                        self.cl_holsteredItems[player.id][_k] = nil
+                    end
+                end
+
+                goto continue
+            end
+
+            local isPlaying, enabled = v.effect:isPlaying(), v.enabled and (localPlayer ~= player or not sm.localPlayer.isInFirstPersonView())
+            if isPlaying and not enabled then
+                v.effect:stop()
+            elseif not isPlaying and enabled then
+                v.effect:start()
+            end
+
+            local holsterItem = holsterItems[tostring(v.item)]
+            v.effect:setOffsetPosition(holsterItem.offset)
+            v.effect:setOffsetRotation(holsterItem.rotation)
+            v.effect:setScale(holsterItem.size * 0.25)
+
+            ::continue::
+        end
+    end
 
     for k, v in pairs(g_cl_queuedStratagems) do
         v.activation = v.activation - 1
@@ -484,5 +608,26 @@ function HelldiversBackend:cl_recieveData(data)
 
     if g_stratagemTerminal then
         sm.event.sendToInteractable(g_stratagemTerminal, "cl_refresh")
+    end
+end
+
+function HelldiversBackend:cl_createHolsterItemEffect(player, holsterItem)
+    local effect = sm.effect.createEffect("ShapeRenderable", player.character, holsterItem.bone)
+    effect:setParameter("uuid", holsterItem.item)
+    effect:setOffsetPosition(holsterItem.offset)
+    effect:setOffsetRotation(holsterItem.rotation)
+    effect:setScale(holsterItem.size * 0.25)
+
+    return effect
+end
+
+function HelldiversBackend:GetFirstHolsterItem(player)
+    local inv = sm.game.getLimitedInventory() and player:getInventory() or player:getHotbar()
+    for i = 0, inv:getSize() do
+        local item = inv:getItem(i)
+        local holsterItem = holsterItems[tostring(item.uuid)]
+        if holsterItem then
+            return holsterItem
+        end
     end
 end

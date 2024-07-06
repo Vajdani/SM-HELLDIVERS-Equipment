@@ -2,6 +2,7 @@ sm.log.info("[HELLDIVERS] Override script loaded")
 
 local ToolItems = {
 	["552b4ced-ca96-4a71-891c-ab54fe9c6873"] = sm.uuid.new("d48e6383-200a-4aa8-9901-47fdf7969ad9"), --HMG
+    ["b3ad837a-2235-476e-9408-4b5321b1032f"] = sm.uuid.new("eac17336-0356-4a9f-b531-a6d44391a83b"), --AutoCannon
 }
 
 oldGetToolProxyItem = oldGetToolProxyItem or GetToolProxyItem

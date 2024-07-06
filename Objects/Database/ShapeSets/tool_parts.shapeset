@@ -15,6 +15,22 @@
 			"ratings": {},
 			"stackSize": 1,
 			"showInInventory": false
+		},
+		{
+			"uuid": "eac17336-0356-4a9f-b531-a6d44391a83b",
+			"name": "obj_tool_autocannon",
+			"renderable": "$CONTENT_DATA/Tools/AutoCannon/char_autocannon.rend",
+			"color": "ffffff",
+			"box": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"physicsMaterial": "Plastic",
+			"rotationSet": "Default",
+			"ratings": {},
+			"stackSize": 1,
+			"showInInventory": false
 		}
 	]
 }
