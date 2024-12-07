@@ -34,6 +34,10 @@ local renderablesFp = {
     "$SURVIVAL_DATA/Character/Char_Male/Animations/char_male_fp_glowstick.rend"
 }
 
+---@type StratagemHUD
+---@diagnostic disable-next-line: missing-fields
+g_stratagemHud = nil
+
 sm.tool.preloadRenderables( renderables )
 sm.tool.preloadRenderables( renderablesTp )
 sm.tool.preloadRenderables( renderablesFp )
@@ -178,13 +182,13 @@ function Stratagem.client_onUpdate( self, dt )
                     "sv_throwStratagem",
                     {
                         pos = self.tool:isInFirstPersonView() and sm.camera.getPosition() or self.tool:getTpBonePos("root_item"),
-                        code = g_strataGemCode
+                        code = g_stratagemCode
                     }
                 )
 
                 self.pendingThrow = false
                 g_stratagemActivated = false
-                g_strataGemCode = nil
+                g_stratagemCode = nil
                 self.stratagemUserdata = nil
                 self:cl_updateStratagemColour()
             end
@@ -427,7 +431,7 @@ function Stratagem.client_onUnequip( self )
             end
 
             g_stratagemActivated = false
-            g_strataGemCode = nil
+            g_stratagemCode = nil
             self.stratagemUserdata = nil
             self.pendingThrow = false
 
@@ -460,7 +464,7 @@ function UpdateStratagemHud()
 
         if uuid then
             local stratagem = GetStratagemUserdata(uuid)
-            local isActive = g_stratagemActivated and stratagem.code == g_strataGemCode
+            local isActive = g_stratagemActivated and stratagem.code == g_stratagemCode
             gui:setVisible(widget, open or isActive)
 
             gui:setText(widget.."_name", stratagem.name)
@@ -500,10 +504,10 @@ function UpdateStratagemHud()
                 bar:update_percentage(1)
 
                 local code = stratagem.code
-                if g_strataGemCode then
-                    local codeLength = #g_strataGemCode
+                if g_stratagemCode then
+                    local codeLength = #g_stratagemCode
                     local subCode = code:sub(1, codeLength)
-                    if subCode == g_strataGemCode then
+                    if subCode == g_stratagemCode then
                         for j = 1, 8 do
                             local box = widget.."_codeDigit"..j
                             gui:setImage(box, indexToArrow[code:sub(j, j)] or "$GAME_DATA/Textures/transparent.tga")
@@ -550,7 +554,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
 
         if rmb == 1 and not self.pendingThrow then
             g_stratagemActivated = false
-            g_strataGemCode = nil
+            g_stratagemCode = nil
             self.stratagemUserdata = nil
             self.network:sendToServer("sv_updateStratagemColour")
             UpdateStratagemHud()
@@ -572,7 +576,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             --g_stratagemHud.gui:close()
             self.network:sendToServer("sv_cancel")
 
-            if g_strataGemCode then
+            if g_stratagemCode then
                 local stratagems = {}
                 local tick = sm.game.getServerTick()
                 for k, v in pairs(GetStratagems()) do
@@ -582,14 +586,14 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
                     end
                 end
 
-                local stratagem = GetStratagem(g_strataGemCode, stratagems)
+                local stratagem = GetStratagem(g_stratagemCode, stratagems)
                 if stratagem then
                     g_stratagemActivated = true
-                    self.stratagemUserdata = GetStratagemUserdata(GetStratagem(g_strataGemCode).uuid)
+                    self.stratagemUserdata = GetStratagemUserdata(stratagem.uuid)
                     self.network:sendToServer("sv_updateStratagemColour", self.stratagemUserdata.type)
                 else
                     sm.effect.playHostedEffect("Stratagem - Fail", self.tool:getOwner().character)
-                    g_strataGemCode = nil
+                    g_stratagemCode = nil
                 end
             end
 
@@ -697,7 +701,7 @@ function Input:client_onAction(action, state)
 
     local isBlocked = blockActions[g_playerData.controlScheme][action] == true and state
     if isBlocked then
-        g_strataGemCode = (g_strataGemCode or "")..convertInputs[action]
+        g_stratagemCode = (g_stratagemCode or "")..convertInputs[action]
         UpdateStratagemHud()
         sm.effect.playHostedEffect("Stratagem - Input", sm.localPlayer.getPlayer().character)
     end

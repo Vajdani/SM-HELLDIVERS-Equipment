@@ -402,7 +402,7 @@ end
 function HelldiversBackend:cl_switchedToItem(args)
     local player = args.player
     local pId = player.id
-    local newItem =args.item
+    local newItem = args.item
 
     if not self.cl_holsteredItems[pId] then
         self.cl_holsteredItems[pId] = {}
