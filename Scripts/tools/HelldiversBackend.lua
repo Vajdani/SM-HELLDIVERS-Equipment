@@ -148,7 +148,7 @@ function HelldiversBackend:server_onFixedUpdate()
             end
         end
 
-        if stratagem.activation <= 0 and stratagem:update() or skip then
+        if skip or stratagem.activation <= 0 and stratagem:update() then
             self.queuedStratagems[k] = nil
             self.network:sendToClients("cl_DeleteStratagem", k)
         end
@@ -458,9 +458,8 @@ function HelldiversBackend:client_onFixedUpdate()
     end
 
     for k, player in pairs(sm.player.getAllPlayers()) do
-        local items = self.cl_holsteredItems[player.id] or {}
-        for _k, v in pairs(items) do
-            local inv = sm.game.getLimitedInventory() and player:getInventory() or player:getHotbar()
+        local inv = sm.game.getLimitedInventory() and player:getInventory() or player:getHotbar()
+        for itemId, v in pairs(self.cl_holsteredItems[player.id] or {}) do
             local hasItem, effectExists = inv:canSpend(v.item, 1), sm.exists(v.effect)
             if not effectExists or not hasItem then
                 if hasItem then
@@ -472,13 +471,13 @@ function HelldiversBackend:client_onFixedUpdate()
 
                     local holsterItem, itemUuid = self:GetFirstHolsterItem(player, holsterItems[tostring(v.item)].bone)
                     if holsterItem then
-                        self.cl_holsteredItems[player.id][_k] = {
+                        self.cl_holsteredItems[player.id][itemId] = {
                             effect = self:cl_createHolsterItemEffect(player, holsterItem),
                             item = itemUuid,
                             enabled = true
                         }
                     else
-                        self.cl_holsteredItems[player.id][_k] = nil
+                        self.cl_holsteredItems[player.id][itemId] = nil
                     end
                 end
 
@@ -546,7 +545,8 @@ end
 function HelldiversBackend:cl_OnStratagemHit(args)
     local pos = args.hitData.position
     local id = args.id
-    local userdata = GetStratagemUserdata(id:sub(3, #id))
+    local separator = string.find(id, "_")
+    local userdata = GetStratagemUserdata(id:sub(separator + 1, #id))
 
     local beaconScale = vec3_new(1,500,1)
     local beacon = sm.effect.createEffect("Stratagem - Beacon")
@@ -600,6 +600,10 @@ function HelldiversBackend:cl_OnStratagemHit(args)
     end
 
     g_cl_queuedStratagems[id] = args
+
+    if sm.localPlayer.getPlayer().id == tonumber(id:sub(1, separator - 1)) then
+        UpdateStratagemHud()
+    end
 end
 
 function HelldiversBackend:cl_DeleteStratagem(index)

@@ -191,6 +191,7 @@ function Stratagem.client_onUpdate( self, dt )
                 g_stratagemCode = nil
                 self.stratagemUserdata = nil
                 self:cl_updateStratagemColour()
+                UpdateStratagemHud()
             end
         end
 	end
@@ -374,7 +375,7 @@ function Stratagem:client_onEquip()
             self.tutorialGui = sm.gui.createGuiFromLayout( "$GAME_DATA/Gui/Layouts/Tutorial/PopUp_Tutorial.layout", true, { isHud = true, isInteractive = false, needsCursor = false } )
             self.tutorialGui:setText( "TextTitle", "HOW TO USE STRATAGEMS" )
             self.tutorialGui:setText( "TextMessage",
-                ("1. Buy stratagems at #ff0000Stratagem Terminals#a5a5a5\n2. Press #df7f00%s#a5a5a5 to create your #ff0000loadout#a5a5a5\n3. Hold #df7f00%s#a5a5a5 to #ff0000type#a5a5a5\n4. #ff0000Type#a5a5a5 in the stratagem code with #df7f00%s%s%s%s#a5a5a5\n5. #ff0000Throw#a5a5a5 the stratagem with #df7f00%s#a5a5a5"):format(
+                ("1. Buy stratagems at #ffffffStratagem Terminals#a5a5a5\n2. Press #df7f00%s#a5a5a5 to create your #ffffffloadout#a5a5a5\n3. Hold #df7f00%s#a5a5a5 to #fffffftype#a5a5a5\n4. #ffffffType#a5a5a5 in the stratagem code with #df7f00%s%s%s%s#a5a5a5\n5. #ffffffThrow#a5a5a5 the stratagem with #df7f00%s#a5a5a5"):format(
                     sm.gui.getKeyBinding("NextCreateRotation"),
                     sm.gui.getKeyBinding("Create"),
                     sm.gui.getKeyBinding("Forward"),
@@ -464,8 +465,9 @@ function UpdateStratagemHud()
 
         if uuid then
             local stratagem = GetStratagemUserdata(uuid)
+            local stratagemInbound = g_cl_queuedStratagems[id..uuid]
             local isActive = g_stratagemActivated and stratagem.code == g_stratagemCode
-            gui:setVisible(widget, open or isActive)
+            gui:setVisible(widget, open or isActive or stratagemInbound ~= nil)
 
             gui:setText(widget.."_name", stratagem.name)
             gui:setIconImage(widget.."_preview", sm.uuid.new(stratagem.icon))
@@ -478,7 +480,6 @@ function UpdateStratagemHud()
                 goto continue
             end
 
-            local stratagemInbound = g_cl_queuedStratagems[id..uuid]
             if stratagemInbound then
                 local time = stratagemInbound.activation/40
                 if time > 0 then
@@ -486,6 +487,10 @@ function UpdateStratagemHud()
                 else
                     gui:setText(widget.."_status", "Ongoing...")
                 end
+
+                gui:setVisible(widget.."_codePanel", false)
+
+                goto continue
             end
 
             local bar = g_stratagemHud.progressbars[i]
@@ -536,8 +541,9 @@ function UpdateStratagemHud()
 end
 
 function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
-    if sm.world.getCurrentWorld():isIndoor() then
-        sm.gui.setInteractionText("<p bg='gui_keybinds_bg' spacing='0'>Stratagems are disabled indoors!</p>")
+    local char = sm.localPlayer.getPlayer().character
+    if sm.world.getCurrentWorld():isIndoor() or not char or char:isTumbling() or char:isDiving() then
+        sm.gui.setInteractionText("<p bg='gui_keybinds_bg' spacing='0'> The Super Destroyer is unreachable! </p>")
         return true, false
     end
 
@@ -567,6 +573,8 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
         if lmb == 1 then
             if #g_cl_loadout == 0 then
                 sm.gui.displayAlertText("Your loadout is empty!")
+                sm.audio.play("RaftShark")
+                return true, true
             end
 
             g_stratagemHud.isOpen = true
@@ -701,6 +709,10 @@ local convertInputs = {
     [8] = "4"
 }
 
+function Input:sv_playInput(args, player)
+    sm.effect.playEffect("Stratagem - Input", player.character.worldPosition)
+end
+
 function Input:client_onAction(action, state)
     if g_stratagemActivated then
         sm.log.warning("[HELLDIVERS] Blocked invalid stratagem input")
@@ -711,7 +723,8 @@ function Input:client_onAction(action, state)
     if isBlocked then
         g_stratagemCode = (g_stratagemCode or "")..convertInputs[action]
         UpdateStratagemHud()
-        sm.effect.playHostedEffect("Stratagem - Input", sm.localPlayer.getPlayer().character)
+        self.network:sendToServer("sv_playInput")
+        -- sm.effect.playHostedEffect("Stratagem - Input", sm.localPlayer.getPlayer().character)
     end
 
     return isBlocked

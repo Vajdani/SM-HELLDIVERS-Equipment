@@ -113,7 +113,7 @@ for k, obj in pairs(_G) do
         elseif obj.server_onUnitUpdate then
             sm.log.info("[HELLDIVERS] Adding external takeDamage to unit...")
             obj.sv_e_takeDamage = function(obj, args)
-                obj:sv_takeDamage(args.damage or 0, args.impact or vec3_zero, args.hitPos or obj.unit.character.worldPosition)
+                obj:sv_takeDamage(args.damage or 0, args.impact or sm.vec3.zero(), args.hitPos or obj.unit.character.worldPosition)
             end
         end
     end
@@ -160,11 +160,11 @@ function Package.sv_tryUnpack( self, delete )
 end
 
 function Package.sv_unpack( self )
-    sm.effect.playEffect( self.data.unboxEffect01, self.shape.worldPosition, nil, self.shape.worldRotation, vec3_new(1,1,1), { Color = self.shape.color } )
+    sm.effect.playEffect( self.data.unboxEffect01, self.shape.worldPosition, nil, self.shape.worldRotation, sm.vec3.new(1,1,1), { Color = self.shape.color } )
 
     local yaw = math.atan2( self.shape.up.y, self.shape.up.x ) - math.pi / 2
     local zShapeOffset = math.abs( ( self.shape.worldRotation * sm.item.getShapeOffset( self.shape.uuid ) ).z )
-    local spawnOffset = vec3_new( 0, 0, -zShapeOffset )
+    local spawnOffset = sm.vec3.new( 0, 0, -zShapeOffset )
     return sm.unit.createUnit( sm.uuid.new( self.data.unitUuid ), self.shape.worldPosition + spawnOffset, yaw, { color = self.shape.color } )
 end
 
@@ -182,4 +182,17 @@ function Package:delay(unit)
     end
 
     sm.shape.destroyPart( self.shape )
+end
+
+
+
+dofile( "$SURVIVAL_DATA/Scripts/game/managers/WaterManager.lua" )
+
+function WaterManager:trigger_onProjectile(trigger, hitPos, hitTime, hitVelocity, _, attacker, damage, userData, hitNormal, projectileUuid )
+    if projectileUuid == projectile_stratagem then
+        return true
+    end
+
+	sm.effect.playEffect( "Projectile - HitWater", hitPos )
+	return false
 end

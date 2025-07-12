@@ -151,6 +151,7 @@ function DropPod:client_onClientDataUpdate(data, channel)
         else
             effect = sm.effect.createEffect("ShapeRenderable", self.interactable, bone)
             effect:setParameter("uuid", effectName)
+            effect:setParameter("color", effectData.colour or sm.item.getShapeDefaultColor(effectName))
             effect:setScale((effectData.size or vec3_one) * 0.25)
         end
 
@@ -243,7 +244,11 @@ ResupplyPod.pickupRegions = {
             size   = vec3_one * 0.15,
         },
         effect = {
-            name   = "Stratagem - Beacon",
+            name     = obj_containers_woodbox,
+            size     = vec3_new(0.7, 0.75, 0.25),
+            offset   = vec3_new(0, 0, 0.025),
+            rotation = quat_identity,
+            colour   = sm.color.new("#ffff00")
         },
         bone   = "jnt_right_upper",
         items  = {
@@ -259,7 +264,11 @@ ResupplyPod.pickupRegions = {
             size   = vec3_one * 0.15,
         },
         effect = {
-            name   = "Stratagem - Beacon",
+            name     = obj_containers_woodbox,
+            size     = vec3_new(0.7, 0.75, 0.25),
+            offset   = vec3_new(0, 0, 0.025),
+            rotation = quat_identity,
+            colour   = sm.color.new("#ffff00")
         },
         bone   = "jnt_right_lower",
         items  = {
@@ -275,7 +284,11 @@ ResupplyPod.pickupRegions = {
             size   = vec3_one * 0.15,
         },
         effect = {
-            name   = "Stratagem - Beacon",
+            name     = obj_containers_woodbox,
+            size     = vec3_new(0.7, 0.75, 0.25),
+            offset   = vec3_new(0, 0, -0.025),
+            rotation = quat_identity,
+            colour   = sm.color.new("#ffff00")
         },
         bone   = "jnt_left_upper",
         items  = {
@@ -291,7 +304,11 @@ ResupplyPod.pickupRegions = {
             size   = vec3_one * 0.15,
         },
         effect = {
-            name   = "Stratagem - Beacon",
+            name     = obj_containers_woodbox,
+            size     = vec3_new(0.7, 0.75, 0.25),
+            offset   = vec3_new(0, 0, -0.025),
+            rotation = quat_identity,
+            colour   = sm.color.new("#ffff00")
         },
         bone   = "jnt_left_lower",
         items  = {
