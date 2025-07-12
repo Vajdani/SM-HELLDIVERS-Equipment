@@ -5,6 +5,15 @@
 ---@field dropEffect? string|Uuid
 ---@field update function
 
+---@class StratagemUserdata
+---@field name string
+---@field description string
+---@field icon string
+---@field type string
+---@field code string
+---@field cost { uuid: Uuid, amount: number }[]
+---@field preview? number
+
 local function SpawnStaticDropPod(self, position)
     return sm.shape.createPart(self.dropEffect, position - dropPodRotation * sm.item.getShapeOffset(self.dropEffect), dropPodRotation, false, true)
 end
@@ -51,7 +60,7 @@ local stratagems = {
         activation = 3 * 40,
         update = function(self)
             if self.tick%80 == 0 then
-                local origin = self.hitData.position + sm.vec3.new(0,0,20)
+                local origin = self.hitData.position + vec3_new(0,0,20)
                 for i = 0, 6 do
                     local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(i * 60), vec3_up)
                     sm.projectile.projectileAttack(sm.uuid.new( "31b92b9a-a9f8-4f6d-988b-04ad479978ec" ), 100, origin, dir * 100, self.hitData.shooter)
@@ -70,10 +79,10 @@ local stratagems = {
         activation = 1 * 40,
         update = function(self)
             if self.tick%2 == 0 then
-                local origin = self.hitData.position + sm.vec3.new(0,0,20)
+                local origin = self.hitData.position + vec3_new(0,0,20)
                 local dir = vec3_forward:rotate(-math.rad(math.random(45, 75)), vec3_right):rotate(math.rad(math.random(0, 359)), vec3_up)
                 sm.projectile.projectileAttack(projectile_potato, 100, origin, dir * 100, self.hitData.shooter)
-                sm.effect.playEffect("SpudgunSpinner - SpinnerMuzzel", origin, sm.vec3.zero(), sm.vec3.getRotation(dir, vec3_up))
+                sm.effect.playEffect("SpudgunSpinner - SpinnerMuzzel", origin, vec3_zero, sm.vec3.getRotation(dir, vec3_up))
             end
 
             self.tick = self.tick + 1
@@ -100,6 +109,7 @@ BakeUUIDToIndex()
 
 
 
+---@type { [string]: StratagemUserdata }
 local stratagemUserdata = {
     ["5fe2e519-9c05-4b4d-b0d6-3dc6fa7357c8"] = {
         name = "Resupply",
@@ -120,7 +130,7 @@ local stratagemUserdata = {
     },
     ["4778cafb-d7d0-44cd-bca0-a2494018108b"] = {
         name = "Eagle 500kg Bomb",
-        description = "big domb goes big boom",
+        description = "big bomb goes big boom",
         icon = "24001201-40dd-4950-b99f-17d878a9e07b", --large explosive
         type = "offensive",
         code = "32444",
@@ -187,6 +197,13 @@ local stratagemUserdata = {
         }
     }
 }
+
+for k, v in pairs(stratagemUserdata) do
+    local path = "$CONTENT_DATA/Gui/StratagemVideos/"..k.."/video.json"
+    if sm.json.fileExists(path) then
+        stratagemUserdata[k].preview = tonumber(sm.json.open(path).frameCount)
+    end
+end
 
 
 
@@ -257,8 +274,8 @@ function GetStratagems()
     return stratagems
 end
 
-function GetStratagemPages()
-    return math.ceil(#stratagems/6)
+function GetStratagemPageCount(itemsPerPage)
+    return math.ceil(#stratagems/itemsPerPage)
 end
 
 function GetStratagemUserdata(id)
@@ -271,10 +288,10 @@ function GetStratagemUserdata(id)
 end
 
 local typeNames = {
-    supply    = "SUPPLY STRATAGEMT PERMIT",
-    mission   = "MISSION STRATAGEMT PERMIT",
-    defensive = "DEFENSIVE STRATAGEMT PERMIT",
-    offensive = "OFFENSIVE STRATAGEMT PERMIT"
+    supply    = "SUPPLY STRATAGEM PERMIT",
+    mission   = "MISSION STRATAGEM PERMIT",
+    defensive = "DEFENSIVE STRATAGEM PERMIT",
+    offensive = "OFFENSIVE STRATAGEM PERMIT"
 }
 function GetTypeFullName(type)
     return typeNames[type]

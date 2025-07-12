@@ -4,6 +4,8 @@ dofile "$SURVIVAL_DATA/Scripts/game/survival_loot.lua"
 DropPod = class()
 DropPod.pickupRegions = {}
 
+local destructionTime = 10 * 40
+
 function DropPod:server_onCreate()
     self.loaded = true
 
@@ -18,10 +20,14 @@ function DropPod:server_onCreate()
 
     self.sv_regions = items
     local col = data.col
-    if #items > 0 and not col then
-        local pos = self.shape.localPosition + self.shape.localRotation * sm.vec3.new(1,1,1)
-        col = self.shape.body:createPart(sm.uuid.new("70cc47b6-429b-482f-bf83-765da7a1a3db"), pos, self.shape.zAxis, self.shape.xAxis, true)
-        col.interactable:setParams({ parent = self.shape })
+    if #items > 0 then
+        if not col then
+            local pos = self.shape.localPosition + self.shape.localRotation * vec3_new(1,1,1)
+            col = self.shape.body:createPart(sm.uuid.new("70cc47b6-429b-482f-bf83-765da7a1a3db"), pos, self.shape.zAxis, self.shape.xAxis, true)
+            col.interactable:setParams({ parent = self.shape })
+        end
+    else
+        self.destructionTime = destructionTime
     end
     self.col = col
 
@@ -94,6 +100,7 @@ function DropPod:sv_redeem(args)
 
     self.sv_regions[index] = nil
     if GetRealLength(self.sv_regions) == 0 then
+        self.destructionTime = destructionTime
         self.col:destroyShape()
         self.col = nil
     end
@@ -104,6 +111,14 @@ end
 function DropPod:server_onFixedUpdate()
     self.pos = self.shape.worldPosition
     self.rot = self.shape.worldRotation
+
+    if self.destructionTime then
+        self.destructionTime = self.destructionTime - 1
+        if self.destructionTime <= 0 then
+            self.shape:destroyShape()
+            self.destructionTime = nil
+        end
+    end
 end
 
 
@@ -132,21 +147,21 @@ function DropPod:client_onClientDataUpdate(data, channel)
         local effect
         if type(effectName) == "string" then
             effect = sm.effect.createEffect(effectName, self.interactable, bone)
-            effect:setScale(effectData.size or sm.vec3.one())
+            effect:setScale(effectData.size or vec3_one)
         else
             effect = sm.effect.createEffect("ShapeRenderable", self.interactable, bone)
             effect:setParameter("uuid", effectName)
-            effect:setScale((effectData.size or sm.vec3.one()) * 0.25)
+            effect:setScale((effectData.size or vec3_one) * 0.25)
         end
 
-        effect:setOffsetPosition(effectData.offset or sm.vec3.zero())
-        effect:setOffsetRotation(effectData.rotation or sm.quat.identity())
+        effect:setOffsetPosition(effectData.offset or vec3_zero)
+        effect:setOffsetRotation(effectData.rotation or quat_identity)
 
         effect:start()
         pickup.effect = effect
 
         local hitbox = region.hitbox
-        local trigger = sm.areaTrigger.createAttachedBox(self.interactable, hitbox.size, hitbox.offset, sm.quat.identity(), nil, { index = v })
+        local trigger = sm.areaTrigger.createAttachedBox(self.interactable, hitbox.size, hitbox.offset, quat_identity, nil, { index = v })
         pickup.trigger = trigger
 
         if false then
@@ -224,8 +239,8 @@ ResupplyPod = class(DropPod)
 ResupplyPod.pickupRegions = {
     {
         hitbox = {
-            offset = sm.vec3.new(0, 0.875, 0.214221),
-            size   = sm.vec3.one() * 0.15,
+            offset = vec3_new(0, 0.875, 0.214221),
+            size   = vec3_one * 0.15,
         },
         effect = {
             name   = "Stratagem - Beacon",
@@ -240,8 +255,8 @@ ResupplyPod.pickupRegions = {
     },
     {
         hitbox = {
-            offset = sm.vec3.new(0, 0.374984, 0.214221),
-            size   = sm.vec3.one() * 0.15,
+            offset = vec3_new(0, 0.374984, 0.214221),
+            size   = vec3_one * 0.15,
         },
         effect = {
             name   = "Stratagem - Beacon",
@@ -256,8 +271,8 @@ ResupplyPod.pickupRegions = {
     },
     {
         hitbox = {
-            offset = sm.vec3.new(0, 0.875, -0.214221),
-            size   = sm.vec3.one() * 0.15,
+            offset = vec3_new(0, 0.875, -0.214221),
+            size   = vec3_one * 0.15,
         },
         effect = {
             name   = "Stratagem - Beacon",
@@ -272,8 +287,8 @@ ResupplyPod.pickupRegions = {
     },
     {
         hitbox = {
-            offset = sm.vec3.new(0, 0.374984, -0.214221),
-            size   = sm.vec3.one() * 0.15,
+            offset = vec3_new(0, 0.374984, -0.214221),
+            size   = vec3_one * 0.15,
         },
         effect = {
             name   = "Stratagem - Beacon",
@@ -294,13 +309,13 @@ HMGPod = class(DropPod)
 HMGPod.pickupRegions = {
     {
         hitbox = {
-            offset = sm.vec3.new(0, 0.624984, 0.214221),
-            size   = sm.vec3.new(0.2, 0.45, 0.2),
+            offset = vec3_new(0, 0.624984, 0.214221),
+            size   = vec3_new(0.2, 0.45, 0.2),
         },
         effect = {
             name     = sm.uuid.new( "d48e6383-200a-4aa8-9901-47fdf7969ad9" ),
-            size     = sm.vec3.one() * 0.9,
-            offset   = sm.vec3.new(0.15, 0.27, 0.0625),
+            size     = vec3_one * 0.9,
+            offset   = vec3_new(0.15, 0.27, 0.0625),
             rotation = sm.quat.angleAxis(math.rad(90), vec3_right) * sm.quat.angleAxis(math.rad(90), vec3_up)
         },
         bone   = "jnt_right_middle",

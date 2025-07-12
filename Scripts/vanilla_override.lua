@@ -3,6 +3,7 @@ sm.log.info("[HELLDIVERS] Override script loaded")
 local ToolItems = {
 	["552b4ced-ca96-4a71-891c-ab54fe9c6873"] = sm.uuid.new("d48e6383-200a-4aa8-9901-47fdf7969ad9"), --HMG
     ["b3ad837a-2235-476e-9408-4b5321b1032f"] = sm.uuid.new("eac17336-0356-4a9f-b531-a6d44391a83b"), --AutoCannon
+    ["e3b77d7e-05b6-493c-b6c3-a264f342519a"] = sm.uuid.new("7705f920-b4cb-41f7-8a9c-088539201c35"), --Stratagem
 }
 
 oldGetToolProxyItem = oldGetToolProxyItem or GetToolProxyItem
@@ -112,7 +113,7 @@ for k, obj in pairs(_G) do
         elseif obj.server_onUnitUpdate then
             sm.log.info("[HELLDIVERS] Adding external takeDamage to unit...")
             obj.sv_e_takeDamage = function(obj, args)
-                obj:sv_takeDamage(args.damage or 0, args.impact or sm.vec3.zero(), args.hitPos or obj.unit.character.worldPosition)
+                obj:sv_takeDamage(args.damage or 0, args.impact or vec3_zero, args.hitPos or obj.unit.character.worldPosition)
             end
         end
     end
@@ -159,11 +160,11 @@ function Package.sv_tryUnpack( self, delete )
 end
 
 function Package.sv_unpack( self )
-    sm.effect.playEffect( self.data.unboxEffect01, self.shape.worldPosition, nil, self.shape.worldRotation, sm.vec3.new(1,1,1), { Color = self.shape.color } )
+    sm.effect.playEffect( self.data.unboxEffect01, self.shape.worldPosition, nil, self.shape.worldRotation, vec3_new(1,1,1), { Color = self.shape.color } )
 
     local yaw = math.atan2( self.shape.up.y, self.shape.up.x ) - math.pi / 2
     local zShapeOffset = math.abs( ( self.shape.worldRotation * sm.item.getShapeOffset( self.shape.uuid ) ).z )
-    local spawnOffset = sm.vec3.new( 0, 0, -zShapeOffset )
+    local spawnOffset = vec3_new( 0, 0, -zShapeOffset )
     return sm.unit.createUnit( sm.uuid.new( self.data.unitUuid ), self.shape.worldPosition + spawnOffset, yaw, { color = self.shape.color } )
 end
 

@@ -27,7 +27,7 @@ sm.game.bindChatCommand = bindHook
 ---@class HelldiversBackend : ToolClass
 HelldiversBackend = class()
 
-local dropPodStartHeight = sm.vec3.new(0,0,500)
+local dropPodStartHeight = vec3_new(0,0,500)
 local blueprintsPath = "$CONTENT_DATA/UserBlueprints/"
 local blueprintTracker = blueprintsPath.."blueprintTracker.json"
 
@@ -234,7 +234,7 @@ function HelldiversBackend:AddCustomStratagem(args)
         end]]
 
         local creation = sm.creation.exportToTable(args.body, false, true)
-        local com = sm.vec3.zero()
+        local com = vec3_zero
         local count = 0
         for k, body in pairs(creation.bodies) do
             for _k, shape in pairs(body.childs) do
@@ -251,7 +251,7 @@ function HelldiversBackend:AddCustomStratagem(args)
                     end
                 end
 
-                com = com + sm.vec3.new(shape.pos.x, shape.pos.y, shape.pos.z)
+                com = com + vec3_new(shape.pos.x, shape.pos.y, shape.pos.z)
                 count = count + 1
             end
         end
@@ -345,32 +345,46 @@ local holsterItems = {
     ["552b4ced-ca96-4a71-891c-ab54fe9c6873"] = {
         item     = sm.uuid.new("d48e6383-200a-4aa8-9901-47fdf7969ad9"),
         bone     = "jnt_backpack",
-        offset   = sm.vec3.new(0.25,0.15,0.1),
+        offset   = vec3_new(0.25,0.15,0.1),
         rotation = sm.quat.angleAxis(math.rad(190), vec3_forward) * sm.quat.angleAxis(math.rad(90), vec3_right),
-        size     = sm.vec3.one()
+        size     = vec3_one
     }, --HMG
     ["b3ad837a-2235-476e-9408-4b5321b1032f"] = {
         item     = sm.uuid.new("eac17336-0356-4a9f-b531-a6d44391a83b"),
         bone     = "jnt_backpack",
-        offset   = sm.vec3.new(0.2,0,0.1),
-        rotation = sm.quat.angleAxis(math.rad(170), vec3_forward),
-        size     = sm.vec3.one()
+        offset   = vec3_new(0.2,-0.15,0.1),
+        rotation = sm.quat.angleAxis(math.rad(170), vec3_forward) * sm.quat.angleAxis(math.rad(180), vec3_up),
+        size     = vec3_one
     }, --AutoCannon
+    ["e3b77d7e-05b6-493c-b6c3-a264f342519a"] = {
+        item     = sm.uuid.new("7705f920-b4cb-41f7-8a9c-088539201c35"),
+        bone     = "jnt_hips",
+        offset   = vec3_new(-0.2,0.025,-0.1),
+        rotation = quat_identity,
+        size     = vec3_one * 0.35
+    }, --Stratagem
     --[[
     ["e4ed32d5-d891-40e3-b82e-db975884dbb3"] = {
         item     = sm.uuid.new("db67924a-39b0-4522-a3a5-270ef2a8538b"),
         bone     = "jnt_hips",
-        offset   = sm.vec3.new(-0.225,0.1,-0.05),
+        offset   = vec3_new(-0.225,0.1,-0.05),
         rotation = sm.quat.angleAxis(math.rad(90), vec3_right) * sm.quat.angleAxis(math.rad(-10), vec3_forward),
-        size     = sm.vec3.one()
+        size     = vec3_one
     }, --M1911
     ["96f3b45c-8729-4573-bc14-bbe1cc7fd2bb"] = {
         item     = sm.uuid.new("d9d3c67a-0186-45c2-af76-4bb1b0951c21"),
         bone     = "jnt_hips",
-        offset   = sm.vec3.new(-0.225,0.1,-0.05),
+        offset   = vec3_new(-0.225,0.1,-0.05),
         rotation = sm.quat.angleAxis(math.rad(90), vec3_right) * sm.quat.angleAxis(math.rad(-10), vec3_forward),
-        size     = sm.vec3.one()
+        size     = vec3_one
     }, --Magnum44
+    ["0ca4320e-5ddb-4dc1-843d-6037d65b2e4a"] = {
+        item     = sm.uuid.new("4f0340c8-3d62-4ee9-a363-b4dbd6a5e014"),
+        bone     = "jnt_backpack",
+        offset   = vec3_new(-0.2,0,0),
+        rotation = sm.quat.angleAxis(math.rad(-80), vec3_right) * sm.quat.angleAxis(math.rad(5), vec3_forward),
+        size     = vec3_one
+    }, --M1 Garand
     ]]
 }
 
@@ -446,14 +460,23 @@ function HelldiversBackend:client_onFixedUpdate()
     for k, player in pairs(sm.player.getAllPlayers()) do
         local items = self.cl_holsteredItems[player.id] or {}
         for _k, v in pairs(items) do
-            if not sm.exists(v.effect) then
-                local inv = sm.game.getLimitedInventory() and player:getInventory() or player:getHotbar()
-                if inv:canSpend(v.item, 1) then
+            local inv = sm.game.getLimitedInventory() and player:getInventory() or player:getHotbar()
+            local hasItem, effectExists = inv:canSpend(v.item, 1), sm.exists(v.effect)
+            if not effectExists or not hasItem then
+                if hasItem then
                     v.effect = self:cl_createHolsterItemEffect(player, holsterItems[tostring(v.item)])
                 else
-                    local holsterItem = self:GetFirstHolsterItem(player)
+                    if effectExists then
+                        v.effect:destroy()
+                    end
+
+                    local holsterItem, itemUuid = self:GetFirstHolsterItem(player, holsterItems[tostring(v.item)].bone)
                     if holsterItem then
-                        v.effect = self:cl_createHolsterItemEffect(player, holsterItem)
+                        self.cl_holsteredItems[player.id][_k] = {
+                            effect = self:cl_createHolsterItemEffect(player, holsterItem),
+                            item = itemUuid,
+                            enabled = true
+                        }
                     else
                         self.cl_holsteredItems[player.id][_k] = nil
                     end
@@ -504,7 +527,7 @@ function HelldiversBackend:client_onUpdate(dt)
         end
 
         if v.pelicanMovement then
-            local pos, rot = v.pelicanMovement:getCameraPosition() or v.hitData.position, (v.pelicanMovement:getCameraRotation() or sm.quat.identity())
+            local pos, rot = v.pelicanMovement:getCameraPosition() or v.hitData.position, (v.pelicanMovement:getCameraRotation() or quat_identity)
             v.pelican:setPosition(pos)
             v.pelican:setRotation(rot)
 
@@ -525,7 +548,7 @@ function HelldiversBackend:cl_OnStratagemHit(args)
     local id = args.id
     local userdata = GetStratagemUserdata(id:sub(3, #id))
 
-    local beaconScale = sm.vec3.new(1,500,1)
+    local beaconScale = vec3_new(1,500,1)
     local beacon = sm.effect.createEffect("Stratagem - Beacon")
     beacon:setParameter("Color", STRATAGEMTYPETOCOLOUR[userdata.type])
     beacon:setParameter("Scale", beaconScale)
@@ -544,7 +567,7 @@ function HelldiversBackend:cl_OnStratagemHit(args)
     if dropEffect then
         local pod = CreateEffect(dropEffect)
         pod:setRotation(dropPodRotation)
-        pod:setScale(sm.vec3.one() * 0.25)
+        pod:setScale(vec3_one * 0.25)
 
         args.pod = pod
         args.dropStartTime = math.min(args.activation/40, 3)
@@ -560,13 +583,13 @@ function HelldiversBackend:cl_OnStratagemHit(args)
 
         local _pos, rot = pelicanMovement:getCameraPosition(), pelicanMovement:getCameraRotation()
         local pelican = sm.effect.createEffect("Pelican")
-        pelican:setScale(sm.vec3.one() * 0.25 * 0.5)
+        pelican:setScale(vec3_one * 0.25 * 0.5)
         pelican:setPosition(_pos)
         pelican:setRotation(rot)
         pelican:start()
 
         local pelicanCargo = CreateEffect(pelicanEffect)
-        pelicanCargo:setScale(sm.vec3.one() * 0.25)
+        pelicanCargo:setScale(vec3_one * 0.25)
         pelicanCargo:setPosition(_pos - rot * pelicanCargoOffset)
         pelicanCargo:setRotation(rot)
         pelicanCargo:start()
@@ -621,13 +644,13 @@ function HelldiversBackend:cl_createHolsterItemEffect(player, holsterItem)
     return effect
 end
 
-function HelldiversBackend:GetFirstHolsterItem(player)
+function HelldiversBackend:GetFirstHolsterItem(player, slot)
     local inv = sm.game.getLimitedInventory() and player:getInventory() or player:getHotbar()
     for i = 0, inv:getSize() do
         local item = inv:getItem(i)
         local holsterItem = holsterItems[tostring(item.uuid)]
-        if holsterItem then
-            return holsterItem
+        if holsterItem and holsterItem.bone == slot then
+            return holsterItem, item.uuid
         end
     end
 end

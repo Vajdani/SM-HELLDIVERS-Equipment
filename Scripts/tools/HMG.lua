@@ -16,6 +16,20 @@ HMG = class(BaseGun)
 HMG.settings = {
 	fireMode = {
 		{
+			name = "Semi-Automatic",
+			icon = ""
+		},
+		{
+			name = "Automatic",
+			icon = ""
+		},
+		{
+			name = "Burst",
+			icon = ""
+		}
+	},
+	rpm = {
+		{
 			name = "450 RPM",
 			icon = ""
 		},
@@ -29,14 +43,14 @@ HMG.settings = {
 		}
 	}
 }
-HMG.defaultSettings = { fireMode = 1 }
+HMG.defaultSettings = { fireMode = 2, rpm = 1 }
 HMG.shootData = {
 	projectile = projectile_smallpotato,
 	damage = 50,
 	pellets = 1,
 	normalFireMode = {
 		fireCooldown = function(self)
-			return rpm[self.cl_settings.fireMode]
+			return rpm[self.cl_settings.rpm]
 		end,
 		spreadCooldown = 0.18,
 		spreadIncrement = 3.9,
@@ -52,7 +66,7 @@ HMG.shootData = {
 	},
 	aimFireMode = {
 		fireCooldown = function(self)
-			return rpm[self.cl_settings.fireMode]
+			return rpm[self.cl_settings.rpm]
 		end,
 		spreadCooldown = 0.18,
 		spreadIncrement = 1.95,
@@ -159,8 +173,4 @@ function HMG:getRecoil()
 	local x = math.random(-10, 10) * 0.005
 	local y = 0.03 * math.random(10, 15) * 0.1
 	return { x = x, y = y }
-end
-
-function HMG:getFiringMode()
-    return 2
 end

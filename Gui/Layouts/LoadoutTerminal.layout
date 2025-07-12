@@ -1,31 +1,29 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Layout" version="3.2.0">
-    <Widget type="Widget" skin="PanelEmpty" position="0 0 1280 700" name="BackPanel">
-        <Widget type="Widget" skin="BeaconBG" position="0 0 1280 690">
-            <Widget type="TextBox" skin="TextBox" position="0 0 1280 120">
-                <Property key="Caption" value="LOADOUT TERMINAL"/>
-                <Property key="TextAlign" value="Center"/>
-                <Property key="FontName" value="SM_HeaderLarge_Wide"/>
-            </Widget>
-            <Widget type="TextBox" skin="TextBox" position="125 150 300 50">
-                <Property key="Caption" value="AVAILABLE"/>
-                <Property key="TextAlign" value="Center"/>
-                <Property key="FontName" value="SM_HeaderLarge_Wide"/>
-            </Widget>
-            <Widget type="TextBox" skin="TextBox" position="855 150 300 50">
-                <Property key="Caption" value="SELECTED"/>
-                <Property key="TextAlign" value="Center"/>
-                <Property key="FontName" value="SM_HeaderLarge_Wide"/>
-            </Widget>
-            <Widget type="ItemBox" skin="InventoryItemBox2" position="50 225 450 450" name="AvailableGrid">
-                <Property key="NeedKey" value="false"/>
-                <Property key="NeedToolTip" value="true"/>
-            </Widget>
-            <Widget type="ItemBox" skin="InventoryItemBox2" position="775 225 450 450" name="SelectedGrid">
-                <Property key="NeedKey" value="false"/>
-                <Property key="NeedToolTip" value="true"/>
-            </Widget>
-        </Widget>
-    </Widget>
-    <CodeGeneratorSettings/>
+	<Widget type="Widget" skin="PanelEmpty" name="BackPanel" position_real="0 0 0.6666666666666666 0.6481481481481481">
+		<Widget type="Widget" skin="BeaconBG" position_real="0 0 1 0.9857142857142858">
+			<Widget type="TextBox" skin="TextBox" position_real="0 0 1 0.17391304347826086">
+				<Property key="Caption" value="LOADOUT TERMINAL" />
+				<Property key="TextAlign" value="Center" />
+				<Property key="FontName" value="SM_HeaderLarge_Wide" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" position_real="0.09765625 0.21739130434782608 0.234375 0.07246376811594203">
+				<Property key="Caption" value="AVAILABLE" />
+				<Property key="TextAlign" value="Center" />
+				<Property key="FontName" value="SM_HeaderLarge_Wide" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" position_real="0.66796875 0.21739130434782608 0.234375 0.07246376811594203">
+				<Property key="Caption" value="SELECTED" />
+				<Property key="TextAlign" value="Center" />
+				<Property key="FontName" value="SM_HeaderLarge_Wide" />
+			</Widget>
+			<Widget type="ItemBox" skin="InventoryItemBox2" name="AvailableGrid" position_real="0.0390625 0.32608695652173914 0.3515625 0.6521739130434783">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedToolTip" value="true" />
+			</Widget>
+			<Widget type="ItemBox" skin="InventoryItemBox2" name="SelectedGrid" position_real="0.60546875 0.32608695652173914 0.3515625 0.6521739130434783">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedToolTip" value="true" />
+			</Widget>
+		</Widget>
+	</Widget>
 </MyGUI>

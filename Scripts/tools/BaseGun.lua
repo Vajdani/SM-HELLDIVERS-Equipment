@@ -3,6 +3,7 @@
 ---@field icon string
 
 ---@class GunSettings
+---@field rpm? GunSetting[]
 ---@field fireMode? GunSetting[]
 ---@field flashLight? GunSetting[]
 ---@field sight? GunSetting[]
@@ -195,6 +196,9 @@ function BaseGun:client_onUnequip(animate)
 		self.tool:updateAnimation("recoil_vertical", 0, 0)
 
 		if self.isLocal then
+			self.burstActive = false
+			self.burstProgress = 0
+
 			self.tool:setMovementSlowDown(false)
 			self.tool:setBlockSprint(false)
 			self.tool:setCrossHairAlpha(1.0)
@@ -281,7 +285,7 @@ function BaseGun:client_onUpdate(dt)
 
 		self.shootEffectFP:setPosition(effectPos)
 		self.shootEffectFP:setVelocity(self.tool:getMovementVelocity())
-		self.shootEffectFP:setRotation(sm.vec3.getRotation(sm.vec3.new(0, 0, 1), dir))
+		self.shootEffectFP:setRotation(sm.vec3.getRotation(vec3_up, dir))
 	end
 
 	local dir = self.tool:getTpBoneDir("pejnt_barrel")
@@ -289,7 +293,7 @@ function BaseGun:client_onUpdate(dt)
 
 	self.shootEffect:setPosition(pos)
 	self.shootEffect:setVelocity(self.tool:getMovementVelocity())
-	self.shootEffect:setRotation(sm.vec3.getRotation(sm.vec3.new(0, 0, 1), dir))
+	self.shootEffect:setRotation(sm.vec3.getRotation(vec3_up, dir))
 
 	-- Timers
 	self.fireCooldownTimer = math.max(self.fireCooldownTimer - dt, 0.0)
@@ -341,7 +345,7 @@ function BaseGun:client_onUpdate(dt)
 	self.tool:setBlockSprint(blockSprint)
 
 	local playerDir = self.tool:getSmoothDirection()
-	local angle = math.asin(playerDir:dot(sm.vec3.new(0, 0, 1))) / (math.pi / 2)
+	local angle = math.asin(playerDir:dot(vec3_up)) / (math.pi / 2)
 
 	local crouchWeight = isCrouching and 1.0 or 0.0
 	local normalWeight = 1.0 - crouchWeight
@@ -407,13 +411,13 @@ function BaseGun:client_onUpdate(dt)
 
 	local finalJointWeight = (self.jointWeight)
 
-	self.tool:updateJoint("jnt_hips", sm.vec3.new(totalOffsetX, totalOffsetY, totalOffsetZ), 0.35 * finalJointWeight * (normalWeight))
+	self.tool:updateJoint("jnt_hips", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), 0.35 * finalJointWeight * (normalWeight))
 	local crouchSpineWeight = (0.35 / 3) * crouchWeight
 
-	self.tool:updateJoint("jnt_spine1", sm.vec3.new(totalOffsetX, totalOffsetY, totalOffsetZ), (0.10 + crouchSpineWeight) * finalJointWeight)
-	self.tool:updateJoint("jnt_spine2", sm.vec3.new(totalOffsetX, totalOffsetY, totalOffsetZ), (0.10 + crouchSpineWeight) * finalJointWeight)
-	self.tool:updateJoint("jnt_spine3", sm.vec3.new(totalOffsetX, totalOffsetY, totalOffsetZ), (0.45 + crouchSpineWeight) * finalJointWeight)
-	self.tool:updateJoint("jnt_head", sm.vec3.new(totalOffsetX, totalOffsetY, totalOffsetZ), 0.3 * finalJointWeight)
+	self.tool:updateJoint("jnt_spine1", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), (0.10 + crouchSpineWeight) * finalJointWeight)
+	self.tool:updateJoint("jnt_spine2", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), (0.10 + crouchSpineWeight) * finalJointWeight)
+	self.tool:updateJoint("jnt_spine3", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), (0.45 + crouchSpineWeight) * finalJointWeight)
+	self.tool:updateJoint("jnt_head", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), 0.3 * finalJointWeight)
 
 	-- Camera update
 	local bobbing = 1
@@ -427,8 +431,8 @@ function BaseGun:client_onUpdate(dt)
 		bobbing = 1
 	end
 
-	self.tool:updateCamera(2.8, 30.0, sm.vec3.new(0.65, 0.0, 0.05), self.aimWeight)
-	self.tool:updateFpCamera(30.0, sm.vec3.new(0.0, 0.0, 0.0), self.aimWeight, bobbing)
+	self.tool:updateCamera(2.8, 30.0, vec3_new(0.65, 0.0, 0.05), self.aimWeight)
+	self.tool:updateFpCamera(30.0, vec3_new(0.0, 0.0, 0.0), self.aimWeight, bobbing)
 end
 
 function BaseGun:client_onClientDataUpdate(data)
@@ -502,11 +506,11 @@ end
 
 function BaseGun:cl_onPrimaryUse()
 	if self.fireCooldownTimer > 0 then
-		return false
+		return 0
 	end
 
     local data = self.shootData
-	if not sm.game.getEnableAmmoConsumption() and  self.cl_ammo > 0 then
+	if not sm.game.getEnableAmmoConsumption() or self.cl_ammo > 0 then
 		local firstPerson = self.tool:isInFirstPersonView()
 
 		local dir = firstPerson and GetFpBoneDir(self.tool, "pejnt_barrel") or self.tool:getTpBoneDir("pejnt_barrel")
@@ -572,7 +576,7 @@ function BaseGun:cl_onPrimaryUse()
 		-- Play FP shoot animation
 		setFpAnimation(self.fpAnimations, self.aiming and "aimShoot" or "shoot", 0.05)
 
-        return true
+        return 1
 	else
         local cooldown = (self.aiming and data.aimFireMode or data.normalFireMode).fireCooldown
         if type(cooldown) == "function" then
@@ -581,9 +585,9 @@ function BaseGun:cl_onPrimaryUse()
 
 		self.fireCooldownTimer = cooldown
 		sm.audio.play("PotatoRifle - NoAmmo")
-	end
 
-    return false
+		return 2
+	end
 end
 
 function BaseGun:cl_onSecondaryUse(state)
@@ -599,6 +603,10 @@ function BaseGun:cl_onSecondaryUse(state)
 end
 
 function BaseGun:client_onEquippedUpdate(lmb, rmb, f)
+	if (self.fpAnimations or self.tpAnimations).currentAnimation == "reload" then
+		return true, true
+	end
+
     local fireMode = self:getFiringMode()
 	if fireMode == 1 then       --Semi Auto
         if lmb == 1 then
@@ -615,12 +623,15 @@ function BaseGun:client_onEquippedUpdate(lmb, rmb, f)
         end
 
         if self.burstActive then
-            if self:cl_onPrimaryUse() then
-                self.burstProgress = self.burstProgress + 1
-                if self.burstProgress == 3 then
-                    self.burstActive = false
-                end
-            end
+			local result = self:cl_onPrimaryUse()
+			if result == 2 or not (lmb == 1 or lmb == 2) then
+                self.burstActive = false
+			elseif result == 1 then
+				self.burstProgress = self.burstProgress + 1
+				if self.burstProgress == 3 then
+					self.burstActive = false
+				end
+			end
         end
 	end
 
@@ -645,13 +656,13 @@ function BaseGun:canReload()
     return (self.sv_ammo or self.cl_ammo) < self.magCapacity
 end
 
---- +x -> right +fy -> up
+--- +x -> right +y -> up
 function BaseGun:getRecoil()
 	return { x = 0, y = 0 }
 end
 
 function BaseGun:getFiringMode()
-    return 1
+    return self.cl_settings.fireMode
 end
 
 function BaseGun:loadAnimations() end
@@ -663,7 +674,7 @@ function BaseGun:calculateFirePosition()
 	local pitch = math.asin(dir.z)
 	local right = sm.localPlayer.getRight()
 
-	local fireOffset = sm.vec3.new(0.0, 0.0, 0.0)
+	local fireOffset = vec3_new(0.0, 0.0, 0.0)
 
 	if crouching then
 		fireOffset.z = 0.15
@@ -690,7 +701,7 @@ function BaseGun:calculateTpMuzzlePos()
 	local right = sm.localPlayer.getRight()
 	local up = right:cross(dir)
 
-	local fakeOffset = sm.vec3.new(0.0, 0.0, 0.0)
+	local fakeOffset = vec3_new(0.0, 0.0, 0.0)
 
 	--General offset
 	fakeOffset = fakeOffset + right * 0.25
@@ -724,8 +735,8 @@ function BaseGun:calculateFpMuzzlePos()
 	local dir = sm.localPlayer.getDirection()
 	local right = sm.localPlayer.getRight()
 
-	local muzzlePos45 = sm.vec3.new(0.0, 0.0, 0.0)
-	local muzzlePos90 = sm.vec3.new(0.0, 0.0, 0.0)
+	local muzzlePos45 = vec3_new(0.0, 0.0, 0.0)
+	local muzzlePos90 = vec3_new(0.0, 0.0, 0.0)
 
 	if self.aiming then
 		muzzlePos45 = muzzlePos45 - up * 0.2

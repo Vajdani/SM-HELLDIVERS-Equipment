@@ -1,17 +1,15 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Layout" version="3.2.0">
-    <Widget type="Button" skin="skin_Default" position_real="0 0 1 1" name="Click">
-        <Widget type="ImageBox" skin="ImageBox" position_real="0.045312499999999999 0.032407407407407406 0.90885416666666663 0.66666666666666663" name="Icon">
-            <Property key="NeedKey" value="false"/>
-            <Property key="NeedMouse" value="false"/>
-        </Widget>
-        <Widget type="TextBox" skin="TextBox" position_real="0 0 0 0" name="Quantity">
-            <Property key="Caption" value="*/0123456789"/>
-            <Property key="FontName" value="SM_NumberTiny"/>
-            <Property key="TextAlign" value="Center"/>
-            <Property key="NeedKey" value="false"/>
-            <Property key="NeedMouse" value="false"/>
-        </Widget>
-    </Widget>
-    <CodeGeneratorSettings/>
+	<Widget type="Button" skin="skin_Default" name="Click" position_real="0 0 1 1">
+		<Widget type="ImageBox" skin="ImageBox" name="Icon" position_real="0.0453125 0.032407407407407406 0.9088541666666666 0.6666666666666666">
+			<Property key="NeedKey" value="false" />
+			<Property key="NeedMouse" value="false" />
+		</Widget>
+		<Widget type="TextBox" skin="TextBox" name="Quantity" position_real="0 0 0.0005208333333333333 0.000925925925925926">
+			<Property key="Caption" value="*/0123456789" />
+			<Property key="FontName" value="SM_NumberTiny" />
+			<Property key="TextAlign" value="Center" />
+			<Property key="NeedKey" value="false" />
+			<Property key="NeedMouse" value="false" />
+		</Widget>
+	</Widget>
 </MyGUI>

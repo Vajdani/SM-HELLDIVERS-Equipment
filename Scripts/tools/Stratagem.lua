@@ -69,7 +69,7 @@ end
 ---@param caller Player
 function Stratagem:sv_prime(args, caller)
     local char = caller.character
-    local shape = sm.shape.createPart(sm.uuid.new("09a84352-04b2-47d1-9346-15ae4f768d03"), char.worldPosition - sm.vec3.new(0,0,250), sm.quat.identity(), false, true)
+    local shape = sm.shape.createPart(sm.uuid.new("09a84352-04b2-47d1-9346-15ae4f768d03"), char.worldPosition - vec3_new(0,0,250), quat_identity, false, true)
     self.network:sendToClient(caller, "cl_lock", shape)
 
     self.input = shape

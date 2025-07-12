@@ -1,213 +1,211 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Layout" version="3.2.0">
-    <Widget type="Widget" skin="PanelEmpty" position="0 0 1280 700" name="BackPanel">
-        <Widget type="Widget" skin="BeaconBG" position="0 0 1280 690">
-            <Widget type="TextBox" skin="TextBox" position="0 0 1280 120">
-                <Property key="Caption" value="STRATAGEM TERMINAL"/>
-                <Property key="TextAlign" value="Center"/>
-                <Property key="FontName" value="SM_HeaderLarge_Wide"/>
-            </Widget>
-            <Widget type="Canvas" skin="Canvas" position="25 145 485 540" name="StratagemPanel">
-                <Widget type="Button" skin="SelectionFieldBox" position="5 5 430 80" name="stratagem1">
-                    <Widget type="ImageBox" skin="ImageBox" position="0 0 140 80" name="stratagem1_preview">
-                        <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="TextBox" skin="TextBox" position="160 0 200 80" name="stratagem1_name">
-                        <Property key="Caption" value="Challenge Name"/>
-                        <Property key="TextAlign" value="Left VCenter"/>
-                        <Property key="FontName" value="SM_ListItem"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem1_completed">
-                        <Property key="ImageTexture" value="IconChallengeCompleted.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem1_locked">
-                        <Property key="ImageTexture" value="IconChallengeLocked.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="Widget" skin="HighlightSelectionBox" position="0 0 430 80" name="stratagem1_border">
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                </Widget>
-                <Widget type="Button" skin="SelectionFieldBox" position="5 95 430 80" name="stratagem2">
-                    <Widget type="ImageBox" skin="ImageBox" position="0 0 140 80" name="stratagem2_preview">
-                        <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="TextBox" skin="TextBox" position="160 0 200 80" name="stratagem2_name">
-                        <Property key="Caption" value="Challenge Name"/>
-                        <Property key="TextAlign" value="Left VCenter"/>
-                        <Property key="FontName" value="SM_ListItem"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem2_completed">
-                        <Property key="ImageTexture" value="IconChallengeCompleted.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem2_locked">
-                        <Property key="ImageTexture" value="IconChallengeLocked.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="Widget" skin="HighlightSelectionBox" position="0 0 430 80" name="stratagem2_border">
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                </Widget>
-                <Widget type="Button" skin="SelectionFieldBox" position="5 185 430 80" name="stratagem3">
-                    <Widget type="ImageBox" skin="ImageBox" position="0 0 140 80" name="stratagem3_preview">
-                        <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="TextBox" skin="TextBox" position="160 0 200 80" name="stratagem3_name">
-                        <Property key="Caption" value="Challenge Name"/>
-                        <Property key="TextAlign" value="Left VCenter"/>
-                        <Property key="FontName" value="SM_ListItem"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem3_completed">
-                        <Property key="ImageTexture" value="IconChallengeCompleted.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem3_locked">
-                        <Property key="ImageTexture" value="IconChallengeLocked.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="Widget" skin="HighlightSelectionBox" position="0 0 430 80" name="stratagem3_border">
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                </Widget>
-                <Widget type="Button" skin="SelectionFieldBox" position="5 275 430 80" name="stratagem4">
-                    <Widget type="ImageBox" skin="ImageBox" position="0 0 140 80" name="stratagem4_preview">
-                        <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="TextBox" skin="TextBox" position="160 0 200 80" name="stratagem4_name">
-                        <Property key="Caption" value="Challenge Name"/>
-                        <Property key="TextAlign" value="Left VCenter"/>
-                        <Property key="FontName" value="SM_ListItem"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem4_completed">
-                        <Property key="ImageTexture" value="IconChallengeCompleted.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem4_locked">
-                        <Property key="ImageTexture" value="IconChallengeLocked.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="Widget" skin="HighlightSelectionBox" position="0 0 430 80" name="stratagem4_border">
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                </Widget>
-                <Widget type="Button" skin="SelectionFieldBox" position="5 365 430 80" name="stratagem5">
-                    <Widget type="ImageBox" skin="ImageBox" position="0 0 140 80" name="stratagem5_preview">
-                        <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="TextBox" skin="TextBox" position="160 0 200 80" name="stratagem5_name">
-                        <Property key="Caption" value="Challenge Name"/>
-                        <Property key="TextAlign" value="Left VCenter"/>
-                        <Property key="FontName" value="SM_ListItem"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem5_completed">
-                        <Property key="ImageTexture" value="IconChallengeCompleted.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem5_locked">
-                        <Property key="ImageTexture" value="IconChallengeLocked.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="Widget" skin="HighlightSelectionBox" position="0 0 430 80" name="stratagem5_border">
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                </Widget>
-                <Widget type="Button" skin="SelectionFieldBox" position="5 455 430 80" name="stratagem6">
-                    <Widget type="ImageBox" skin="ImageBox" position="0 0 140 80" name="stratagem6_preview">
-                        <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="TextBox" skin="TextBox" position="160 0 200 80" name="stratagem6_name">
-                        <Property key="Caption" value="Challenge Name"/>
-                        <Property key="TextAlign" value="Left VCenter"/>
-                        <Property key="FontName" value="SM_ListItem"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem6_completed">
-                        <Property key="ImageTexture" value="IconChallengeCompleted.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="ImageBox" skin="ImageBox" position="380 25 30 30" name="stratagem6_locked">
-                        <Property key="ImageTexture" value="IconChallengeLocked.png"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                    <Widget type="Widget" skin="HighlightSelectionBox" position="0 0 430 80" name="stratagem6_border">
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                </Widget>
-                <Widget type="Canvas" skin="Canvas" position="450 5 30 530" name="StratagemScroll"/>
-            </Widget>
-            <Widget type="Canvas" skin="Canvas" position="545 145 710 540" name="InfoPanel">
-                <Widget type="ImageBox" skin="ImageBox" position="0 0 710 300" name="PreviewVideo">
-                    <Property key="ImageTexture" value="challenge_missing_icon_large.png"/>
-                    <Property key="NeedKey" value="false"/>
-                    <Property key="NeedMouse" value="false"/>
-                </Widget>
-                <Widget type="TextBox" skin="TextBox" position="0 310 710 30" name="Type">
-                    <Property key="TextAlign" value="Left VCenter"/>
-                </Widget>
-                <Widget type="TextBox" skin="TextBox" position="0 340 710 40" name="Name">
-                    <Property key="TextAlign" value="Left VCenter"/>
-                </Widget>
-                <Widget type="TextBox" skin="TextBox" position="0 385 710 50" name="Description">
-                    <Property key="TextAlign" value="Left VCenter"/>
-                </Widget>
-                <Widget type="Button" skin="UpgradeButton" position="550 500 150 40" name="Purchase">
-                    <Widget type="TextBox" skin="TextBox" position="16 5 118 27">
-                        <Property key="TextAlign" value="Center"/>
-                        <Property key="Caption" value="Purchase"/>
-                        <Property key="NeedKey" value="false"/>
-                        <Property key="NeedMouse" value="false"/>
-                    </Widget>
-                </Widget>
-                <Widget type="ItemBox" skin="InventoryItemBox2" position="0 450 265 90" name="MaterialGrid">
-                    <Property key="NeedKey" value="false"/>
-                    <Property key="NeedToolTip" value="true"/>
-                </Widget>
-                <Widget type="TextBox" skin="TextBox" position="270 500 200 40" name="Charges"/>
-            </Widget>
-        </Widget>
-    </Widget>
-    <CodeGeneratorSettings/>
+	<Widget type="Widget" skin="PanelEmpty" name="BackPanel" position_real="0 0 0.6666666666666666 0.6481481481481481">
+		<Widget type="Widget" skin="BeaconBG" position_real="0 0 1 0.9857142857142858">
+			<Widget type="TextBox" skin="TextBox" position_real="0 0 1 0.17391304347826086">
+				<Property key="Caption" value="STRATAGEM TERMINAL" />
+				<Property key="TextAlign" value="Center" />
+				<Property key="FontName" value="SM_HeaderLarge_Wide" />
+			</Widget>
+			<Widget type="Canvas" skin="Canvas" name="StratagemPanel" position_real="0.01953125 0.21014492753623187 0.37890625 0.782608695652174">
+				<Widget type="Button" skin="SelectionFieldBox" name="stratagem1" position_real="0.010309278350515464 0.009259259259259259 0.8865979381443299 0.14814814814814814">
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem1_preview" position_real="0 0 0.32558139534883723 1">
+						<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="TextBox" skin="TextBox" name="stratagem1_name" position_real="0.37209302325581395 0 0.46511627906976744 1">
+						<Property key="Caption" value="Challenge Name" />
+						<Property key="TextAlign" value="Left VCenter" />
+						<Property key="FontName" value="SM_ListItem" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem1_completed" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeCompleted.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem1_locked" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeLocked.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="Widget" skin="HighlightSelectionBox" name="stratagem1_border" position_real="0 0 1 1">
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+				</Widget>
+				<Widget type="Button" skin="SelectionFieldBox" name="stratagem2" position_real="0.010309278350515464 0.17592592592592593 0.8865979381443299 0.14814814814814814">
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem2_preview" position_real="0 0 0.32558139534883723 1">
+						<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="TextBox" skin="TextBox" name="stratagem2_name" position_real="0.37209302325581395 0 0.46511627906976744 1">
+						<Property key="Caption" value="Challenge Name" />
+						<Property key="TextAlign" value="Left VCenter" />
+						<Property key="FontName" value="SM_ListItem" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem2_completed" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeCompleted.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem2_locked" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeLocked.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="Widget" skin="HighlightSelectionBox" name="stratagem2_border" position_real="0 0 1 1">
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+				</Widget>
+				<Widget type="Button" skin="SelectionFieldBox" name="stratagem3" position_real="0.010309278350515464 0.3425925925925926 0.8865979381443299 0.14814814814814814">
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem3_preview" position_real="0 0 0.32558139534883723 1">
+						<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="TextBox" skin="TextBox" name="stratagem3_name" position_real="0.37209302325581395 0 0.46511627906976744 1">
+						<Property key="Caption" value="Challenge Name" />
+						<Property key="TextAlign" value="Left VCenter" />
+						<Property key="FontName" value="SM_ListItem" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem3_completed" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeCompleted.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem3_locked" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeLocked.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="Widget" skin="HighlightSelectionBox" name="stratagem3_border" position_real="0 0 1 1">
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+				</Widget>
+				<Widget type="Button" skin="SelectionFieldBox" name="stratagem4" position_real="0.010309278350515464 0.5092592592592593 0.8865979381443299 0.14814814814814814">
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem4_preview" position_real="0 0 0.32558139534883723 1">
+						<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="TextBox" skin="TextBox" name="stratagem4_name" position_real="0.37209302325581395 0 0.46511627906976744 1">
+						<Property key="Caption" value="Challenge Name" />
+						<Property key="TextAlign" value="Left VCenter" />
+						<Property key="FontName" value="SM_ListItem" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem4_completed" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeCompleted.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem4_locked" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeLocked.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="Widget" skin="HighlightSelectionBox" name="stratagem4_border" position_real="0 0 1 1">
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+				</Widget>
+				<Widget type="Button" skin="SelectionFieldBox" name="stratagem5" position_real="0.010309278350515464 0.6759259259259259 0.8865979381443299 0.14814814814814814">
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem5_preview" position_real="0 0 0.32558139534883723 1">
+						<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="TextBox" skin="TextBox" name="stratagem5_name" position_real="0.37209302325581395 0 0.46511627906976744 1">
+						<Property key="Caption" value="Challenge Name" />
+						<Property key="TextAlign" value="Left VCenter" />
+						<Property key="FontName" value="SM_ListItem" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem5_completed" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeCompleted.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem5_locked" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeLocked.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="Widget" skin="HighlightSelectionBox" name="stratagem5_border" position_real="0 0 1 1">
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+				</Widget>
+				<Widget type="Button" skin="SelectionFieldBox" name="stratagem6" position_real="0.010309278350515464 0.8425925925925926 0.8865979381443299 0.14814814814814814">
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem6_preview" position_real="0 0 0.32558139534883723 1">
+						<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="TextBox" skin="TextBox" name="stratagem6_name" position_real="0.37209302325581395 0 0.46511627906976744 1">
+						<Property key="Caption" value="Challenge Name" />
+						<Property key="TextAlign" value="Left VCenter" />
+						<Property key="FontName" value="SM_ListItem" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem6_completed" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeCompleted.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="ImageBox" skin="ImageBox" name="stratagem6_locked" position_real="0.8837209302325582 0.3125 0.06976744186046512 0.375">
+						<Property key="ImageTexture" value="IconChallengeLocked.png" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+					<Widget type="Widget" skin="HighlightSelectionBox" name="stratagem6_border" position_real="0 0 1 1">
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+				</Widget>
+				<Widget type="Canvas" skin="Canvas" name="StratagemScroll" position_real="0.9278350515463918 0.009259259259259259 0.061855670103092786 0.9814814814814815" />
+			</Widget>
+			<Widget type="Canvas" skin="Canvas" name="InfoPanel" position_real="0.42578125 0.21014492753623187 0.5546875 0.782608695652174">
+				<Widget type="ImageBox" skin="ImageBox" name="PreviewVideo" position_real="0.1619718309859155 0.040740740740740744 0.676056338028169 0.5">
+					<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
+					<Property key="NeedKey" value="false" />
+					<Property key="NeedMouse" value="false" />
+				</Widget>
+				<Widget type="TextBox" skin="TextBox" name="Type" position_real="0 0.5740740740740741 1 0.05555555555555555">
+					<Property key="TextAlign" value="Left VCenter" />
+				</Widget>
+				<Widget type="TextBox" skin="TextBox" name="Name" position_real="0 0.6296296296296297 1 0.07407407407407407">
+					<Property key="TextAlign" value="Left VCenter" />
+				</Widget>
+				<Widget type="TextBox" skin="TextBox" name="Description" position_real="0 0.7129629629629629 1 0.09259259259259259">
+					<Property key="TextAlign" value="Left VCenter" />
+				</Widget>
+				<Widget type="Button" skin="UpgradeButton" name="Purchase" position_real="0.7746478873239436 0.9259259259259259 0.2112676056338028 0.07407407407407407">
+					<Widget type="TextBox" skin="TextBox" position_real="0.10666666666666667 0.125 0.7866666666666666 0.675">
+						<Property key="TextAlign" value="Center" />
+						<Property key="Caption" value="Purchase" />
+						<Property key="NeedKey" value="false" />
+						<Property key="NeedMouse" value="false" />
+					</Widget>
+				</Widget>
+				<Widget type="ItemBox" skin="InventoryItemBox2" name="MaterialGrid" position_real="0 0.8333333333333334 0.3732394366197183 0.16666666666666666">
+					<Property key="NeedKey" value="false" />
+					<Property key="NeedToolTip" value="true" />
+				</Widget>
+				<Widget type="TextBox" skin="TextBox" name="Charges" position_real="0.38028169014084506 0.9259259259259259 0.28169014084507044 0.07407407407407407" />
+			</Widget>
+		</Widget>
+	</Widget>
 </MyGUI>

@@ -31,6 +31,22 @@
 			"ratings": {},
 			"stackSize": 1,
 			"showInInventory": false
+		},
+		{
+			"uuid": "7705f920-b4cb-41f7-8a9c-088539201c35",
+			"name": "obj_tool_stratagem",
+			"renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_stratagem.rend",
+			"color": "ffffff",
+			"box": {
+				"x": 1,
+				"y": 1,
+				"z": 1
+			},
+			"physicsMaterial": "Plastic",
+			"rotationSet": "Default",
+			"ratings": {},
+			"stackSize": 1,
+			"showInInventory": false
 		}
 	]
 }

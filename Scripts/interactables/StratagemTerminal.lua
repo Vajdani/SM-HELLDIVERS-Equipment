@@ -1,3 +1,5 @@
+dofile("../VideoPlayer.lua")
+
 ---@class StratagemTerminal : ShapeClass
 StratagemTerminal = class()
 
@@ -19,6 +21,7 @@ end
 function StratagemTerminal:client_onInteract(char, state)
     if not state then return end
 
+    ---@type Interactable?
     g_stratagemTerminal = self.interactable
     self.selectedStratagem = 0
     self.offset = 0
@@ -32,7 +35,7 @@ function StratagemTerminal:client_onInteract(char, state)
         self.gui:setButtonCallback(widget, "cl_select")
     end
 
-    self.range = math.max(GetStratagemPages(), 2)
+    self.range = math.max(GetStratagemPageCount(6), 2)
     self.gui:createVerticalSlider("StratagemScroll", self.range, self.range - 1, "cl_scroll")
 
     local matGrid = {
@@ -46,8 +49,15 @@ function StratagemTerminal:client_onInteract(char, state)
 	self.gui:setContainer( "", sm.localPlayer.getPlayer():getInventory())
 
     self:cl_scroll(self.range - 1)
+    self:cl_select("stratagem1")
 
     self.gui:open()
+end
+
+function StratagemTerminal:client_onUpdate(dt)
+    if sm.exists(self.gui) and self.gui:isActive() and self.video then
+        self.video:update(dt)
+    end
 end
 
 function StratagemTerminal:cl_onClose()
@@ -80,6 +90,8 @@ function StratagemTerminal:cl_scroll(value, noReset)
             local userData = GetStratagemUserdata(stratagem.uuid)
             self.gui:setText(widget.."_name", userData.name)
 
+            self.gui:setIconImage(widget.."_preview", sm.uuid.new(userData.icon))
+
             local unlocked = GetClStratagemProgression(stratagem.uuid).unlocked
             self.gui:setVisible(widget.."_border", false)
             self.gui:setVisible(widget.."_completed", unlocked)
@@ -110,12 +122,20 @@ function StratagemTerminal:cl_updateInfo(index)
         end
 
         self.gui:setVisible("Purchase", true)
+        self.gui:setVisible("PreviewVideo", true)
+        if userData.preview then
+            self.video = VideoPlayer():init(self.gui, "PreviewVideo", "$CONTENT_DATA/Gui/StratagemVideos/"..uuid, userData.preview)
+        else
+            self.video = nil
+            self.gui:setImage("PreviewVideo", "challenge_missing_icon_large.png")
+        end
     else
         self.gui:setText("Type", "")
         self.gui:setText("Name", "")
         self.gui:setText("Description", "")
         self.gui:setText("Charges", "")
         self.gui:setVisible("Purchase", false)
+        self.gui:setVisible("PreviewVideo", false)
 
         for idx = 1, 4 do
             self.gui:setGridItem( "MaterialGrid", idx - 1, nil )

@@ -13,7 +13,7 @@
          "uuid" : "9266ebb2-2954-4466-9832-8075ae0eb10c"
       },
       {
-         "name" : "Stratagem",
+         "name" : "tool_stratagem",
          "previewRenderable" : "$CONTENT_DATA/Objects/Renderables/obj_interactive_stratagem.rend",
          "previewRotation" : [ 1, 0, 0, 0, 0, -1, 0, 1, 0 ],
          "script" : {
@@ -25,7 +25,7 @@
       },
       {
 			"uuid": "552b4ced-ca96-4a71-891c-ab54fe9c6873",
-         "name": "Heavy Machine Gun",
+         "name": "tool_hmg",
 			"previewRenderable": "$GAME_DATA/Character/Char_Tools/char_spudgun_spinner_preview.rend",
 			"previewRotation": [ 1, 0, 0, 0, 0, -1, 0, 1, 0 ],
 			"script": { 
@@ -36,7 +36,7 @@
 		},
       {
 			"uuid": "b3ad837a-2235-476e-9408-4b5321b1032f",
-         "name": "AutoCannon",
+         "name": "tool_autocannon",
 			"previewRenderable": "$CONTENT_DATA/Tools/AutoCannon/char_autocannon.rend",
 			"previewRotation": [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ],
 			"script": { 

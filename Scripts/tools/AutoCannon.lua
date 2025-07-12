@@ -16,6 +16,10 @@ AutoCannon.settings = {
 		{
 			name = "Automatic",
 			icon = ""
+		},
+		{
+			name = "Burst",
+			icon = ""
 		}
 	}
 }
@@ -140,10 +144,6 @@ function AutoCannon:getRecoil()
 	local x = math.random(20, 40) * 0.01
 	local y = 0.2
 	return { x = x, y = y }
-end
-
-function AutoCannon:getFiringMode()
-	return self.cl_settings.fireMode == 1 and 1 or 2
 end
 
 function AutoCannon:canReload()

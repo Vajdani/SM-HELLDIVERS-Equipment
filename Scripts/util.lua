@@ -9,9 +9,14 @@ STRATAGEMINVENTORYSIZE = 6
 STRATAGEMMAXBOUNCEOUNT = 3
 PLAYERDATAPATH = "$CONTENT_DATA/playerData.json"
 
-vec3_right   = sm.vec3.new(1,0,0)
-vec3_forward = sm.vec3.new(0,1,0)
-vec3_up      = sm.vec3.new(0,0,1)
+vec3_new     = sm.vec3.new
+vec3_right   = vec3_new(1,0,0)
+vec3_forward = vec3_new(0,1,0)
+vec3_up      = vec3_new(0,0,1)
+vec3_zero    = sm.vec3.zero()
+vec3_one     = sm.vec3.one()
+
+quat_identity = sm.quat.identity()
 
 dropPodRotation = sm.quat.angleAxis(math.rad(90), vec3_right)
 
@@ -58,7 +63,7 @@ end
 
 function GetFpBoneDir(tool, bone)
     local endPos = tool:getFpBonePos(bone.."_end")
-    if endPos == sm.vec3.zero() then
+    if endPos == vec3_zero then
         return tool:getDirection()
     end
 
