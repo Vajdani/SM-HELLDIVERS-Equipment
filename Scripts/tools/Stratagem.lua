@@ -34,9 +34,9 @@ local renderablesFp = {
     "$SURVIVAL_DATA/Character/Char_Male/Animations/char_male_fp_glowstick.rend"
 }
 
----@type StratagemHUD
+---@type StratagemHUD?
 ---@diagnostic disable-next-line: missing-fields
-g_stratagemHud = nil
+g_stratagemHud = g_stratagemHud
 
 sm.tool.preloadRenderables( renderables )
 sm.tool.preloadRenderables( renderablesTp )
@@ -562,6 +562,8 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
 
         return true, true
     else
+        sm.gui.setInteractionText(sm.gui.getKeyBinding("Create", true).."Call", "")
+
         if lmb == 1 then
             if #g_cl_loadout == 0 then
                 sm.gui.displayAlertText("Your loadout is empty!")
@@ -569,11 +571,19 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
 
             g_stratagemHud.isOpen = true
             UpdateStratagemHud()
-            --g_stratagemHud.gui:open()
             self.network:sendToServer("sv_prime")
+        elseif lmb == 2 and g_stratagemHud.isOpen then
+            sm.gui.setInteractionText("", sm.gui.getKeyBinding("Attack", true), "Cancel")
+
+            if rmb == 1 then
+                g_stratagemHud.isOpen = false
+                g_stratagemCode = nil
+
+                self.network:sendToServer("sv_cancel")
+                UpdateStratagemHud()
+            end
         elseif lmb == 3 then
             g_stratagemHud.isOpen = false
-            --g_stratagemHud.gui:close()
             self.network:sendToServer("sv_cancel")
 
             if g_stratagemCode then
@@ -598,8 +608,6 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             end
 
             UpdateStratagemHud()
-        else
-            sm.gui.setInteractionText(sm.gui.getKeyBinding("Create", true).."Call", "")
         end
     end
 
