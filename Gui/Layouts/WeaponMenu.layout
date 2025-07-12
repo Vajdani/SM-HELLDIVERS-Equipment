@@ -1,0 +1,173 @@
+<MyGUI type="Layout" version="3.2.0">
+	<Widget type="Widget" skin="WhiteSkin" position_real="0 0 1 1">
+		<Property key="Visible" value="false" />
+	</Widget>
+	<Widget type="Widget" skin="BlurryBackgroundSkin" position_real="0.4609375 0.4305555555555556 0.078125 0.1388888888888889">
+		<Widget type="EditBox" skin="EditBoxEmpty" name="name" position_real="0.03333333333333333 0.03333333333333333 0.9333333333333333 0.2">
+			<Property key="Caption" value="this is very big and long text for sure" />
+			<Property key="FontName" value="SM_TextSmall" />
+			<Property key="WordWrap" value="true" />
+			<Property key="ReadOnly" value="true" />
+			<Property key="FontHeight" value="18" />
+			<Property key="NeedKey" value="false" />
+			<Property key="NeedMouse" value="false" />
+			<Property key="TextAlign" value="Center" />
+		</Widget>
+		<Widget type="ImageBox" skin="ImageBox" name="icon" position_real="0.26666666666666666 0.26666666666666666 0.4666666666666667 0.4666666666666667" />
+		<Widget type="TextBox" skin="TextBox" name="ammo" position_real="0.03333333333333333 0.7666666666666667 0.9333333333333333 0.2">
+			<Property key="TextAlign" value="Center" />
+		</Widget>
+	</Widget>
+	<Widget type="Widget" skin="PanelEmpty" name="panel_rpm" position_real="0.3020833333333333 0.4648148148148148 0.15625 0.06944444444444445">
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_rpm_1" position_real="0.6666666666666666 0 0.3333333333333333 1" />
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_rpm_2" position_real="0.3333333333333333 0 0.6666666666666666 1" />
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_rpm_3" position_real="0 0 1 1" />
+		<Widget type="Button" skin="PanelEmpty" name="panel_rpm_item1" position_real="0.6666666666666666 0 0.3333333333333333 1">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_rpm_item1_icon" position_real="0.25 0.06666666666666667 0.5 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_rpm_item1_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+		<Widget type="Button" skin="PanelEmpty" name="panel_rpm_item2" position_real="0.3333333333333333 0 0.3333333333333333 1">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_rpm_item2_icon" position_real="0.25 0.06666666666666667 0.5 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_rpm_item2_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+		<Widget type="Button" skin="PanelEmpty" name="panel_rpm_item3" position_real="0 0 0.3333333333333333 1">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_rpm_item3_icon" position_real="0.25 0.06666666666666667 0.5 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_rpm_item3_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+	</Widget>
+	<Widget type="Widget" skin="PanelEmpty" name="panel_fireMode" position_real="0.5416666666666666 0.4648148148148148 0.15625 0.06944444444444445">
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_fireMode_1" position_real="0 0 0.3333333333333333 1" />
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_fireMode_2" position_real="0 0 0.6666666666666666 1" />
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_fireMode_3" position_real="0 0 1 1" />
+		<Widget type="Button" skin="PanelEmpty" name="panel_fireMode_item1" position_real="0 0 0.3333333333333333 1">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_fireMode_item1_icon" position_real="0.25 0.06666666666666667 0.5 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_fireMode_item1_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+		<Widget type="Button" skin="PanelEmpty" name="panel_fireMode_item2" position_real="0.3333333333333333 0 0.3333333333333333 1">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_fireMode_item2_icon" position_real="0.25 0.06666666666666667 0.5 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_fireMode_item2_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+		<Widget type="Button" skin="PanelEmpty" name="panel_fireMode_item3" position_real="0.6666666666666666 0 0.3333333333333333 1">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_fireMode_item3_icon" position_real="0.25 0.06666666666666667 0.5 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_fireMode_item3_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+	</Widget>
+	<Widget type="Widget" skin="PanelEmpty" name="panel_flashLight" position_real="0.48020833333333335 0.5740740740740741 0.0390625 0.2777777777777778">
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_flashLight_1" position_real="0 0 1 0.3333333333333333" />
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_flashLight_2" position_real="0 0 1 0.6666666666666666" />
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_flashLight_3" position_real="0 0 1 1" />
+		<Widget type="Button" skin="PanelEmpty" name="panel_flashLight_item1" position_real="0 0.03 1 0.25">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_flashLight_item1_icon" position_real="0.16 0.06666666666666667 0.6666666666666666 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_flashLight_item1_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+		<Widget type="Button" skin="PanelEmpty" name="panel_flashLight_item2" position_real="0 0.36333333333333334 1 0.25">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_flashLight_item2_icon" position_real="0.16 0.06666666666666667 0.6666666666666666 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_flashLight_item2_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+		<Widget type="Button" skin="PanelEmpty" name="panel_flashLight_item3" position_real="0 0.6966666666666667 1 0.25">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_flashLight_item3_icon" position_real="0.16 0.06666666666666667 0.6666666666666666 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_flashLight_item3_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+	</Widget>
+	<Widget type="Widget" skin="PanelEmpty" name="panel_sight" position_real="0.48020833333333335 0.14814814814814814 0.0390625 0.2777777777777778">
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_sight_1" position_real="0 0.6666666666666666 1 0.3333333333333333" />
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_sight_2" position_real="0 0.3333333333333333 1 0.6666666666666666" />
+		<Widget type="Widget" skin="BlurryBackgroundSkin" name="panel_sight_3" position_real="0 0 1 1" />
+		<Widget type="Button" skin="PanelEmpty" name="panel_sight_item1" position_real="0 0.6966666666666667 1 0.25">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_sight_item1_icon" position_real="0.16 0.06666666666666667 0.6666666666666666 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_sight_item1_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+		<Widget type="Button" skin="PanelEmpty" name="panel_sight_item2" position_real="0 0.36333333333333334 1 0.25">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_sight_item2_icon" position_real="0.16 0.06666666666666667 0.6666666666666666 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_sight_item2_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+		<Widget type="Button" skin="PanelEmpty" name="panel_sight_item3" position_real="0 0.03 1 0.25">
+			<Widget type="ImageBox" skin="ImageBox" name="panel_sight_item3_icon" position_real="0.16 0.06666666666666667 0.6666666666666666 0.6666666666666666">
+				<Property key="NeedKey" value="false" />
+				<Property key="NeedMouse" value="false" />
+			</Widget>
+			<Widget type="TextBox" skin="TextBox" name="panel_sight_item3_text" position_real="0 0.7333333333333333 1 0.26666666666666666">
+				<Property key="TextAlign" value="Center" />
+				<Property key="NeedMouse" value="false" />
+				<Property key="NeedKey" value="false" />
+			</Widget>
+		</Widget>
+	</Widget>
+</MyGUI>

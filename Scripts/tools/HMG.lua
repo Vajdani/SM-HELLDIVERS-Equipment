@@ -14,32 +14,21 @@ local rpm = {
 ---@class HMG : BaseGun
 HMG = class(BaseGun)
 HMG.settings = {
-	fireMode = {
-		{
-			name = "Semi-Automatic",
-			icon = ""
-		},
-		{
-			name = "Automatic",
-			icon = ""
-		},
-		{
-			name = "Burst",
-			icon = ""
-		}
-	},
+	fireMode = FIREMODESETTINGS_ALL,
+	flashLight = FLASHLIGHTSETTINGS_ALL,
+	sight = FLASHLIGHTSETTINGS_ALL,
 	rpm = {
 		{
-			name = "450 RPM",
-			icon = ""
+			name = "450rpm",
+			icon = "challenge_missing_icon_large.png"
 		},
 		{
-			name = "750 RPM",
-			icon = ""
+			name = "750rpm",
+			icon = "challenge_missing_icon_large.png"
 		},
 		{
-			name = "900 RPM",
-			icon = ""
+			name = "900rpm",
+			icon = "challenge_missing_icon_large.png"
 		}
 	}
 }

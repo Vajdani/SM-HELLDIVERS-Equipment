@@ -101,8 +101,8 @@ function BaseGun:sv_saveAndSync()
 	self.network:setClientData(data)
 end
 
-function BaseGun:sv_updateFireMode(mode)
-	self.sv_settings.fireMode = mode
+function BaseGun:sv_updateSetting(args)
+	self.sv_settings[args[1]] = args[2]
 	self:sv_saveAndSync()
 end
 
@@ -220,10 +220,37 @@ local aimAnims = {
     aimShoot = true
 }
 
+--https://github.com/godotengine/godot/blob/c6d130abd9188f313e6701d01a0ddd6ea32166a0/core/math/math_defs.h#L43
+local TAU = 6.2831853071795864769252867666
+
+--https://github.com/godotengine/godot/blob/c6d130abd9188f313e6701d01a0ddd6ea32166a0/core/math/math_funcs.h#L482
+local function angle_difference(p_from, p_to)
+	local difference = math.fmod(p_to - p_from, TAU);
+	return math.fmod(2.0 * difference, TAU) - difference;
+end
+
+--https://github.com/godotengine/godot/blob/c6d130abd9188f313e6701d01a0ddd6ea32166a0/core/math/vector3.h#L313
+local function angle_to(p_from, p_to)
+	local cross = p_from:cross(p_to)
+	return math.atan2(cross:length(), p_from:dot(p_to)), cross
+end
+
+
 function BaseGun:client_onUpdate(dt)
 	-- First person animation	
 	local isSprinting = self.tool:isSprinting()
 	local isCrouching = self.tool:isCrouching()
+
+	local playerDir = self.tool:getDirection()
+	self.lerpedDir = sm.vec3.lerp(self.lerpedDir or playerDir, playerDir, dt * 15)
+
+	local angle, cross = angle_to(self.lerpedDir, playerDir)
+	if angle > MAXAIMDRAGANGLE then
+	 	self.lerpedDir = playerDir:rotate(-MAXAIMDRAGANGLE, cross)
+	end
+
+	local aimDrag_hor = angle_difference(math.atan2(self.lerpedDir.x, self.lerpedDir.y), math.atan2(playerDir.x, playerDir.y))
+	local aimDrag_ver = math.asin(playerDir.z) - math.asin(self.lerpedDir.z)
 
 	if self.isLocal then
 		if self.equipped then
@@ -241,15 +268,8 @@ function BaseGun:client_onUpdate(dt)
 				swapFpAnimation(self.fpAnimations, "aimInto", "aimExit", 0.0)
 			end
 
-           --[[local x, y = sm.localPlayer.getMouseDelta()
-            self.x = (self.x or 0) + x * 0.5
-            self.y = (self.y or 0) + y * 0.5]]
-
-			self.tool:updateFpAnimation("recoil_horizontal", 0.5 + self.recoil_x --[[+ self.x]], 1, false)
-			self.tool:updateFpAnimation("recoil_vertical", 0.5 - self.recoil_y --[[+ self.y]], 1, false)
-
-            --[[self.x = sm.util.lerp(self.x, 0, dt * 10)
-            self.y = sm.util.lerp(self.y, 0, dt * 10)]]
+			self.tool:updateFpAnimation("recoil_horizontal", 0.5 + self.recoil_x - aimDrag_hor, 1, false)
+			self.tool:updateFpAnimation("recoil_vertical",   0.5 - self.recoil_y + aimDrag_ver, 1, false)
 		end
 		updateFpAnimations(self, self.equipped, dt)
 	end
@@ -262,8 +282,8 @@ function BaseGun:client_onUpdate(dt)
 		return
 	end
 
-	self.tool:updateAnimation("recoil_horizontal", 0.5 + self.recoil_x, 1)
-	self.tool:updateAnimation("recoil_vertical", 0.5 - self.recoil_y, 1)
+	self.tool:updateAnimation("recoil_horizontal", 0.5 + self.recoil_x - aimDrag_hor, 1)
+	self.tool:updateAnimation("recoil_vertical",   0.5 - self.recoil_y + aimDrag_ver, 1)
 
 	self.recoil_x = sm.util.lerp(self.recoil_x, self.recoil_target_x, dt * 10)
 	self.recoil_y = sm.util.lerp(self.recoil_y, self.recoil_target_y, dt * 10)
@@ -451,11 +471,58 @@ end
 
 
 function BaseGun:client_onToggle()
-	self.cl_settings.fireMode = self.cl_settings.fireMode < #self.settings.fireMode and self.cl_settings.fireMode + 1 or 1
-    sm.gui.displayAlertText(tostring(self.cl_settings.fireMode), 2.5)
-	self.network:sendToServer("sv_updateFireMode", self.cl_settings.fireMode)
+	self.gui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/WeaponMenu.layout", true)
+
+	local uuid = sm.localPlayer.getActiveItem()
+	self.gui:setText("name", sm.shape.getShapeTitle(uuid))
+	self.gui:setText("ammo", ("#ffffff%s/#cccccc%s"):format(self.cl_ammo, self.magCapacity))
+	self.gui:setIconImage("icon", uuid)
+
+	self:cl_updateSettingsGui()
+
+	self.gui:open()
 
 	return true
+end
+
+function BaseGun:cl_updateSettingsGui()
+	for k, settingName in pairs({ "rpm", "fireMode", "sight", "flashLight" }) do
+		local widget = "panel_"..settingName
+		local settings = self.settings[settingName]
+		if settings ~= nil then
+			self.gui:setVisible(widget, true)
+
+			local count = #settings
+			self.gui:setVisible(widget.."_1", count == 1)
+			self.gui:setVisible(widget.."_2", count == 2)
+			self.gui:setVisible(widget.."_3", count == 3)
+
+			for i = 1, count do
+				local setting = settings[i]
+				local subWidget = widget.."_item"..i
+				local colour = self.cl_settings[settingName] == i and "#ffffff" or "#cccccc"
+
+				self.gui:setText(subWidget.."_text", colour..setting.name)
+				self.gui:setImage(subWidget.."_icon", setting.icon)
+				self.gui:setColor(subWidget.."_icon", sm.color.new(colour))
+
+				self.gui:setButtonCallback(subWidget, "cl_selectSetting")
+			end
+		else
+			self.gui:setVisible(widget, false)
+		end
+	end
+end
+
+function BaseGun:cl_selectSetting(button)
+	local panelStart, panelEnd = button:find("panel_")
+	local itemStart, itemEnd = button:find("_item")
+	local setting, value = button:sub(panelEnd + 1, itemStart - 1), tonumber(button:sub(itemEnd + 1, itemEnd + 1))
+
+	self.cl_settings[setting] = value
+	self.network:sendToServer("sv_updateSetting", { setting, value })
+
+	self:cl_updateSettingsGui()
 end
 
 function BaseGun:sv_n_onAim(aiming)
@@ -476,7 +543,10 @@ function BaseGun:onAim(aiming)
 end
 
 function BaseGun:sv_n_onShoot(recoil)
-    self.sv_ammo = self.sv_ammo - 1
+	if sm.game.getEnableAmmoConsumption() then
+    	self.sv_ammo = self.sv_ammo - 1
+	end
+
     self:sv_save()
 	self.network:sendToClients("cl_n_onShoot", recoil)
 end
@@ -510,7 +580,7 @@ function BaseGun:cl_onPrimaryUse()
 	end
 
     local data = self.shootData
-	if not sm.game.getEnableAmmoConsumption() or self.cl_ammo > 0 then
+	if self.cl_ammo > 0 then
 		local firstPerson = self.tool:isInFirstPersonView()
 
 		local dir = firstPerson and GetFpBoneDir(self.tool, "pejnt_barrel") or self.tool:getTpBoneDir("pejnt_barrel")
@@ -556,7 +626,9 @@ function BaseGun:cl_onPrimaryUse()
             sm.projectile.projectileAttack(data.projectile, data.damage, firePos, sm.noise.gunSpread(dir, spreadDeg) * fireMode.fireVelocity, owner, fakePosition, fakePositionSelf)
         end
 
-        self.cl_ammo = self.cl_ammo - 1
+		if sm.game.getEnableAmmoConsumption() then
+			self.cl_ammo = self.cl_ammo - 1
+		end
 
 		-- Timers
         local cooldown = fireMode.fireCooldown
@@ -568,12 +640,10 @@ function BaseGun:cl_onPrimaryUse()
 		self.spreadCooldownTimer = math.min(self.spreadCooldownTimer + fireMode.spreadIncrement, fireMode.spreadCooldown)
 		self.sprintCooldownTimer = self.sprintCooldown
 
-		-- Send TP shoot over network and dircly to self
 		local recoil = self:getRecoil()
 		self:onShoot(recoil)
 		self.network:sendToServer("sv_n_onShoot", recoil)
 
-		-- Play FP shoot animation
 		setFpAnimation(self.fpAnimations, self.aiming and "aimShoot" or "shoot", 0.05)
 
         return 1

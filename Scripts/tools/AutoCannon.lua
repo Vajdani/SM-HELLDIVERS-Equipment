@@ -8,20 +8,7 @@ dofile "BaseGun.lua"
 ---@class AutoCannon : BaseGun
 AutoCannon = class(BaseGun)
 AutoCannon.settings = {
-	fireMode = {
-		{
-			name = "Semi-Automatic",
-			icon = ""
-		},
-		{
-			name = "Automatic",
-			icon = ""
-		},
-		{
-			name = "Burst",
-			icon = ""
-		}
-	}
+	fireMode = FIREMODESETTINGS_ALL
 }
 AutoCannon.defaultSettings = { fireMode = 1 }
 AutoCannon.shootData = {
@@ -141,9 +128,7 @@ function AutoCannon:loadAnimations()
 end
 
 function AutoCannon:getRecoil()
-	local x = math.random(20, 40) * 0.01
-	local y = 0.2
-	return { x = x, y = y }
+	return { x = math.random(20, 40) * 0.01, y = 0.2 }
 end
 
 function AutoCannon:canReload()

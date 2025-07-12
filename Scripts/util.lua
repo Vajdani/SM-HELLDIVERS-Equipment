@@ -5,9 +5,41 @@ STRATAGEMTYPETOCOLOUR = {
     offensive = sm.color.new(1,0,0),
 }
 
+FIREMODESETTINGS_ALL = {
+    {
+		name = "Semi-Automatic",
+		icon = "challenge_missing_icon_large.png"
+	},
+	{
+		name = "Automatic",
+		icon = "challenge_missing_icon_large.png"
+	},
+	{
+		name = "Burst",
+		icon = "challenge_missing_icon_large.png"
+	}
+}
+
+FLASHLIGHTSETTINGS_ALL = {
+    {
+		name = "On",
+		icon = "challenge_missing_icon_large.png"
+	},
+	{
+		name = "Auto",
+		icon = "challenge_missing_icon_large.png"
+	},
+	{
+		name = "Off",
+		icon = "challenge_missing_icon_large.png"
+	}
+}
+
 STRATAGEMINVENTORYSIZE = 6
 STRATAGEMMAXBOUNCEOUNT = 3
 PLAYERDATAPATH = "$CONTENT_DATA/playerData.json"
+
+MAXAIMDRAGANGLE = math.rad(30)
 
 vec3_new     = sm.vec3.new
 vec3_right   = vec3_new(1,0,0)

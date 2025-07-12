@@ -15,12 +15,12 @@
 			"effectmaterial": "Potato",
 			"enableGravity": true,
 			"enableImpactEffect": true,
-			"friction": 0.2000000029802322,
+			"friction": 0.2,
 			"mass": 3.0,
-			"mesh": "$GAME_DATA/Projectiles/Renderables/potato.rend",
+			"mesh": "$CONTENT_DATA/Objects/Renderables/obj_interactive_stratagem.rend",
 			"name": "projectile_stratagem",
 			"radius": 0.250,
-			"spin": 7.0,
+			"spin": 1,
 			"uuid": "6411767a-8882-4b94-aae5-381057cde9f9"
 		},
 		{
