@@ -16,6 +16,8 @@ dofile "$CONTENT_DATA/Scripts/ProgressBar.lua"
 ---@field wantEquipped boolean
 ---@field pendingThrow boolean
 ---@field blendTime number
+---@field jointWeight number
+---@field spineWeight number
 Stratagem = class()
 
 local renderables = {
@@ -25,7 +27,8 @@ local renderablesTp = {
     "$SURVIVAL_DATA/Character/Char_Male/Animations/char_male_tp_eattool.rend",
     "$SURVIVAL_DATA/Character/Char_Tools/Char_eattool/char_eattool_tp.rend",
 
-    "$SURVIVAL_DATA/Character/Char_Male/Animations/char_male_tp_glowstick.rend"
+    "$SURVIVAL_DATA/Character/Char_Male/Animations/char_male_tp_glowstick.rend",
+    "$GAME_DATA/Character/Char_Male/Animations/char_male_tp_spudgun.rend"
 }
 local renderablesFp = {
     "$SURVIVAL_DATA/Character/Char_Male/Animations/char_male_fp_eattool.rend",
@@ -87,6 +90,9 @@ end
 
 function Stratagem:client_onCreate()
     self.isLocal = self.tool:isLocal()
+
+	self.jointWeight = 0.0
+	self.spineWeight = 0.0
 
     if not self.isLocal then return end
 
@@ -196,7 +202,6 @@ function Stratagem.client_onUpdate( self, dt )
         end
 	end
 
-
 	if not self.equipped then
 		if self.wantEquipped then
 			self.wantEquipped = false
@@ -205,8 +210,9 @@ function Stratagem.client_onUpdate( self, dt )
 		return
 	end
 
-
-	local crouchWeight = self.tool:isCrouching() and 1.0 or 0.0
+    local isSprinting = self.tool:isSprinting()
+    local isCrouching = self.tool:isCrouching()
+	local crouchWeight = isCrouching and 1.0 or 0.0
 	local normalWeight = 1.0 - crouchWeight
 	local totalWeight = 0.0
 
@@ -246,6 +252,40 @@ function Stratagem.client_onUpdate( self, dt )
 			self.tool:updateAnimation( animation.info.name, animation.time, weight )
 		end
 	end
+
+	local relativeMoveDirection = self.tool:getRelativeMoveDirection()
+	if (((isAnyOf(self.tpAnimations.currentAnimation, { "aimInto", "aim", "shoot" }) and (relativeMoveDirection:length() > 0 or isCrouching))) and not isSprinting) then
+		self.jointWeight = math.min(self.jointWeight + (10.0 * dt), 1.0)
+	else
+		self.jointWeight = math.max(self.jointWeight - (6.0 * dt), 0.0)
+	end
+
+	if (not isSprinting) then
+		self.spineWeight = math.min(self.spineWeight + (10.0 * dt), 1.0)
+	else
+		self.spineWeight = math.max(self.spineWeight - (10.0 * dt), 0.0)
+	end
+
+	local playerDir = self.tool:getSmoothDirection()
+    local spineAngle = math.asin(playerDir:dot(vec3_up)) / (math.pi / 2)
+    local finalAngle = (0.5 + spineAngle * 0.5)
+	self.tool:updateAnimation("spudgun_spine_bend", finalAngle, self.spineWeight)
+
+	local totalOffsetZ = lerp(-22.0, -26.0, crouchWeight)
+	local totalOffsetY = lerp(6.0, 12.0, crouchWeight)
+	local crouchTotalOffsetX = clamp((spineAngle * 60.0) - 15.0, -60.0, 40.0)
+	local normalTotalOffsetX = clamp((spineAngle * 50.0), -45.0, 50.0)
+	local totalOffsetX = lerp(normalTotalOffsetX, crouchTotalOffsetX, crouchWeight)
+
+	local finalJointWeight = (self.jointWeight)
+
+	self.tool:updateJoint("jnt_hips", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), 0.35 * finalJointWeight * (normalWeight))
+	local crouchSpineWeight = (0.35 / 3) * crouchWeight
+
+	self.tool:updateJoint("jnt_spine1", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), (0.10 + crouchSpineWeight) * finalJointWeight)
+	self.tool:updateJoint("jnt_spine2", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), (0.10 + crouchSpineWeight) * finalJointWeight)
+	self.tool:updateJoint("jnt_spine3", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), (0.45 + crouchSpineWeight) * finalJointWeight)
+	self.tool:updateJoint("jnt_head", vec3_new(totalOffsetX, totalOffsetY, totalOffsetZ), 0.3 * finalJointWeight)
 end
 
 function Stratagem:sv_export(body)

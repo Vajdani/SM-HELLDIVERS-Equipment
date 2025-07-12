@@ -241,7 +241,7 @@ function BaseGun:client_onUpdate(dt)
 	local isSprinting = self.tool:isSprinting()
 	local isCrouching = self.tool:isCrouching()
 
-	local playerDir = self.tool:getDirection()
+	local playerDir = self.tool:getSmoothDirection()
 	self.lerpedDir = sm.vec3.lerp(self.lerpedDir or playerDir, playerDir, dt * 15)
 
 	local angle, cross = angle_to(self.lerpedDir, playerDir)
@@ -364,8 +364,7 @@ function BaseGun:client_onUpdate(dt)
 	local blockSprint = self.aiming or self.sprintCooldownTimer > 0.0
 	self.tool:setBlockSprint(blockSprint)
 
-	local playerDir = self.tool:getSmoothDirection()
-	local angle = math.asin(playerDir:dot(vec3_up)) / (math.pi / 2)
+	local spineAngle = math.asin(playerDir:dot(vec3_up)) / (math.pi / 2)
 
 	local crouchWeight = isCrouching and 1.0 or 0.0
 	local normalWeight = 1.0 - crouchWeight
@@ -420,13 +419,13 @@ function BaseGun:client_onUpdate(dt)
 		self.spineWeight = math.max(self.spineWeight - (10.0 * dt), 0.0)
 	end
 
-	local finalAngle = (0.5 + angle * 0.5)
+	local finalAngle = (0.5 + spineAngle * 0.5)
 	self.tool:updateAnimation("spudgun_spine_bend", finalAngle, self.spineWeight)
 
 	local totalOffsetZ = lerp(-22.0, -26.0, crouchWeight)
 	local totalOffsetY = lerp(6.0, 12.0, crouchWeight)
-	local crouchTotalOffsetX = clamp((angle * 60.0) - 15.0, -60.0, 40.0)
-	local normalTotalOffsetX = clamp((angle * 50.0), -45.0, 50.0)
+	local crouchTotalOffsetX = clamp((spineAngle * 60.0) - 15.0, -60.0, 40.0)
+	local normalTotalOffsetX = clamp((spineAngle * 50.0), -45.0, 50.0)
 	local totalOffsetX = lerp(normalTotalOffsetX, crouchTotalOffsetX, crouchWeight)
 
 	local finalJointWeight = (self.jointWeight)

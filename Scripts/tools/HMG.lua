@@ -44,7 +44,7 @@ HMG.shootData = {
 		spreadCooldown = 0.18,
 		spreadIncrement = 3.9,
 		spreadMinAngle = 0.25,
-		spreadMaxAngle = 32,
+		spreadMaxAngle = 2,
 		fireVelocity = 130.0,
 
 		minDispersionStanding = 0.1,
@@ -60,7 +60,7 @@ HMG.shootData = {
 		spreadCooldown = 0.18,
 		spreadIncrement = 1.95,
 		spreadMinAngle = 0.25,
-		spreadMaxAngle = 24,
+		spreadMaxAngle = 1,
 		fireVelocity = 130.0,
 
 		minDispersionStanding = 0.01,
