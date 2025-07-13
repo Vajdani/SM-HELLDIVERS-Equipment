@@ -97,15 +97,26 @@ end
 
 
 
--- function TurretEmplacementSeat:client_onFixedUpdate()
---     print(getCameraMode(self.shape.worldRotation))
--- end
+function TurretEmplacementSeat:client_onDestroy()
+    if self.gui then
+        self.gui:destroy()
+    end
+end
+
+function TurretEmplacementSeat:client_onFixedUpdate()
+    if self.gui and not self.interactable:getSeatCharacter() and sm.game.getServerTick() - self.seatedTick > 5 then
+        self.gui:destroy()
+        self.gui = nil
+    end
+end
 
 function TurretEmplacementSeat:client_onInteract(character, state)
     if not state or self.interactable:getSeatCharacter() then return end
 
+    self.interactable:setSeatCharacter(character)
     sm.localPlayer.setLockedControls(true)
     sm.localPlayer.setDirection(self.shape.up)
+
     sm.event.sendToInteractable(self.interactable, "cl_seat", character)
 end
 
@@ -128,6 +139,7 @@ function TurretEmplacementSeat:client_onAction(action, state)
             self.interactable:setSeatCharacter(sm.localPlayer.getPlayer().character)
             sm.camera.setCameraState(0)
             self.gui:close()
+            self.gui = nil
         end
 
         -- if action == 0 then
@@ -142,10 +154,10 @@ end
 function TurretEmplacementSeat:cl_seat(character)
     sm.localPlayer.setLockedControls(false)
 
-    self.interactable:setSeatCharacter(character)
     sm.camera.setCameraPullback(0,0)
     sm.camera.setCameraState(0)
 
+    self.seatedTick = sm.game.getServerTick()
     self.gui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/Empty.layout", true, {
         isHud           = true,
         isInteractive   = false,

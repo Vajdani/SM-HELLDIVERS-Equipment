@@ -1,6 +1,6 @@
 STRATAGEMTYPETOCOLOUR = {
     supply    = sm.color.new(0,1,1),
-    mission   = sm.color.new(1,1,0),
+    mission   = sm.color.new(0,1,1), --sm.color.new(1,1,0),
     defensive = sm.color.new(0,1,0),
     offensive = sm.color.new(1,0,0),
 }

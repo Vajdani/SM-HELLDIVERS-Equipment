@@ -602,7 +602,12 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
         if self.pendingThrow then return true, true end
 
         if lmb == 1 then
-            g_cl_thrownStratagems[sm.localPlayer.getPlayer().id][tostring(GetStratagem(g_stratagemCode).uuid)] = true
+            local pId = sm.localPlayer.getPlayer().id
+            if not g_cl_thrownStratagems[pId] then
+                g_cl_thrownStratagems[pId] = {}
+            end
+
+            g_cl_thrownStratagems[pId][tostring(GetStratagem(g_stratagemCode).uuid)] = true
 
             self.pendingThrow = true
             self.network:sendToServer("sv_throwAnim")
