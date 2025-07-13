@@ -101,6 +101,7 @@ function HelldiversBackend:server_onCreate()
     self.customStratagems = storage.customStratagems or {}
 
     self.queuedStratagems = {}
+    -- self.thrownStratagems = {}
 
     self.playerInventories = {}
 
@@ -174,6 +175,12 @@ function HelldiversBackend:OnStratagemThrow(args)
 
     self:sv_save()
     self:sv_requestData(nil, player)
+
+    self.network:sendToClients("cl_OnStratagemThrow", { pId = pId, uuid = uuid })
+end
+
+function HelldiversBackend:OnStratagemTimedOut(args)
+    self.network:sendToClients("cl_OnStratagemTimedOut", args)
 end
 
 function HelldiversBackend:OnStratagemHit(args)
@@ -396,6 +403,7 @@ function HelldiversBackend:client_onCreate()
     end
 
     g_cl_queuedStratagems = {}
+    g_cl_thrownStratagems = {}
     g_cl_loadout = {}
     g_cl_stratagemProgression = {}
     g_cl_cooldowns = {}
@@ -542,11 +550,35 @@ function HelldiversBackend:client_onUpdate(dt)
     end
 end
 
+function HelldiversBackend:cl_OnStratagemThrow(args)
+    local pId = args.pId
+    if not g_cl_thrownStratagems[pId] then
+        g_cl_thrownStratagems[pId] = {}
+    end
+
+    g_cl_thrownStratagems[pId][tostring(args.uuid)] = true
+
+    if sm.localPlayer.getPlayer().id == pId then
+        UpdateStratagemHud()
+    end
+end
+
+function HelldiversBackend:cl_OnStratagemTimedOut(args)
+    local pId = args.pId
+    g_cl_thrownStratagems[pId][args.uuid or tostring(GetStratagem(args.code).uuid)] = nil
+
+    if sm.localPlayer.getPlayer().id == pId then
+        UpdateStratagemHud()
+    end
+end
+
+
 function HelldiversBackend:cl_OnStratagemHit(args)
     local pos = args.hitData.position
     local id = args.id
     local separator = string.find(id, "_")
-    local userdata = GetStratagemUserdata(id:sub(separator + 1, #id))
+    local uuid = id:sub(separator + 1, #id)
+    local userdata = GetStratagemUserdata(uuid)
 
     local beaconScale = vec3_new(1,500,1)
     local beacon = sm.effect.createEffect("Stratagem - Beacon")
@@ -601,9 +633,10 @@ function HelldiversBackend:cl_OnStratagemHit(args)
 
     g_cl_queuedStratagems[id] = args
 
-    if sm.localPlayer.getPlayer().id == tonumber(id:sub(1, separator - 1)) then
-        UpdateStratagemHud()
-    end
+    self:cl_OnStratagemTimedOut({
+        pId = tonumber(id:sub(1, separator - 1)),
+        uuid = uuid
+    })
 end
 
 function HelldiversBackend:cl_DeleteStratagem(index)

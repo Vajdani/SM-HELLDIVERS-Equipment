@@ -13,13 +13,13 @@
 			<Widget type="EditBox" skin="EditBoxEmpty" name="stratagem1_name" position_real="0.19767441860465115 0.0625 0.7906976744186046 0.4375">
 				<Property key="Caption" value="Challenge Name" />
 				<Property key="TextAlign" value="Left VCenter" />
-				<Property key="FontName" value="SM_HeaderLarge_Narrow" />
+				<Property key="FontName" value="SM_Header" />
 				<Property key="NeedKey" value="false" />
 				<Property key="NeedMouse" value="false" />
 				<Property key="ReadOnly" value="true" />
 				<Property key="WordWrap" value="true" />
 			</Widget>
-			<Widget type="TextBox" skin="TextBox" name="stratagem1_status" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="TextBox" skin="TextBox" name="stratagem1_status" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Property key="FontName" value="SM_ItemTitle" />
 				<Property key="TextAlign" value="Left VCenter" />
 			</Widget>
@@ -34,7 +34,7 @@
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
 				<Property key="Colour" value="0.392157 0.392157 0.392157" />
 			</Widget>
-			<Widget type="Canvas" skin="Canvas" name="stratagem1_codePanel" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="Canvas" skin="Canvas" name="stratagem1_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem1_codeDigit1" position_real="0 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem1_codeDigit2" position_real="0.11475409836065574 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem1_codeDigit3" position_real="0.22950819672131148 0 0.11475409836065574 1" />
@@ -58,13 +58,13 @@
 			<Widget type="EditBox" skin="EditBoxEmpty" name="stratagem2_name" position_real="0.19767441860465115 0.0625 0.7906976744186046 0.4375">
 				<Property key="Caption" value="Challenge Name" />
 				<Property key="TextAlign" value="Left VCenter" />
-				<Property key="FontName" value="SM_HeaderLarge_Narrow" />
+				<Property key="FontName" value="SM_Header" />
 				<Property key="NeedKey" value="false" />
 				<Property key="NeedMouse" value="false" />
 				<Property key="ReadOnly" value="true" />
 				<Property key="WordWrap" value="true" />
 			</Widget>
-			<Widget type="TextBox" skin="TextBox" name="stratagem2_status" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="TextBox" skin="TextBox" name="stratagem2_status" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Property key="FontName" value="SM_ItemTitle" />
 				<Property key="TextAlign" value="Left VCenter" />
 			</Widget>
@@ -79,7 +79,7 @@
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
 				<Property key="Colour" value="0.392157 0.392157 0.392157" />
 			</Widget>
-			<Widget type="Canvas" skin="Canvas" name="stratagem2_codePanel" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="Canvas" skin="Canvas" name="stratagem2_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem2_codeDigit1" position_real="0 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem2_codeDigit2" position_real="0.11475409836065574 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem2_codeDigit3" position_real="0.22950819672131148 0 0.11475409836065574 1" />
@@ -103,13 +103,13 @@
 			<Widget type="EditBox" skin="EditBoxEmpty" name="stratagem3_name" position_real="0.19767441860465115 0.0625 0.7906976744186046 0.4375">
 				<Property key="Caption" value="Challenge Name" />
 				<Property key="TextAlign" value="Left VCenter" />
-				<Property key="FontName" value="SM_HeaderLarge_Narrow" />
+				<Property key="FontName" value="SM_Header" />
 				<Property key="NeedKey" value="false" />
 				<Property key="NeedMouse" value="false" />
 				<Property key="ReadOnly" value="true" />
 				<Property key="WordWrap" value="true" />
 			</Widget>
-			<Widget type="TextBox" skin="TextBox" name="stratagem3_status" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="TextBox" skin="TextBox" name="stratagem3_status" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Property key="FontName" value="SM_ItemTitle" />
 				<Property key="TextAlign" value="Left VCenter" />
 			</Widget>
@@ -124,7 +124,7 @@
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
 				<Property key="Colour" value="0.392157 0.392157 0.392157" />
 			</Widget>
-			<Widget type="Canvas" skin="Canvas" name="stratagem3_codePanel" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="Canvas" skin="Canvas" name="stratagem3_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem3_codeDigit1" position_real="0 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem3_codeDigit2" position_real="0.11475409836065574 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem3_codeDigit3" position_real="0.22950819672131148 0 0.11475409836065574 1" />
@@ -148,13 +148,13 @@
 			<Widget type="EditBox" skin="EditBoxEmpty" name="stratagem4_name" position_real="0.19767441860465115 0.0625 0.7906976744186046 0.4375">
 				<Property key="Caption" value="Challenge Name" />
 				<Property key="TextAlign" value="Left VCenter" />
-				<Property key="FontName" value="SM_HeaderLarge_Narrow" />
+				<Property key="FontName" value="SM_Header" />
 				<Property key="NeedKey" value="false" />
 				<Property key="NeedMouse" value="false" />
 				<Property key="ReadOnly" value="true" />
 				<Property key="WordWrap" value="true" />
 			</Widget>
-			<Widget type="TextBox" skin="TextBox" name="stratagem4_status" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="TextBox" skin="TextBox" name="stratagem4_status" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Property key="FontName" value="SM_ItemTitle" />
 				<Property key="TextAlign" value="Left VCenter" />
 			</Widget>
@@ -169,7 +169,7 @@
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
 				<Property key="Colour" value="0.392157 0.392157 0.392157" />
 			</Widget>
-			<Widget type="Canvas" skin="Canvas" name="stratagem4_codePanel" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="Canvas" skin="Canvas" name="stratagem4_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem4_codeDigit1" position_real="0 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem4_codeDigit2" position_real="0.11475409836065574 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem4_codeDigit3" position_real="0.22950819672131148 0 0.11475409836065574 1" />
@@ -193,13 +193,13 @@
 			<Widget type="EditBox" skin="EditBoxEmpty" name="stratagem5_name" position_real="0.19767441860465115 0.0625 0.7906976744186046 0.4375">
 				<Property key="Caption" value="Challenge Name" />
 				<Property key="TextAlign" value="Left VCenter" />
-				<Property key="FontName" value="SM_HeaderLarge_Narrow" />
+				<Property key="FontName" value="SM_Header" />
 				<Property key="NeedKey" value="false" />
 				<Property key="NeedMouse" value="false" />
 				<Property key="ReadOnly" value="true" />
 				<Property key="WordWrap" value="true" />
 			</Widget>
-			<Widget type="TextBox" skin="TextBox" name="stratagem5_status" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="TextBox" skin="TextBox" name="stratagem5_status" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Property key="FontName" value="SM_ItemTitle" />
 				<Property key="TextAlign" value="Left VCenter" />
 			</Widget>
@@ -214,7 +214,7 @@
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
 				<Property key="Colour" value="0.392157 0.392157 0.392157" />
 			</Widget>
-			<Widget type="Canvas" skin="Canvas" name="stratagem5_codePanel" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="Canvas" skin="Canvas" name="stratagem5_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem5_codeDigit1" position_real="0 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem5_codeDigit2" position_real="0.11475409836065574 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem5_codeDigit3" position_real="0.22950819672131148 0 0.11475409836065574 1" />
@@ -238,13 +238,13 @@
 			<Widget type="EditBox" skin="EditBoxEmpty" name="stratagem6_name" position_real="0.19767441860465115 0.0625 0.7906976744186046 0.4375">
 				<Property key="Caption" value="Challenge Name" />
 				<Property key="TextAlign" value="Left VCenter" />
-				<Property key="FontName" value="SM_HeaderLarge_Narrow" />
+				<Property key="FontName" value="SM_Header" />
 				<Property key="NeedKey" value="false" />
 				<Property key="NeedMouse" value="false" />
 				<Property key="ReadOnly" value="true" />
 				<Property key="WordWrap" value="true" />
 			</Widget>
-			<Widget type="TextBox" skin="TextBox" name="stratagem6_status" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="TextBox" skin="TextBox" name="stratagem6_status" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Property key="FontName" value="SM_ItemTitle" />
 				<Property key="TextAlign" value="Left VCenter" />
 			</Widget>
@@ -259,7 +259,7 @@
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
 				<Property key="Colour" value="0.392157 0.392157 0.392157" />
 			</Widget>
-			<Widget type="Canvas" skin="Canvas" name="stratagem6_codePanel" position_real="0.27906976744186046 0.5 0.7093023255813954 0.4375">
+			<Widget type="Canvas" skin="Canvas" name="stratagem6_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem6_codeDigit1" position_real="0 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem6_codeDigit2" position_real="0.11475409836065574 0 0.11475409836065574 1" />
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem6_codeDigit3" position_real="0.22950819672131148 0 0.11475409836065574 1" />

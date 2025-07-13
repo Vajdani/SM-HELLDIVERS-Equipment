@@ -101,9 +101,17 @@ function VehicleBuilder:client_onUpdate()
 
     if self.cl_controller ~= sm.localPlayer.getPlayer() then return end
 
-    local correctCode = self.cl_correctCode:gsub("1", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_left.png</img>"):gsub("2", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_right.png</img>"):gsub("3", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_up.png</img>"):gsub("4", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_down.png</img>")
-    local currentCode = self.cl_currentCode:gsub("1", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_left.png</img>"):gsub("2", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_right.png</img>"):gsub("3", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_up.png</img>"):gsub("4", "<img bg='gui_keybinds_bg' spacing='0'>icon_keybinds_arrow_down.png</img>")
-    sm.gui.setInteractionText(correctCode, "|\t|", currentCode)
+    local final = ""
+    for i = 1, #self.cl_correctCode do
+        local char = self.cl_correctCode:sub(i, i)
+        if char == self.cl_currentCode:sub(i, i) then
+            final = final.."<img bg='gui_keybinds_bg_white' spacing='0'>"..indexToArrow[char].."</img>"
+        else
+            final = final.."<img bg='gui_keybinds_bg' spacing='0'>"..indexToArrow[char].."</img>"
+        end
+    end
+
+    sm.gui.setInteractionText(final, "")
 end
 
 function VehicleBuilder:client_canInteract()

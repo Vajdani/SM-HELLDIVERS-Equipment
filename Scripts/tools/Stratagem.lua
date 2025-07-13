@@ -486,21 +486,16 @@ function Stratagem.client_onUnequip( self )
 	end
 end
 
-local indexToArrow = {
-    ["1"] = "icon_keybinds_arrow_left.png",
-    ["2"] = "icon_keybinds_arrow_right.png",
-    ["3"] = "icon_keybinds_arrow_up.png",
-    ["4"] = "icon_keybinds_arrow_down.png"
-}
-
 local col_bright = sm.color.new("ffffff")
 local col_dark = sm.color.new("999999")
 function UpdateStratagemHud()
     local progression = g_cl_loadout
     local tick = sm.game.getServerTick()
-    local id = sm.localPlayer.getPlayer().id.."_"
+    local pId = sm.localPlayer.getPlayer().id
+    local id = pId.."_"
     local gui = g_stratagemHud.gui
     local open = g_stratagemHud.isOpen
+    local thrownStratagems = g_cl_thrownStratagems[pId] or {}
     for i = 1, STRATAGEMINVENTORYSIZE do
         local uuid = progression[i]
         local widget = "stratagem"..i
@@ -509,11 +504,25 @@ function UpdateStratagemHud()
             local stratagem = GetStratagemUserdata(uuid)
             local stratagemInbound = g_cl_queuedStratagems[id..uuid]
             local isActive = g_stratagemActivated and stratagem.code == g_stratagemCode
-            gui:setVisible(widget, open or isActive or stratagemInbound ~= nil)
+            local isThrown = thrownStratagems[tostring(uuid)]
+            gui:setVisible(widget, open or isActive or stratagemInbound ~= nil or isThrown)
 
             gui:setText(widget.."_name", stratagem.name)
             gui:setIconImage(widget.."_preview", sm.uuid.new(stratagem.icon))
-            gui:setText(widget.."_charges", tostring(GetClStratagemProgression(uuid).charges))
+
+            local charges = GetClStratagemProgression(uuid).charges
+            if charges > 99 then
+                gui:setText(widget.."_charges", "-")
+            else
+                gui:setText(widget.."_charges", tostring(charges))
+            end
+
+            if isThrown then
+                gui:setText(widget.."_status", "Beacon thrown...")
+                gui:setVisible(widget.."_codePanel", false)
+
+                goto continue
+            end
 
             if stratagemInbound then
                 local time = stratagemInbound.activation/40
@@ -593,6 +602,8 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
         if self.pendingThrow then return true, true end
 
         if lmb == 1 then
+            g_cl_thrownStratagems[sm.localPlayer.getPlayer().id][tostring(GetStratagem(g_stratagemCode).uuid)] = true
+
             self.pendingThrow = true
             self.network:sendToServer("sv_throwAnim")
         end
@@ -639,10 +650,16 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             if g_stratagemCode then
                 local stratagems = {}
                 local tick = sm.game.getServerTick()
-                local id = sm.localPlayer.getPlayer().id.."_"
+                local pId = sm.localPlayer.getPlayer().id
+                local id = pId.."_"
+                local thrownStratagems = g_cl_thrownStratagems[pId] or {}
                 for k, v in pairs(GetStratagems()) do
                     local uuid = v.uuid
-                    if isAnyOf(uuid, g_cl_loadout) and GetClStratagemProgression(uuid).charges > 0 and (g_cl_cooldowns[uuid] or tick) <= tick and not g_cl_queuedStratagems[id..uuid] then
+                    if isAnyOf(uuid, g_cl_loadout) and
+                       GetClStratagemProgression(uuid).charges > 0 and
+                       (g_cl_cooldowns[uuid] or tick) <= tick and
+                       not g_cl_queuedStratagems[id..uuid] and
+                       not thrownStratagems[uuid] then
                         table.insert(stratagems, v)
                     end
                 end

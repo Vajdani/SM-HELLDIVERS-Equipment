@@ -143,36 +143,6 @@
 				"buoyancy": 2
 			},
 			"flammable": false
-		},
-		{
-			"cylinder": {
-				"axis": "Y",
-				"depth": 1,
-				"diameter": 4
-			},
-			"color": "ff4d00",
-			"name": "obj_interactive_vehiclebuilder",
-			"physicsMaterial": "Metal",
-			"renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_droppod.rend",
-			"restrictions": {
-				"buildable": true,
-				"connectable": true,
-				"convertibleToDynamic": true,
-				"destructable": true,
-				"erasable": false,
-				"liftable": true,
-				"paintable": true,
-				"usable": true
-			},
-			"rotationSet": "PropY",
-			"scripted": {
-				"classname": "VehicleBuilder",
-				"data": {},
-				"filename": "$CONTENT_DATA/Scripts/interactables/VehicleBuilder.lua"
-			},
-			"showInInventory": true,
-			"sticky": "-Y+Y",
-			"uuid": "687465a4-d956-4001-9163-1eab2a7798e0"
 		}
 	]
 }

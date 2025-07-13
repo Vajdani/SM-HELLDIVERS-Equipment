@@ -80,6 +80,13 @@ local function setupProjectiles(worldScript)
                 if customData.bouncesLeft > 0 then
                     customData.bouncesLeft = customData.bouncesLeft - 1
                     sm.projectile.customProjectileAttack(customData, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, position, normal * 10, shooter )
+                else
+                    sm.event.sendToTool(sm.HELLDIVERSBACKEND, "OnStratagemTimedOut",
+                        {
+                            pId = shooter.id,
+                            code = customData.code
+                        }
+                    )
                 end
 
                 return
@@ -188,7 +195,7 @@ end
 
 dofile( "$SURVIVAL_DATA/Scripts/game/managers/WaterManager.lua" )
 
-function WaterManager:trigger_onProjectile(trigger, hitPos, hitTime, hitVelocity, _, attacker, damage, userData, hitNormal, projectileUuid )
+function WaterManager:trigger_onProjectile(trigger, hitPos, hitTime, hitVelocity, _, attacker, damage, userData, hitNormal, projectileUuid)
     if projectileUuid == projectile_stratagem then
         return true
     end

@@ -52,6 +52,13 @@ quat_identity = sm.quat.identity()
 
 dropPodRotation = sm.quat.angleAxis(math.rad(90), vec3_right)
 
+indexToArrow = {
+    ["1"] = "icon_keybinds_arrow_left.png",
+    ["2"] = "icon_keybinds_arrow_right.png",
+    ["3"] = "icon_keybinds_arrow_up.png",
+    ["4"] = "icon_keybinds_arrow_down.png"
+}
+
 function GetRealLength(table)
     local count = 0
     for k, v in pairs(table) do
