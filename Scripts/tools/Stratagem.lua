@@ -108,8 +108,10 @@ end
 function Stratagem:client_onDestroy()
     if not self.isLocal then return end
 
-    g_stratagemHud.gui:destroy()
-    g_stratagemHud = nil
+    if g_stratagemHud then
+        g_stratagemHud.gui:destroy()
+        g_stratagemHud = nil
+    end
 end
 
 function Stratagem.loadAnimations( self )
@@ -513,13 +515,6 @@ function UpdateStratagemHud()
             gui:setIconImage(widget.."_preview", sm.uuid.new(stratagem.icon))
             gui:setText(widget.."_charges", tostring(GetClStratagemProgression(uuid).charges))
 
-            if isActive then
-                gui:setText(widget.."_status", "Activating...")
-                gui:setVisible(widget.."_codePanel", false)
-
-                goto continue
-            end
-
             if stratagemInbound then
                 local time = stratagemInbound.activation/40
                 if time > 0 then
@@ -528,6 +523,13 @@ function UpdateStratagemHud()
                     gui:setText(widget.."_status", "Ongoing...")
                 end
 
+                gui:setVisible(widget.."_codePanel", false)
+
+                goto continue
+            end
+
+            if isActive then
+                gui:setText(widget.."_status", "Activating...")
                 gui:setVisible(widget.."_codePanel", false)
 
                 goto continue
@@ -637,9 +639,10 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
             if g_stratagemCode then
                 local stratagems = {}
                 local tick = sm.game.getServerTick()
+                local id = sm.localPlayer.getPlayer().id.."_"
                 for k, v in pairs(GetStratagems()) do
                     local uuid = v.uuid
-                    if isAnyOf(uuid, g_cl_loadout) and GetClStratagemProgression(uuid).charges > 0 and (g_cl_cooldowns[uuid] or tick) <= tick then
+                    if isAnyOf(uuid, g_cl_loadout) and GetClStratagemProgression(uuid).charges > 0 and (g_cl_cooldowns[uuid] or tick) <= tick and not g_cl_queuedStratagems[id..uuid] then
                         table.insert(stratagems, v)
                     end
                 end

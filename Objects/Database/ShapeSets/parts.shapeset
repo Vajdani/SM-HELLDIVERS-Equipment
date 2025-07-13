@@ -85,6 +85,66 @@
 			"uuid": "1204064f-437e-4054-870f-4027d05d791b"
 		},
 		{
+			"uuid": "651d8304-8ae3-4516-9674-50e05f2b1e06",
+			"name": "obj_turretemplacement_seat",
+			"renderable": "$SURVIVAL_DATA/Objects/Renderable/interactive_upgradeable/obj_interactiveupgradeable_saddle05.rend",
+			"color": "df7f01",
+			"hull": {
+				"x": 3,
+				"y": 4,
+				"z": 3,
+				"col": "$SURVIVAL_DATA/Objects/Collision/obj_interactive_saddle_05.obj"
+			},
+			"scripted": {
+				"filename": "$CONTENT_DATA/Scripts/interactables/TurretEmplacement.lua",
+				"classname": "TurretEmplacementSeat",
+				"data": {},
+				"seat": {
+					"bones": [
+						{
+							"name": "Hips",
+							"offset": {
+								"x": 0.0,
+								"y": 0.36,
+								"z": 0.8
+							}
+						},
+						{
+							"name": "LeftForeArm",
+							"offset": {
+								"x": 0.92,
+								"y": 0.456,
+								"z": 2.024
+							},
+							"freeRotation": true
+						},
+						{
+							"name": "RightForeArm",
+							"offset": {
+								"x": -0.92,
+								"y": 0.456,
+								"z": 2.024
+							},
+							"freeRotation": true
+						}
+					],
+					"ragdollFile": "$GAME_DATA/Character/bikeseat_ragdoll.json",
+					"enterAudio": "Seat seated",
+					"exitAudio": "Seat unseated"
+				}
+			},
+			"rotationSet": "PropY",
+			"sticky": "-Y+Z-Z",
+			"physicsMaterial": "Mechanical",
+			"ratings": {
+				"density": 3,
+				"durability": 7,
+				"friction": 5,
+				"buoyancy": 2
+			},
+			"flammable": false
+		},
+		{
 			"cylinder": {
 				"axis": "Y",
 				"depth": 1,

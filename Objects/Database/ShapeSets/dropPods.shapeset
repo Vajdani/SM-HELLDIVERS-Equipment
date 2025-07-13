@@ -56,7 +56,7 @@
 				"data": {},
 				"filename": "$CONTENT_DATA/Scripts/interactables/DropPod.lua"
 			},
-			"showInInventory": true,
+			"showInInventory": false,
 			"sticky": "-Y+Y",
 			"uuid": "b63d99e5-06e5-4397-bb3d-27c396124334"
 		},
@@ -86,9 +86,39 @@
 				"data": {},
 				"filename": "$CONTENT_DATA/Scripts/interactables/DropPod.lua"
 			},
-			"showInInventory": true,
+			"showInInventory": false,
 			"sticky": "-Y+Y",
 			"uuid": "a8d6cc6d-dec6-4ba4-ac78-cc6fe3130d9f"
+		},
+		{
+			"cylinder": {
+				"axis": "Y",
+				"depth": 1,
+				"diameter": 5
+			},
+			"color": "ff4d00",
+			"name": "obj_interactive_droppod_turretEmplacement",
+			"physicsMaterial": "Metal",
+			"renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_droppod.rend",
+			"restrictions": {
+				"buildable": true,
+				"connectable": true,
+				"convertibleToDynamic": true,
+				"destructable": true,
+				"erasable": false,
+				"liftable": true,
+				"paintable": true,
+				"usable": true
+			},
+			"rotationSet": "PropY",
+			"scripted": {
+				"classname": "TurretEmplacementPod",
+				"data": {},
+				"filename": "$CONTENT_DATA/Scripts/interactables/TurretEmplacement.lua"
+			},
+			"showInInventory": false,
+			"sticky": "-Y+Y",
+			"uuid": "559b5c5d-9e48-4cdd-a078-a751c8a6357e"
 		}
 	]
 }

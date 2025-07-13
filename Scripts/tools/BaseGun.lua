@@ -220,22 +220,6 @@ local aimAnims = {
     aimShoot = true
 }
 
---https://github.com/godotengine/godot/blob/c6d130abd9188f313e6701d01a0ddd6ea32166a0/core/math/math_defs.h#L43
-local TAU = 6.2831853071795864769252867666
-
---https://github.com/godotengine/godot/blob/c6d130abd9188f313e6701d01a0ddd6ea32166a0/core/math/math_funcs.h#L482
-local function angle_difference(p_from, p_to)
-	local difference = math.fmod(p_to - p_from, TAU);
-	return math.fmod(2.0 * difference, TAU) - difference;
-end
-
---https://github.com/godotengine/godot/blob/c6d130abd9188f313e6701d01a0ddd6ea32166a0/core/math/vector3.h#L313
-local function angle_to(p_from, p_to)
-	local cross = p_from:cross(p_to)
-	return math.atan2(cross:length(), p_from:dot(p_to)), cross
-end
-
-
 function BaseGun:client_onUpdate(dt)
 	-- First person animation	
 	local isSprinting = self.tool:isSprinting()
@@ -244,12 +228,12 @@ function BaseGun:client_onUpdate(dt)
 	local playerDir = self.tool:getSmoothDirection()
 	self.lerpedDir = sm.vec3.lerp(self.lerpedDir or playerDir, playerDir, dt * 15)
 
-	local angle, cross = angle_to(self.lerpedDir, playerDir)
+	local angle, cross = AngleTo(self.lerpedDir, playerDir)
 	if angle > MAXAIMDRAGANGLE then
 	 	self.lerpedDir = playerDir:rotate(-MAXAIMDRAGANGLE, cross)
 	end
 
-	local aimDrag_hor = angle_difference(math.atan2(self.lerpedDir.x, self.lerpedDir.y), math.atan2(playerDir.x, playerDir.y))
+	local aimDrag_hor = AngleDifference(math.atan2(self.lerpedDir.x, self.lerpedDir.y), math.atan2(playerDir.x, playerDir.y))
 	local aimDrag_ver = math.asin(playerDir.z) - math.asin(self.lerpedDir.z)
 
 	if self.isLocal then

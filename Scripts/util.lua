@@ -1,7 +1,7 @@
 STRATAGEMTYPETOCOLOUR = {
     supply    = sm.color.new(0,1,1),
     mission   = sm.color.new(1,1,0),
-    defensive = sm.color.new(0,0,1),
+    defensive = sm.color.new(0,1,0),
     offensive = sm.color.new(1,0,0),
 }
 
@@ -101,5 +101,81 @@ function GetFpBoneDir(tool, bone)
 
 	return (endPos - tool:getFpBonePos(bone)):normalize()
 end
+
+function GetYawPitch( direction )
+    return math.atan2(direction.y, direction.x) - math.pi/2, math.asin(direction.z)
+end
+
+--https://github.com/godotengine/godot/blob/c6d130abd9188f313e6701d01a0ddd6ea32166a0/core/math/math_defs.h#L43
+local TAU = 6.2831853071795864769252867666
+
+--https://github.com/godotengine/godot/blob/c6d130abd9188f313e6701d01a0ddd6ea32166a0/core/math/math_funcs.h#L482
+function AngleDifference(p_from, p_to)
+	local difference = math.fmod(p_to - p_from, TAU);
+	return math.fmod(2.0 * difference, TAU) - difference;
+end
+
+--https://github.com/godotengine/godot/blob/c6d130abd9188f313e6701d01a0ddd6ea32166a0/core/math/vector3.h#L313
+function AngleTo(p_from, p_to)
+	local cross = p_from:cross(p_to)
+	return math.atan2(cross:length(), p_from:dot(p_to)), cross
+end
+
+
+
+-- local function minQuatDifference( q1, q2 )
+-- 	local minusDiff = math.max(
+-- 		math.abs( q1.x - q2.x ),
+-- 		math.abs( q1.y - q2.y ),
+-- 		math.abs( q1.z - q2.z ),
+-- 		math.abs( q1.w - q2.w )
+-- 	)
+-- 	local plusDiff = math.max(
+-- 		math.abs( q1.x + q2.x ),
+-- 		math.abs( q1.y + q2.y ),
+-- 		math.abs( q1.z + q2.z ),
+-- 		math.abs( q1.w + q2.w )
+-- 	)
+-- 	return min( minusDiff, plusDiff )
+-- end
+
+-- function getCameraMode( shapeRot )
+-- 	local rotation = sm.camera.getRotation() * sm.quat.inverse( sm.camera.getDefaultRotation() )
+-- 	local freeDiff = minQuatDifference( rotation, sm.quat.identity() )
+-- 	local followDiff = minQuatDifference( rotation, sm.util.axesToQuat( shapeRot * vec3_up, vec3_up ) )
+-- 	local strictDiff = minQuatDifference( rotation, shapeRot * sm.util.axesToQuat( -vec3_right, vec3_forward ) )
+
+-- 	local lowestDiff, mode = freeDiff, "Free"
+-- 	if followDiff < lowestDiff then
+-- 		lowestDiff, mode = followDiff, "Follow"
+-- 	end
+-- 	if strictDiff < lowestDiff then
+-- 		lowestDiff, mode = strictDiff, "Strict"
+-- 	end
+
+-- 	return mode
+-- end
+
+
+-- function getCameraCenter( mode, shapePos, shapeRot )
+--   	if mode == "Strict" then
+--    		return shapePos + shapeRot * sm.vec3.new( 0.0, 0.575, 0.0 )
+--   	else
+--     	return shapePos + sm.vec3.new( 0.0, 0.0, 0.575 )
+--   	end
+-- end
+
+
+-- function getCameraOffset( pullback )
+-- 	local _, pullback = sm.camera.getCameraPullback()
+-- 	if pullback == 0 then
+-- 		return sm.vec3.new( 0.0, -0.25, 0.0 )
+-- 	else
+-- 		local dist = 0.0575 * pullback ^ 2 + 0.575 * pullback + 1.5
+-- 		return sm.vec3.new( 0.375, -dist, 0.0 )
+-- 	end
+-- end
+
+
 
 dofile "StratagemDatabase.lua"

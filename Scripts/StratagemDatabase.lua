@@ -36,6 +36,23 @@ local function SpawnDropPod(self, override)
     return true
 end
 
+local function SpawnCreation(self, override, path, offset)
+    local position
+    if override then
+        if type(override) == "RaycastResult" then
+            position = override.pointWorld
+        else
+            position = override
+        end
+    else
+        position = self.hitData.position
+    end
+
+    sm.creation.importFromFile(sm.world.getCurrentWorld(), path, position + offset)
+
+    return true
+end
+
 ---@type StratagemObj[]
 local stratagems = {
     {
@@ -92,9 +109,25 @@ local stratagems = {
     },
     {
         uuid = "59a3c3e8-4c75-4f68-b550-22eed1b0ec53",
-        cooldown = 1,--160 * 40,
+        cooldown = 1, --160 * 40,
         activation = 3 * 40, --12 * 40,
         dropEffect = sm.uuid.new("a8d6cc6d-dec6-4ba4-ac78-cc6fe3130d9f"),
+        update = SpawnDropPod
+    },
+    {
+        uuid = "dc80a180-cacf-4b21-a896-d85dd3d32d70",
+        cooldown = 1, --160 * 40,
+        activation = 3 * 40, --12 * 40,
+        dropEffect = sm.uuid.new("559b5c5d-9e48-4cdd-a078-a751c8a6357e"),
+        update = function(self, override)
+            return SpawnCreation(self, override, "$CONTENT_DATA/Objects/turretEmplacement.json", vec3_new(1.875, 0.625, 0.375))
+        end
+    },
+    {
+        uuid = "578b35aa-3865-4297-989b-4734417338c3",
+        cooldown = 1, --160 * 40,
+        activation = 3 * 40, --12 * 40,
+        dropEffect = sm.uuid.new("b63d99e5-06e5-4397-bb3d-27c396124334"),
         update = SpawnDropPod
     },
 }
@@ -180,11 +213,45 @@ local stratagemUserdata = {
         }
     },
     ["59a3c3e8-4c75-4f68-b550-22eed1b0ec53"] = {
-        name = "Heavy Machine Gun",
+        name = "Heavy Machinegun",
         description = "ratatatatatata",
         icon = "552b4ced-ca96-4a71-891c-ab54fe9c6873", --HMG
+        type = "supply",
+        code = "41344",
+        cost = {
+            {
+                uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
+                amount = 5
+            },
+            {
+                uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
+                amount = 5
+            }
+        }
+    },
+    ["dc80a180-cacf-4b21-a896-d85dd3d32d70"] = {
+        name = "HMG Emplacement",
+        description = "Manned turret",
+        icon = "559b5c5d-9e48-4cdd-a078-a751c8a6357e", --Pod
         type = "defensive",
-        code = "44344",
+        code = "431221",
+        cost = {
+            {
+                uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
+                amount = 5
+            },
+            {
+                uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
+                amount = 5
+            }
+        }
+    },
+    ["578b35aa-3865-4297-989b-4734417338c3"] = {
+        name = "Hellbomb",
+        description = "very big boom",
+        icon = "b63d99e5-06e5-4397-bb3d-27c396124334", --Pod
+        type = "mission",
+        code = "43143243",
         cost = {
             {
                 uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit

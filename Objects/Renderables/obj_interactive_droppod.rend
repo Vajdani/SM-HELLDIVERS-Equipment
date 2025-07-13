@@ -8,8 +8,8 @@
             }
          ],
          "mesh" : "$CONTENT_DATA/Objects/Mesh/parts/obj_interactive_droppod.fbx",
-         "subMeshList" : [
-            {
+         "subMeshMap" : {
+            "hellpod": {
                "material" : "SkelAnimDifAsgNor",
                "textureList" : [
                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_droppod_dif.tga",
@@ -17,7 +17,7 @@
                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_droppod_nor.tga"
                ]
             },
-            {
+            "supplystand": {
                "material" : "SkelAnimDifAsgNor",
                "textureList" : [
                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_supplypod_dif.tga",
@@ -25,7 +25,7 @@
                   "$CONTENT_DATA/Objects/Textures/parts/obj_interactive_supplypod_nor.tga"
                ]
             }
-         ]
+         }
       }
    ]
 }
