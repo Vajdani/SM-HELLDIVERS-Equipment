@@ -1,3 +1,13 @@
+-- #region Setup
+dofile("$CONTENT_DATA/Scripts/AnimationUtil.lua")
+dofile "$CONTENT_DATA/Scripts/ProgressBar.lua"
+dofile "tools/BaseGun.lua"
+dofile("ProgressBar.lua")
+dofile("VideoPlayer.lua")
+dofile "StratagemDatabase.lua"
+-- #endregion
+
+
 STRATAGEMTYPETOCOLOUR = {
     supply    = sm.color.new(0,1,1),
     mission   = sm.color.new(0,1,1), --sm.color.new(1,1,0),
@@ -38,6 +48,8 @@ FLASHLIGHTSETTINGS_ALL = {
 STRATAGEMINVENTORYSIZE = 6
 STRATAGEMMAXBOUNCEOUNT = 3
 PLAYERDATAPATH = "$CONTENT_DATA/playerData.json"
+SHOWSTRATAGEMCOOLDOWNTIME = 10
+SHOWSTRATAGEMUSAGETIME = 5 * 40
 
 MAXAIMDRAGANGLE = math.rad(30)
 
@@ -49,6 +61,13 @@ vec3_zero    = sm.vec3.zero()
 vec3_one     = sm.vec3.one()
 
 quat_identity = sm.quat.identity()
+
+util_clamp = sm.util.clamp
+util_lerp = sm.util.lerp
+
+max = math.max
+
+projectile_stratagem = sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9")
 
 dropPodRotation = sm.quat.angleAxis(math.rad(90), vec3_right)
 
@@ -128,61 +147,120 @@ function AngleTo(p_from, p_to)
 	return math.atan2(cross:length(), p_from:dot(p_to)), cross
 end
 
-
-
--- local function minQuatDifference( q1, q2 )
--- 	local minusDiff = math.max(
--- 		math.abs( q1.x - q2.x ),
--- 		math.abs( q1.y - q2.y ),
--- 		math.abs( q1.z - q2.z ),
--- 		math.abs( q1.w - q2.w )
--- 	)
--- 	local plusDiff = math.max(
--- 		math.abs( q1.x + q2.x ),
--- 		math.abs( q1.y + q2.y ),
--- 		math.abs( q1.z + q2.z ),
--- 		math.abs( q1.w + q2.w )
--- 	)
--- 	return min( minusDiff, plusDiff )
--- end
-
--- function getCameraMode( shapeRot )
--- 	local rotation = sm.camera.getRotation() * sm.quat.inverse( sm.camera.getDefaultRotation() )
--- 	local freeDiff = minQuatDifference( rotation, sm.quat.identity() )
--- 	local followDiff = minQuatDifference( rotation, sm.util.axesToQuat( shapeRot * vec3_up, vec3_up ) )
--- 	local strictDiff = minQuatDifference( rotation, shapeRot * sm.util.axesToQuat( -vec3_right, vec3_forward ) )
-
--- 	local lowestDiff, mode = freeDiff, "Free"
--- 	if followDiff < lowestDiff then
--- 		lowestDiff, mode = followDiff, "Follow"
--- 	end
--- 	if strictDiff < lowestDiff then
--- 		lowestDiff, mode = strictDiff, "Strict"
--- 	end
-
--- 	return mode
--- end
-
-
--- function getCameraCenter( mode, shapePos, shapeRot )
---   	if mode == "Strict" then
---    		return shapePos + shapeRot * sm.vec3.new( 0.0, 0.575, 0.0 )
---   	else
---     	return shapePos + sm.vec3.new( 0.0, 0.0, 0.575 )
---   	end
--- end
-
-
--- function getCameraOffset( pullback )
--- 	local _, pullback = sm.camera.getCameraPullback()
--- 	if pullback == 0 then
--- 		return sm.vec3.new( 0.0, -0.25, 0.0 )
--- 	else
--- 		local dist = 0.0575 * pullback ^ 2 + 0.575 * pullback + 1.5
--- 		return sm.vec3.new( 0.375, -dist, 0.0 )
--- 	end
--- end
+function GetInventory()
+	return
+		sm.game.getLimitedInventory() and
+		sm.localPlayer.getPlayer():getInventory() or
+		sm.localPlayer.getPlayer():getHotbar()
+end
 
 
 
-dofile "StratagemDatabase.lua"
+-- #region Base game variables
+blk_wood1 = sm.uuid.new( "df953d9c-234f-4ac2-af5e-f0490b223e71" )
+obj_containers_woodbox = sm.uuid.new( "c3990931-b471-4e89-beb5-0baaef47f0af" )
+
+DAYCYCLE_TIME = 1440.0 -- seconds (24 minutes)
+
+projectile_potato = sm.uuid.new( "5e8eeaae-b5c1-4992-bb21-dec5254ce722" )
+projectile_smallpotato = sm.uuid.new( "132c44d3-7436-419d-ac6b-fc178336dcb7" )
+projectile_loot = sm.uuid.new( "45209992-1a59-479e-a446-57140b605836" )
+projectile_epicloot = sm.uuid.new( "17cd4768-3123-4ce3-835a-362321dcf9de" )
+
+function Round( value )
+	return math.floor( value + 0.5 )
+end
+
+function IsAnyOf(is, off)
+	for _, v in pairs(off) do
+		if is == v then
+			return true
+		end
+	end
+	return false
+end
+
+function ShallowCopy( orig )
+	local orig_type = type( orig )
+	local copy
+	if orig_type == 'table' then
+		copy = {}
+		for orig_key, orig_value in pairs( orig ) do
+			copy[orig_key] = orig_value
+		end
+	else -- number, string, boolean, etc
+		copy = orig
+	end
+	return copy
+end
+
+function SpawnLoot( origin, lootList, worldPosition, ringAngle )
+
+	if worldPosition == nil then
+		if type( origin ) == "Shape" then
+			worldPosition = origin.worldPosition
+		elseif type( origin ) == "Player" or type( origin ) == "Unit" then
+			local character = origin:getCharacter()
+			if character then
+				worldPosition = character.worldPosition
+			end
+		elseif type( origin ) == "Harvestable" then
+			worldPosition = origin.worldPosition
+		end
+	end
+
+	ringAngle = ringAngle or math.pi / 18
+
+	if worldPosition then
+		for i = 1, #lootList do
+			local dir
+			local up
+			if type( origin ) == "Shape" then
+				dir = sm.vec3.new( 1.0, 0.0, 0.0 )
+				up = sm.vec3.new( 0, 1, 0 )
+			else
+				dir = sm.vec3.new( 0.0, 1.0, 0.0 )
+				up = sm.vec3.new( 0, 0, 1 )
+			end
+
+			local firstCircle = 6
+			local secondCircle = 13
+			local thirdCircle = 26
+
+			if i < 6 then
+				local divisions = ( firstCircle - ( firstCircle - math.min( #lootList, firstCircle - 1 ) ) )
+				dir = dir:rotate( i * 2 * math.pi / divisions, up )
+				local right = dir:cross( up )
+				dir = dir:rotate( math.pi / 2 - ringAngle, right )
+			elseif i < 13 then
+				local divisions = ( secondCircle - ( secondCircle - math.min( #lootList - firstCircle + 1, secondCircle - firstCircle ) ) )
+				dir = dir:rotate( i * 2 * math.pi / divisions, up )
+				local right = dir:cross( up )
+				dir = dir:rotate( math.pi / 2 - 2 * ringAngle, right )
+			elseif i < 26 then
+				local dvisions = ( thirdCircle - ( thirdCircle - math.min( #lootList - secondCircle + 1, thirdCircle - secondCircle ) ) )
+				dir = dir:rotate( i * 2 * math.pi / dvisions, up )
+				local right = dir:cross( up )
+				dir = dir:rotate( math.pi / 2 - 4 * ringAngle, right )
+			else
+				-- Out of predetermined room, place randomly
+				dir = dir:rotate( math.random() * 2 * math.pi, up )
+				local right = dir:cross( up )
+				dir = dir:rotate( math.pi / 2 - ringAngle - math.random() * ( 3 * ringAngle ), right )
+			end
+
+			local loot = lootList[i]
+			local params = { lootUid = loot.uuid, lootQuantity = loot.quantity or 1, epic = loot.epic }
+			local vel = dir * (4+math.random()*2)
+			local projectileUuid = loot.epic and projectile_epicloot or projectile_loot
+			if type( origin ) == "Shape" then
+				sm.projectile.shapeCustomProjectileAttack( params, projectileUuid, 0, sm.vec3.new( 0, 0, 0 ), vel, origin, 0 )
+			elseif type( origin ) == "Player" or type( origin ) == "Unit" then
+				sm.projectile.customProjectileAttack( params, projectileUuid, 0, worldPosition, vel, origin, worldPosition, worldPosition, 0 )
+			elseif type( origin ) == "Harvestable" then
+				sm.projectile.harvestableCustomProjectileAttack( params, projectileUuid, 0, worldPosition, vel, origin, 0 )
+			end
+		end
+	end
+end
+-- #endregion

@@ -1,9 +1,4 @@
-dofile("$CONTENT_DATA/Scripts/AnimationUtil.lua")
-dofile("$SURVIVAL_DATA/Scripts/util.lua")
-dofile("$SURVIVAL_DATA/Scripts/game/survival_shapes.lua")
-dofile("$SURVIVAL_DATA/Scripts/game/survival_projectiles.lua")
-
-dofile "BaseGun.lua"
+dofile ("../util.lua")
 
 ---@class AutoCannon : BaseGun
 AutoCannon = class(BaseGun)

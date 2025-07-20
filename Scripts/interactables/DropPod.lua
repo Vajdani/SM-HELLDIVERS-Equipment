@@ -1,5 +1,3 @@
-dofile "$SURVIVAL_DATA/Scripts/game/survival_loot.lua"
-
 ---@class DropPod : ShapeClass
 DropPod = class()
 DropPod.pickupRegions = {}
@@ -185,7 +183,7 @@ function DropPod:client_onUpdate(dt)
     if self.shouldBeActive then
         self.animProgress = math.min(self.animProgress + dt * 2.5, 1)
     else
-        self.animProgress = math.max(self.animProgress - dt * 2.5, 0.04)
+        self.animProgress = max(self.animProgress - dt * 2.5, 0.04)
     end
     self.interactable:setAnimProgress("unfold", self.animProgress)
 end

@@ -69,7 +69,7 @@ function BaseGun:server_onCreate()
 	local data = self.storage:load() or {}
 	self.sv_ammo = data.ammo or self.magCapacity
 	self.sv_mags = data.mags or self.magAmount
-	self.sv_settings = data.settings or shallowcopy(self.defaultSettings)
+	self.sv_settings = data.settings or ShallowCopy(self.defaultSettings)
 
 	self:sv_saveAndSync()
 end
@@ -139,7 +139,7 @@ function BaseGun:client_onCreate()
 	self.jointWeight = 0.0
 	self.spineWeight = 0.0
 	local cameraWeight, cameraFPWeight = self.tool:getCameraWeights()
-	self.aimWeight = math.max(cameraWeight, cameraFPWeight)
+	self.aimWeight = max(cameraWeight, cameraFPWeight)
 
 	if not self.isLocal then return end
 
@@ -156,7 +156,7 @@ function BaseGun:client_onEquip(animate)
 	self.wantEquipped = true
 	self.aiming = false
 	local cameraWeight, cameraFPWeight = self.tool:getCameraWeights()
-	self.aimWeight = math.max(cameraWeight, cameraFPWeight)
+	self.aimWeight = max(cameraWeight, cameraFPWeight)
 	self.jointWeight = 0.0
 
 	local currentRenderablesTp = { "$CONTENT_DATA/Tools/char_male_recoil.rend" }
@@ -269,12 +269,12 @@ function BaseGun:client_onUpdate(dt)
 	self.tool:updateAnimation("recoil_horizontal", 0.5 + self.recoil_x - aimDrag_hor, 1)
 	self.tool:updateAnimation("recoil_vertical",   0.5 - self.recoil_y + aimDrag_ver, 1)
 
-	self.recoil_x = sm.util.lerp(self.recoil_x, self.recoil_target_x, dt * 10)
-	self.recoil_y = sm.util.lerp(self.recoil_y, self.recoil_target_y, dt * 10)
+	self.recoil_x = util_lerp(self.recoil_x, self.recoil_target_x, dt * 10)
+	self.recoil_y = util_lerp(self.recoil_y, self.recoil_target_y, dt * 10)
 
 	local recoilRecovery = self.aiming and self.aimRecoilRecoverySpeed or self.hipRecoilRecoverySpeed
-	self.recoil_target_x = sm.util.lerp(self.recoil_target_x, 0, dt * recoilRecovery)
-	self.recoil_target_y = sm.util.lerp(self.recoil_target_y, 0, dt * recoilRecovery)
+	self.recoil_target_x = util_lerp(self.recoil_target_x, 0, dt * recoilRecovery)
+	self.recoil_target_y = util_lerp(self.recoil_target_y, 0, dt * recoilRecovery)
 
 	if self.isLocal then
 		local effectPos
@@ -300,15 +300,15 @@ function BaseGun:client_onUpdate(dt)
 	self.shootEffect:setRotation(sm.vec3.getRotation(vec3_up, dir))
 
 	-- Timers
-	self.fireCooldownTimer = math.max(self.fireCooldownTimer - dt, 0.0)
-	self.spreadCooldownTimer = math.max(self.spreadCooldownTimer - dt, 0.0)
-	self.sprintCooldownTimer = math.max(self.sprintCooldownTimer - dt, 0.0)
+	self.fireCooldownTimer = max(self.fireCooldownTimer - dt, 0.0)
+	self.spreadCooldownTimer = max(self.spreadCooldownTimer - dt, 0.0)
+	self.sprintCooldownTimer = max(self.sprintCooldownTimer - dt, 0.0)
 
 
 	if self.isLocal then
 		local dispersion = 0.0
 		local fireMode = self.aiming and self.shootData.aimFireMode or self.shootData.normalFireMode
-		local recoilDispersion = 1.0 - (math.max(fireMode.minDispersionCrouching, fireMode.minDispersionStanding) + fireMode.maxMovementDispersion)
+		local recoilDispersion = 1.0 - (max(fireMode.minDispersionCrouching, fireMode.minDispersionStanding) + fireMode.maxMovementDispersion)
 
 		if isCrouching then
 			dispersion = fireMode.minDispersionCrouching
@@ -326,10 +326,10 @@ function BaseGun:client_onUpdate(dt)
 
 		self.movementDispersion = dispersion
 
-		self.spreadCooldownTimer = clamp(self.spreadCooldownTimer, 0.0, fireMode.spreadCooldown)
-		local spreadFactor = fireMode.spreadCooldown > 0.0 and clamp(self.spreadCooldownTimer / fireMode.spreadCooldown, 0.0, 1.0) or 0.0
+		self.spreadCooldownTimer = util_clamp(self.spreadCooldownTimer, 0.0, fireMode.spreadCooldown)
+		local spreadFactor = fireMode.spreadCooldown > 0.0 and util_clamp(self.spreadCooldownTimer / fireMode.spreadCooldown, 0.0, 1.0) or 0.0
 
-		self.tool:setDispersionFraction(clamp(self.movementDispersion + spreadFactor * recoilDispersion, 0.0, 1.0))
+		self.tool:setDispersionFraction(util_clamp(self.movementDispersion + spreadFactor * recoilDispersion, 0.0, 1.0))
 
 		if self.aiming then
 			if self.tool:isInFirstPersonView() then
@@ -370,7 +370,7 @@ function BaseGun:client_onUpdate(dt)
 				end
 			end
 		else
-			animation.weight = math.max( animation.weight - ( self.tpAnimations.blendSpeed * dt ), 0.0 )
+			animation.weight = max( animation.weight - ( self.tpAnimations.blendSpeed * dt ), 0.0 )
 		end
 
 		totalWeight = totalWeight + animation.weight
@@ -391,26 +391,26 @@ function BaseGun:client_onUpdate(dt)
 
 	-- Third Person joint lock
 	local relativeMoveDirection = self.tool:getRelativeMoveDirection()
-	if (((isAnyOf(self.tpAnimations.currentAnimation, { "aimInto", "aim", "shoot" }) and (relativeMoveDirection:length() > 0 or isCrouching)) or (self.aiming and (relativeMoveDirection:length() > 0 or isCrouching))) and not isSprinting) then
+	if (((IsAnyOf(self.tpAnimations.currentAnimation, { "aimInto", "aim", "shoot" }) and (relativeMoveDirection:length() > 0 or isCrouching)) or (self.aiming and (relativeMoveDirection:length() > 0 or isCrouching))) and not isSprinting) then
 		self.jointWeight = math.min(self.jointWeight + (10.0 * dt), 1.0)
 	else
-		self.jointWeight = math.max(self.jointWeight - (6.0 * dt), 0.0)
+		self.jointWeight = max(self.jointWeight - (6.0 * dt), 0.0)
 	end
 
 	if (not isSprinting) then
 		self.spineWeight = math.min(self.spineWeight + (10.0 * dt), 1.0)
 	else
-		self.spineWeight = math.max(self.spineWeight - (10.0 * dt), 0.0)
+		self.spineWeight = max(self.spineWeight - (10.0 * dt), 0.0)
 	end
 
 	local finalAngle = (0.5 + spineAngle * 0.5)
 	self.tool:updateAnimation("spudgun_spine_bend", finalAngle, self.spineWeight)
 
-	local totalOffsetZ = lerp(-22.0, -26.0, crouchWeight)
-	local totalOffsetY = lerp(6.0, 12.0, crouchWeight)
-	local crouchTotalOffsetX = clamp((spineAngle * 60.0) - 15.0, -60.0, 40.0)
-	local normalTotalOffsetX = clamp((spineAngle * 50.0), -45.0, 50.0)
-	local totalOffsetX = lerp(normalTotalOffsetX, crouchTotalOffsetX, crouchWeight)
+	local totalOffsetZ = util_lerp(-22.0, -26.0, crouchWeight)
+	local totalOffsetY = util_lerp(6.0, 12.0, crouchWeight)
+	local crouchTotalOffsetX = util_clamp((spineAngle * 60.0) - 15.0, -60.0, 40.0)
+	local normalTotalOffsetX = util_clamp((spineAngle * 50.0), -45.0, 50.0)
+	local totalOffsetX = util_lerp(normalTotalOffsetX, crouchTotalOffsetX, crouchWeight)
 
 	local finalJointWeight = (self.jointWeight)
 
@@ -426,11 +426,11 @@ function BaseGun:client_onUpdate(dt)
 	local bobbing = 1
 	if self.aiming then
 		local blend = 1 - math.pow(1 - 1 / self.aimBlendSpeed, dt * 60)
-		self.aimWeight = sm.util.lerp(self.aimWeight, 1.0, blend)
+		self.aimWeight = util_lerp(self.aimWeight, 1.0, blend)
 		bobbing = 0.12
 	else
 		local blend = 1 - math.pow(1 - 1 / self.aimBlendSpeed, dt * 60)
-		self.aimWeight = sm.util.lerp(self.aimWeight, 0.0, blend)
+		self.aimWeight = util_lerp(self.aimWeight, 0.0, blend)
 		bobbing = 1
 	end
 
@@ -547,8 +547,8 @@ function BaseGun:onShoot(recoil)
 
 	setTpAnimation(self.tpAnimations, self.aiming and "aimShoot" or "shoot", 10.0)
 
-	self.recoil_target_x = sm.util.clamp(self.recoil_target_x + recoil.x, -0.5, 0.5)
-	self.recoil_target_y = sm.util.clamp(self.recoil_target_y + recoil.y, -0.5, 0.5)
+	self.recoil_target_x = util_clamp(self.recoil_target_x + recoil.x, -0.5, 0.5)
+	self.recoil_target_y = util_clamp(self.recoil_target_y + recoil.y, -0.5, 0.5)
 
 	if self.tool:isInFirstPersonView() then
 		self.shootEffectFP:start()
@@ -579,7 +579,7 @@ function BaseGun:cl_onPrimaryUse()
 		--[[if not firstPerson then
 			local raycastPos = sm.camera.getPosition() +
 			sm.camera.getDirection() *
-			sm.camera.getDirection():dot(GetOwnerPosition(self.tool) - sm.camera.getPosition())
+			sm.camera.getDirection():dot(self.tool:getPosition() - sm.camera.getPosition())
 			local hit, result = sm.localPlayer.getRaycast(250, raycastPos, sm.camera.getDirection())
 			if hit then
 				local norDir = sm.vec3.normalize(result.pointWorld - firePos)
@@ -598,10 +598,10 @@ function BaseGun:cl_onPrimaryUse()
 
 		-- Spread
 		local fireMode = self.aiming and data.aimFireMode or data.normalFireMode
-		local recoilDispersion = 1.0 - (math.max(fireMode.minDispersionCrouching, fireMode.minDispersionStanding) + fireMode.maxMovementDispersion)
+		local recoilDispersion = 1.0 - (max(fireMode.minDispersionCrouching, fireMode.minDispersionStanding) + fireMode.maxMovementDispersion)
 
-		local spreadFactor = fireMode.spreadCooldown > 0.0 and clamp(self.spreadCooldownTimer / fireMode.spreadCooldown, 0.0, 1.0) or 0.0
-		spreadFactor = clamp(self.movementDispersion + spreadFactor * recoilDispersion, 0.0, 1.0)
+		local spreadFactor = fireMode.spreadCooldown > 0.0 and util_clamp(self.spreadCooldownTimer / fireMode.spreadCooldown, 0.0, 1.0) or 0.0
+		spreadFactor = util_clamp(self.movementDispersion + spreadFactor * recoilDispersion, 0.0, 1.0)
 		local spreadDeg = fireMode.spreadMinAngle + (fireMode.spreadMaxAngle - fireMode.spreadMinAngle) * spreadFactor
 
         local owner = self.tool:getOwner()
@@ -743,7 +743,7 @@ function BaseGun:calculateFirePosition()
 		fireOffset = fireOffset + right * 0.25
 		fireOffset = fireOffset:rotate(math.rad(pitch), right)
 	end
-	local firePosition = GetOwnerPosition(self.tool) + fireOffset
+	local firePosition = self.tool:getPosition() + fireOffset
 	return firePosition
 end
 
@@ -777,7 +777,7 @@ function BaseGun:calculateTpMuzzlePos()
 		fakeOffset = fakeOffset + up * 0.1 * math.abs(pitchFraction)
 	end
 
-	local fakePosition = fakeOffset + GetOwnerPosition(self.tool)
+	local fakePosition = fakeOffset + self.tool:getPosition()
 	return fakePosition
 end
 

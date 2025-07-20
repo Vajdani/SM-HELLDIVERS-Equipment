@@ -1,8 +1,3 @@
-local function round( value )
-	return math.floor( value + 0.5 )
-end
-
-
 ---@class ProgressBar
 ---@field gui GuiInterface The GuiInterface that the progress bar is on.
 ---@field name string The name of the ImageBox that the progress bar will use.
@@ -37,7 +32,7 @@ end
 ---Updates the progress bar according to the step given.
 ---@param value number How much the progress bar should be filled. (A number in the range of [0;The progress bar's steps])
 function ProgressBar:update(value)
-    self.gui:setImage(self.name, self.path:format(round(value)))
+    self.gui:setImage(self.name, self.path:format(Round(value)))
 end
 
 ---Sets the colour of the progress bar

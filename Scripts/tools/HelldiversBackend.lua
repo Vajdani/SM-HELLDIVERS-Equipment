@@ -171,20 +171,20 @@ function HelldiversBackend:OnStratagemThrow(args)
     local tick = sm.game.getServerTick()
     if (self.cooldownsPerPlayer[pId][uuid] or tick) > tick then return end
 
-    sm.projectile.customProjectileAttack({ code = args.code, bouncesLeft = STRATAGEMMAXBOUNCEOUNT }, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, args.pos, player.character.direction * 35, player )
+    sm.projectile.customProjectileAttack({ code = args.code, bouncesLeft = STRATAGEMMAXBOUNCEOUNT }, projectile_stratagem, 0, args.pos, player.character.direction * 35, player )
 
     self:sv_save()
     self:sv_requestData(nil, player)
 
-    self.network:sendToClients("cl_OnStratagemThrow", { pId = pId, uuid = uuid })
+    self.network:sendToClient(player, "cl_OnStratagemThrow", uuid)
 end
 
 function HelldiversBackend:OnStratagemTimedOut(args)
-    self.network:sendToClients("cl_OnStratagemTimedOut", args)
+    self.network:sendToClient(args.player, "cl_OnStratagemTimedOut", args.code)
 end
 
 function HelldiversBackend:OnStratagemHit(args)
-    local stratagem = shallowcopy(GetStratagem(args.data.code))
+    local stratagem = ShallowCopy(GetStratagem(args.data.code))
     local player = args.shooter
     local pId, uuid = player.id, stratagem.uuid
     local id = ("%s_%s"):format(pId, uuid)
@@ -200,7 +200,7 @@ function HelldiversBackend:OnStratagemHit(args)
         g_sv_stratagemProgression[pId][uuid] = progression
     end
 
-    self.cooldownsPerPlayer[pId][uuid] = sm.game.getServerTick() + stratagem.cooldown
+    self.cooldownsPerPlayer[pId][uuid] = sm.game.getServerTick() + stratagem.activation + stratagem.lifeTime + stratagem.cooldown
 
     args.data = nil
     stratagem.hitData = args
@@ -236,7 +236,7 @@ function HelldiversBackend:AddCustomStratagem(args)
         local tracker = sm.json.open(blueprintTracker) or {}
         local blueprintPath = ("%s%s.json"):format(blueprintsPath, bpName)
 
-        --[[if isAnyOf(blueprintPath, tracker) then
+        --[[if IsAnyOf(blueprintPath, tracker) then
             return
         end]]
 
@@ -267,20 +267,20 @@ function HelldiversBackend:AddCustomStratagem(args)
 
         for k, body in pairs(creation.bodies) do
             for _k, shape in pairs(body.childs) do
-                shape.pos.x = round(shape.pos.x - com.x)
-                shape.pos.y = round(shape.pos.y - com.y)
-                shape.pos.z = round(shape.pos.z - com.z)
+                shape.pos.x = Round(shape.pos.x - com.x)
+                shape.pos.y = Round(shape.pos.y - com.y)
+                shape.pos.z = Round(shape.pos.z - com.z)
             end
         end
 
         for _k, shape in pairs(creation.joints or {}) do
-            shape.posA.x = round(shape.posA.x - com.x)
-            shape.posA.y = round(shape.posA.y - com.y)
-            shape.posA.z = round(shape.posA.z - com.z)
+            shape.posA.x = Round(shape.posA.x - com.x)
+            shape.posA.y = Round(shape.posA.y - com.y)
+            shape.posA.z = Round(shape.posA.z - com.z)
 
-            shape.posB.x = round(shape.posB.x - com.x)
-            shape.posB.y = round(shape.posB.y - com.y)
-            shape.posB.z = round(shape.posB.z - com.z)
+            shape.posB.x = Round(shape.posB.x - com.x)
+            shape.posB.y = Round(shape.posB.y - com.y)
+            shape.posB.z = Round(shape.posB.z - com.z)
         end
 
         --if true then return end
@@ -466,7 +466,7 @@ function HelldiversBackend:client_onFixedUpdate()
     end
 
     for k, player in pairs(sm.player.getAllPlayers()) do
-        local inv = sm.game.getLimitedInventory() and player:getInventory() or player:getHotbar()
+        local inv = GetInventory()
         for itemId, v in pairs(self.cl_holsteredItems[player.id] or {}) do
             local hasItem, effectExists = inv:canSpend(v.item, 1), sm.exists(v.effect)
             if not effectExists or not hasItem then
@@ -511,9 +511,9 @@ function HelldiversBackend:client_onFixedUpdate()
     for k, v in pairs(g_cl_queuedStratagems) do
         v.activation = v.activation - 1
         if v.activation >= 0 then
-            v.gui:setText("Text", ("Inbound T-%s"):format(FormatStratagemTimer(v.activation/40)))
+            v.gui:setText("status", ("Inbound T-%s"):format(FormatStratagemTimer(v.activation/40)))
         else
-            v.gui:setText("Text", "Ongoing...")
+            v.gui:setText("status", "Ongoing...")
         end
     end
 end
@@ -550,26 +550,14 @@ function HelldiversBackend:client_onUpdate(dt)
     end
 end
 
-function HelldiversBackend:cl_OnStratagemThrow(args)
-    local pId = args.pId
-    if not g_cl_thrownStratagems[pId] then
-        g_cl_thrownStratagems[pId] = {}
-    end
-
-    g_cl_thrownStratagems[pId][tostring(args.uuid)] = true
-
-    if sm.localPlayer.getPlayer().id == pId then
-        UpdateStratagemHud()
-    end
+function HelldiversBackend:cl_OnStratagemThrow(uuid)
+    g_cl_thrownStratagems[tostring(uuid)] = true
+    UpdateStratagemHud()
 end
 
-function HelldiversBackend:cl_OnStratagemTimedOut(args)
-    local pId = args.pId
-    g_cl_thrownStratagems[pId][args.uuid or tostring(GetStratagem(args.code).uuid)] = nil
-
-    if sm.localPlayer.getPlayer().id == pId then
-        UpdateStratagemHud()
-    end
+function HelldiversBackend:cl_OnStratagemTimedOut(code, uuid)
+    g_cl_thrownStratagems[uuid or tostring(GetStratagem(code).uuid)] = nil
+    UpdateStratagemHud()
 end
 
 
@@ -580,7 +568,7 @@ function HelldiversBackend:cl_OnStratagemHit(args)
     local uuid = id:sub(separator + 1, #id)
     local userdata = GetStratagemUserdata(uuid)
 
-    local beaconScale = vec3_new(1,500,1)
+    local beaconScale = vec3_new(0.25,3000,0.25)
     local beacon = sm.effect.createEffect("Stratagem - Beacon")
     beacon:setParameter("Color", STRATAGEMTYPETOCOLOUR[userdata.type])
     beacon:setParameter("Scale", beaconScale)
@@ -588,9 +576,19 @@ function HelldiversBackend:cl_OnStratagemHit(args)
     beacon:start()
     args.beacon = beacon
 
-    local gui = sm.gui.createNameTagGui(true)
+    local ball = sm.effect.createEffect("ShapeRenderable")
+    ball:setParameter("uuid", sm.uuid.new("7705f920-b4cb-41f7-8a9c-088539201c35"))
+    ball:setPosition(pos)
+    ball:setRotation(sm.vec3.getRotation(args.hitData.normal, vec3_forward))
+    ball:setScale(vec3_one * 0.125)
+    ball:start()
+    args.ball = ball
+
+    local gui = sm.gui.createWorldIconGui(430 * 0.25, 160 * 0.25, "$CONTENT_DATA/Gui/Layouts/StratagemWorldIcon.layout")
     gui:setRequireLineOfSight(false)
-    gui:setText("Text", ("%.0fs"):format(args.activation/40))
+    gui:setText("status", ("%.0fs"):format(args.activation/40))
+    gui:setText("name", "#"..STRATAGEMTYPETOCOLOUR[userdata.type]:getHexStr():sub(1,6)..userdata.name)
+    gui:setIconImage("icon", sm.uuid.new(userdata.icon))
     gui:setWorldPosition(pos)
     gui:open()
     args.gui = gui
@@ -633,16 +631,16 @@ function HelldiversBackend:cl_OnStratagemHit(args)
 
     g_cl_queuedStratagems[id] = args
 
-    self:cl_OnStratagemTimedOut({
-        pId = tonumber(id:sub(1, separator - 1)),
-        uuid = uuid
-    })
+    if sm.localPlayer.getPlayer().id == args.hitData.shooter.id then
+        self:cl_OnStratagemTimedOut(nil, uuid)
+    end
 end
 
 function HelldiversBackend:cl_DeleteStratagem(index)
     local data = g_cl_queuedStratagems[index]
     data.gui:close()
     data.beacon:destroy()
+    data.ball:destroy()
 
     if data.pod then
         sm.effect.playEffect("DropPod - Land", data.hitData.position)
@@ -682,7 +680,7 @@ function HelldiversBackend:cl_createHolsterItemEffect(player, holsterItem)
 end
 
 function HelldiversBackend:GetFirstHolsterItem(player, slot)
-    local inv = sm.game.getLimitedInventory() and player:getInventory() or player:getHotbar()
+    local inv = GetInventory()
     for i = 0, inv:getSize() do
         local item = inv:getItem(i)
         local holsterItem = holsterItems[tostring(item.uuid)]

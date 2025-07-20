@@ -2,6 +2,7 @@
 ---@field uuid string
 ---@field cooldown number
 ---@field activation number
+---@field lifeTime number
 ---@field dropEffect? string|Uuid
 ---@field update function
 
@@ -57,8 +58,9 @@ end
 local stratagems = {
     {
         uuid = "5fe2e519-9c05-4b4d-b0d6-3dc6fa7357c8",
-        cooldown = 1,--160 * 40,
+        cooldown = 5 * 40,--160 * 40,
         activation = 3 * 40, --12 * 40,
+        lifeTime = 0,
         dropEffect = sm.uuid.new("b63d99e5-06e5-4397-bb3d-27c396124334"),
         update = SpawnDropPod
     },
@@ -66,6 +68,7 @@ local stratagems = {
         uuid = "4778cafb-d7d0-44cd-bca0-a2494018108b",
         cooldown = 160 * 40,
         activation = 3 * 40,
+        lifeTime = 0,
         update = function(self)
             sm.physics.explode(self.hitData.position, 100, 50, 75, 1000, "PropaneTank - ExplosionBig")
             return true
@@ -75,6 +78,7 @@ local stratagems = {
         uuid = "bd7e37ba-844c-4c57-b660-e93048cd48a6",
         cooldown = 120 * 40,
         activation = 3 * 40,
+        lifeTime = 240,
         update = function(self)
             if self.tick%80 == 0 then
                 local origin = self.hitData.position + vec3_new(0,0,20)
@@ -86,7 +90,7 @@ local stratagems = {
             end
 
             self.tick = self.tick + 1
-            return self.tick >= 240
+            return self.tick >= self.lifeTime
         end,
         tick = 0
     },
@@ -94,6 +98,7 @@ local stratagems = {
         uuid = "53d9dc66-e90c-4ea2-9795-7522206a0549",
         cooldown = 80 * 40,
         activation = 1 * 40,
+        lifeTime = 160,
         update = function(self)
             if self.tick%2 == 0 then
                 local origin = self.hitData.position + vec3_new(0,0,20)
@@ -103,7 +108,7 @@ local stratagems = {
             end
 
             self.tick = self.tick + 1
-            return self.tick >= 160
+            return self.tick >= self.lifeTime
         end,
         tick = 0
     },
@@ -111,6 +116,7 @@ local stratagems = {
         uuid = "59a3c3e8-4c75-4f68-b550-22eed1b0ec53",
         cooldown = 1, --160 * 40,
         activation = 3 * 40, --12 * 40,
+        lifeTime = 0,
         dropEffect = sm.uuid.new("a8d6cc6d-dec6-4ba4-ac78-cc6fe3130d9f"),
         update = SpawnDropPod
     },
@@ -118,6 +124,7 @@ local stratagems = {
         uuid = "dc80a180-cacf-4b21-a896-d85dd3d32d70",
         cooldown = 1, --160 * 40,
         activation = 3 * 40, --12 * 40,
+        lifeTime = 0,
         dropEffect = sm.uuid.new("559b5c5d-9e48-4cdd-a078-a751c8a6357e"),
         update = function(self, override)
             return SpawnCreation(self, override, "$CONTENT_DATA/Objects/turretEmplacement.json", vec3_new(1.875, 0.625, 0.375))
@@ -127,6 +134,7 @@ local stratagems = {
         uuid = "578b35aa-3865-4297-989b-4734417338c3",
         cooldown = 1, --160 * 40,
         activation = 3 * 40, --12 * 40,
+        lifeTime = 0,
         dropEffect = sm.uuid.new("b63d99e5-06e5-4397-bb3d-27c396124334"),
         update = SpawnDropPod
     },
@@ -333,7 +341,7 @@ function GetStratagem(id, override)
     end
 end
 
-function GetStratagemByUUUID(uuid)
+function GetStratagemByUUID(uuid)
     return stratagems[stratagemUUIDToIndex[uuid]]
 end
 
@@ -402,7 +410,7 @@ function ParseCustomStratagems(data)
     for k, v in pairs(data) do
         local uuid = v.uuid
         if not stratagemUUIDToIndex[uuid] then
-            local stratagem = shallowcopy(v.obj)
+            local stratagem = ShallowCopy(v.obj)
             stratagem.uuid = uuid
             stratagem.update = customStratagemFunctions[stratagem.update]
             table.insert(stratagems, stratagem)
@@ -415,5 +423,5 @@ function ParseCustomStratagems(data)
 end
 
 function GetCustomStratagemTemplate(name)
-    return shallowcopy(customStratagemTemplates[name])
+    return ShallowCopy(customStratagemTemplates[name])
 end

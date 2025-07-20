@@ -17,7 +17,7 @@
 			"enableImpactEffect": true,
 			"friction": 0.2,
 			"mass": 3.0,
-			"mesh": "$CONTENT_DATA/Objects/Renderables/obj_interactive_stratagem.rend",
+			"mesh": "$CONTENT_DATA/Tools/Stratagem/char_stratagem.rend", //"$CONTENT_DATA/Objects/Renderables/obj_interactive_stratagem.rend",
 			"name": "projectile_stratagem",
 			"radius": 0.250,
 			"spin": 1,

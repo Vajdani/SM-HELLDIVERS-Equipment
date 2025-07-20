@@ -128,7 +128,7 @@ end
 function swapFpAnimation( data, from, to, blendTime )
 	local p = 0.0
 	if data.currentAnimation == from then
-		p = clamp(1.0-getFpAnimationProgress(data, from), 0.0, 1.0)
+		p = util_clamp(1.0-getFpAnimationProgress(data, from), 0.0, 1.0)
 	end
 	setFpAnimation(data, to, blendTime)
 	setFpAnimationProgress(data, to, p)
@@ -162,7 +162,7 @@ function updateFpAnimations( self, equipped, dt )
 					end
 				end
 			else
-				animation.weight = math.max(animation.weight-blendStep, 0.0)
+				animation.weight = max(animation.weight-blendStep, 0.0)
 			end
 
 			totalWeight = totalWeight + animation.weight
@@ -176,7 +176,7 @@ function updateFpAnimations( self, equipped, dt )
 end
 
 function updateTpAnimations( self, equipped, dt )
-	local data = data
+	local data = self.tpAnimations
 	if data ~= nil and (equipped or data.currentAnimation == "unequip") then
 		--[[local totalWeight = 0.0
 		local frameCurrent = data.currentAnimation
@@ -200,7 +200,7 @@ function updateTpAnimations( self, equipped, dt )
 					setTpAnimation(data, nextAnim, animation.blendNext)
 				end
 			else
-				animation.weight = math.max(animation.weight-blendStep, 0.0)
+				animation.weight = max(animation.weight-blendStep, 0.0)
 			end
 
 			totalWeight = totalWeight + animation.weight
@@ -239,7 +239,7 @@ function updateTpAnimations( self, equipped, dt )
 					end
 				end
 			else
-				animation.weight = math.max( animation.weight - ( data.blendSpeed * dt ), 0.0 )
+				animation.weight = max( animation.weight - ( data.blendSpeed * dt ), 0.0 )
 			end
 
 			totalWeight = totalWeight + animation.weight

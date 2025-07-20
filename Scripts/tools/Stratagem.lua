@@ -1,12 +1,8 @@
-dofile("$CONTENT_DATA/Scripts/AnimationUtil.lua")
-dofile "$SURVIVAL_DATA/Scripts/util.lua"
-dofile "$SURVIVAL_DATA/Scripts/game/survival_shapes.lua"
-dofile "$CONTENT_DATA/Scripts/ProgressBar.lua"
-
 ---@class StratagemHUD
 ---@field gui GuiInterface
 ---@field isOpen boolean
----@field progressbars ProgressBar[]
+---@field cooldownBars ProgressBar[]
+---@field activationBars ProgressBar[]
 
 ---@class Stratagem : ToolClass
 ---@field fpAnimations table
@@ -176,6 +172,10 @@ end
 
 function Stratagem.client_onUpdate( self, dt )
 	if self.isLocal then
+        if g_stratagemHud and g_stratagemHud.gui:isActive() then
+            UpdateStratagemHudProgressBars()
+        end
+
 		updateFpAnimations( self, self.equipped, dt )
 
         if self.pendingThrow then
@@ -236,7 +236,7 @@ function Stratagem.client_onUpdate( self, dt )
 				end
 			end
 		else
-			animation.weight = math.max( animation.weight - ( self.tpAnimations.blendSpeed * dt ), 0.0 )
+			animation.weight = max( animation.weight - ( self.tpAnimations.blendSpeed * dt ), 0.0 )
 		end
 
 		totalWeight = totalWeight + animation.weight
@@ -256,16 +256,16 @@ function Stratagem.client_onUpdate( self, dt )
 	end
 
 	local relativeMoveDirection = self.tool:getRelativeMoveDirection()
-	if (((isAnyOf(self.tpAnimations.currentAnimation, { "aimInto", "aim", "shoot" }) and (relativeMoveDirection:length() > 0 or isCrouching))) and not isSprinting) then
+	if (((IsAnyOf(self.tpAnimations.currentAnimation, { "aimInto", "aim", "shoot" }) and (relativeMoveDirection:length() > 0 or isCrouching))) and not isSprinting) then
 		self.jointWeight = math.min(self.jointWeight + (10.0 * dt), 1.0)
 	else
-		self.jointWeight = math.max(self.jointWeight - (6.0 * dt), 0.0)
+		self.jointWeight = max(self.jointWeight - (6.0 * dt), 0.0)
 	end
 
 	if (not isSprinting) then
 		self.spineWeight = math.min(self.spineWeight + (10.0 * dt), 1.0)
 	else
-		self.spineWeight = math.max(self.spineWeight - (10.0 * dt), 0.0)
+		self.spineWeight = max(self.spineWeight - (10.0 * dt), 0.0)
 	end
 
 	local playerDir = self.tool:getSmoothDirection()
@@ -273,11 +273,11 @@ function Stratagem.client_onUpdate( self, dt )
     local finalAngle = (0.5 + spineAngle * 0.5)
 	self.tool:updateAnimation("spudgun_spine_bend", finalAngle, self.spineWeight)
 
-	local totalOffsetZ = lerp(-22.0, -26.0, crouchWeight)
-	local totalOffsetY = lerp(6.0, 12.0, crouchWeight)
-	local crouchTotalOffsetX = clamp((spineAngle * 60.0) - 15.0, -60.0, 40.0)
-	local normalTotalOffsetX = clamp((spineAngle * 50.0), -45.0, 50.0)
-	local totalOffsetX = lerp(normalTotalOffsetX, crouchTotalOffsetX, crouchWeight)
+	local totalOffsetZ = util_lerp(-22.0, -26.0, crouchWeight)
+	local totalOffsetY = util_lerp(6.0, 12.0, crouchWeight)
+	local crouchTotalOffsetX = util_clamp((spineAngle * 60.0) - 15.0, -60.0, 40.0)
+	local normalTotalOffsetX = util_clamp((spineAngle * 50.0), -45.0, 50.0)
+	local totalOffsetX = util_lerp(normalTotalOffsetX, crouchTotalOffsetX, crouchWeight)
 
 	local finalJointWeight = (self.jointWeight)
 
@@ -321,7 +321,7 @@ function Stratagem:client_onToggle()
     local stratagems = GetStratagemsFromClProgression()
     self.originalLength = #stratagems
     for k, v in pairs(stratagems) do
-        if isAnyOf(v.uuid, g_cl_loadout) then
+        if IsAnyOf(v.uuid, g_cl_loadout) then
             table.insert(self.selected, v)
         else
             table.insert(self.available, v)
@@ -440,12 +440,14 @@ function Stratagem:client_onEquip()
             ---@type StratagemHUD
             g_stratagemHud = {
                 gui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/StratagemHud.layout", false, { isHud = true, isInteractive = false, needsCursor = false }),
-                progressbars = {},
+                cooldownBars = {},
+                activationBars = {},
                 isOpen = false
             }
 
             for i = 1, STRATAGEMINVENTORYSIZE do
-                g_stratagemHud.progressbars[i] = ProgressBar():init(g_stratagemHud.gui, "stratagem"..i.."_cooldown", "$CONTENT_DATA/Gui/StratagemCooldown", 100)
+                g_stratagemHud.cooldownBars[i] = ProgressBar():init(g_stratagemHud.gui, "stratagem"..i.."_cooldown", "$CONTENT_DATA/Gui/StratagemCooldown", 100)
+                g_stratagemHud.activationBars[i] = ProgressBar():init(g_stratagemHud.gui, "stratagem"..i.."_cooldown", "$CONTENT_DATA/Gui/StratagemActivation", 100)
             end
         end
 
@@ -489,23 +491,26 @@ end
 local col_bright = sm.color.new("ffffff")
 local col_dark = sm.color.new("999999")
 function UpdateStratagemHud()
-    local progression = g_cl_loadout
     local tick = sm.game.getServerTick()
     local pId = sm.localPlayer.getPlayer().id
     local id = pId.."_"
     local gui = g_stratagemHud.gui
     local open = g_stratagemHud.isOpen
-    local thrownStratagems = g_cl_thrownStratagems[pId] or {}
     for i = 1, STRATAGEMINVENTORYSIZE do
-        local uuid = progression[i]
+        local uuid = g_cl_loadout[i]
         local widget = "stratagem"..i
-
         if uuid then
             local stratagem = GetStratagemUserdata(uuid)
             local stratagemInbound = g_cl_queuedStratagems[id..uuid]
             local isActive = g_stratagemActivated and stratagem.code == g_stratagemCode
-            local isThrown = thrownStratagems[tostring(uuid)]
-            gui:setVisible(widget, open or isActive or stratagemInbound ~= nil or isThrown)
+            local isThrown = g_cl_thrownStratagems[tostring(uuid)]
+            local stratagemCooldown = g_cl_cooldowns[uuid] or 0
+            local isOnCooldown = stratagemCooldown > tick
+            local cooldownSeconds = (stratagemCooldown - tick)/40
+            gui:setVisible(widget,
+                open or isActive or stratagemInbound ~= nil or isThrown or
+                (isOnCooldown and (cooldownSeconds <= SHOWSTRATAGEMCOOLDOWNTIME or GetStratagemByUUID(uuid).cooldown - (stratagemCooldown - tick) < SHOWSTRATAGEMUSAGETIME))
+            )
 
             gui:setText(widget.."_name", stratagem.name)
             gui:setIconImage(widget.."_preview", sm.uuid.new(stratagem.icon))
@@ -525,7 +530,8 @@ function UpdateStratagemHud()
             end
 
             if stratagemInbound then
-                local time = stratagemInbound.activation/40
+                local activation = stratagemInbound.activation
+                local time = activation/40
                 if time > 0 then
                     gui:setText(widget.."_status", ("Inbound T-%s"):format(FormatStratagemTimer(time)))
                 else
@@ -544,20 +550,13 @@ function UpdateStratagemHud()
                 goto continue
             end
 
-            local bar = g_stratagemHud.progressbars[i]
-            local stratagemCooldown = g_cl_cooldowns[uuid] or 0
-            local isOnCooldown = stratagemCooldown > tick
             gui:setVisible(widget.."_codePanel", not isOnCooldown)
             if isOnCooldown then
-                local seconds = (stratagemCooldown - tick)/40
                 if not stratagemInbound then
-                    gui:setText(widget.."_status", ("Cooldown T-%s"):format(FormatStratagemTimer(seconds)))
+                    gui:setText(widget.."_status", ("Cooldown T-%s"):format(FormatStratagemTimer(cooldownSeconds)))
                 end
-
-                bar:update_percentage(1 - seconds/(GetStratagemByUUUID(uuid).cooldown/40))
             else
                 gui:setText(widget.."_status", "")
-                bar:update_percentage(1)
 
                 local code = stratagem.code
                 if g_stratagemCode then
@@ -591,6 +590,44 @@ function UpdateStratagemHud()
     end
 end
 
+function UpdateStratagemHudProgressBars()
+    local tick = sm.game.getServerTick()
+    local id = sm.localPlayer.getPlayer().id.."_"
+    for i = 1, STRATAGEMINVENTORYSIZE do
+        local uuid = g_cl_loadout[i]
+        if uuid then
+            local stratagemInbound = g_cl_queuedStratagems[id..uuid]
+            local isActive = g_stratagemActivated and GetStratagemUserdata(uuid).code == g_stratagemCode
+            if g_cl_thrownStratagems[tostring(uuid)] then
+                goto continue
+            end
+
+            if stratagemInbound then
+                local activation = stratagemInbound.activation
+                if activation > 0 then
+                    g_stratagemHud.activationBars[i]:update_percentage(1 - activation/GetStratagemByUUID(uuid).activation)
+                else
+                    g_stratagemHud.activationBars[i]:update_percentage(1)
+                end
+
+                goto continue
+            end
+
+            if isActive then
+                goto continue
+            end
+
+            local stratagemCooldown = g_cl_cooldowns[uuid] or 0
+            if stratagemCooldown > tick then
+                g_stratagemHud.cooldownBars[i]:update_percentage(max(1 - (stratagemCooldown - tick)/GetStratagemByUUID(uuid).cooldown, 0))
+            else
+                g_stratagemHud.cooldownBars[i]:update_percentage(1)
+            end
+        end
+        ::continue::
+    end
+end
+
 function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
     local char = sm.localPlayer.getPlayer().character
     if sm.world.getCurrentWorld():isIndoor() or not char or char:isTumbling() or char:isDiving() then
@@ -602,12 +639,7 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
         if self.pendingThrow then return true, true end
 
         if lmb == 1 then
-            local pId = sm.localPlayer.getPlayer().id
-            if not g_cl_thrownStratagems[pId] then
-                g_cl_thrownStratagems[pId] = {}
-            end
-
-            g_cl_thrownStratagems[pId][tostring(GetStratagem(g_stratagemCode).uuid)] = true
+            g_cl_thrownStratagems[tostring(GetStratagem(g_stratagemCode).uuid)] = true
 
             self.pendingThrow = true
             self.network:sendToServer("sv_throwAnim")
@@ -657,14 +689,13 @@ function Stratagem:client_onEquippedUpdate( lmb, rmb, f )
                 local tick = sm.game.getServerTick()
                 local pId = sm.localPlayer.getPlayer().id
                 local id = pId.."_"
-                local thrownStratagems = g_cl_thrownStratagems[pId] or {}
                 for k, v in pairs(GetStratagems()) do
                     local uuid = v.uuid
-                    if isAnyOf(uuid, g_cl_loadout) and
+                    if IsAnyOf(uuid, g_cl_loadout) and
                        GetClStratagemProgression(uuid).charges > 0 and
                        (g_cl_cooldowns[uuid] or tick) <= tick and
                        not g_cl_queuedStratagems[id..uuid] and
-                       not thrownStratagems[uuid] then
+                       not g_cl_thrownStratagems[uuid] then
                         table.insert(stratagems, v)
                     end
                 end

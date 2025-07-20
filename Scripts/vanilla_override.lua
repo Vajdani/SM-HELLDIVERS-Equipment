@@ -79,11 +79,11 @@ local function setupProjectiles(worldScript)
             if bounce then
                 if customData.bouncesLeft > 0 then
                     customData.bouncesLeft = customData.bouncesLeft - 1
-                    sm.projectile.customProjectileAttack(customData, sm.uuid.new("6411767a-8882-4b94-aae5-381057cde9f9"), 0, position, normal * 10, shooter )
+                    sm.projectile.customProjectileAttack(customData, projectile_stratagem, 0, position, normal * 10, shooter )
                 else
                     sm.event.sendToTool(sm.HELLDIVERSBACKEND, "OnStratagemTimedOut",
                         {
-                            pId = shooter.id,
+                            player = shooter,
                             code = customData.code
                         }
                     )

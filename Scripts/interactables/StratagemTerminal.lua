@@ -1,5 +1,3 @@
-dofile("../VideoPlayer.lua")
-
 ---@class StratagemTerminal : ShapeClass
 StratagemTerminal = class()
 
@@ -35,7 +33,7 @@ function StratagemTerminal:client_onInteract(char, state)
         self.gui:setButtonCallback(widget, "cl_select")
     end
 
-    self.range = math.max(GetStratagemPageCount(6), 2)
+    self.range = max(GetStratagemPageCount(6), 2)
     self.gui:createVerticalSlider("StratagemScroll", self.range, self.range - 1, "cl_scroll")
 
     local matGrid = {

@@ -1,5 +1,3 @@
-dofile "$SURVIVAL_DATA/Scripts/blueprint_util.lua"
-
 ---@class VehicleBuilder : ShapeClass
 VehicleBuilder = class()
 
