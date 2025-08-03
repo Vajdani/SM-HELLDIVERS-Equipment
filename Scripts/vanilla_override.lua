@@ -1,3 +1,5 @@
+---@diagnostic disable:inject-field
+
 sm.log.info("[HELLDIVERS] Override script loaded")
 
 local ToolItems = {
@@ -60,26 +62,36 @@ local canExplode = {
 }
 
 ---@param worldScript WorldClass
-local function setupProjectiles(worldScript)
-    if not worldScript or worldScript.PROJECTILESETUPCOMPLETE then return end
+local function setupProjectiles(worldScript, classname)
+    if not worldScript then return end
 
-    local oldProjectile = worldScript.server_onProjectile
-    function projectileHook(world, position, airTime, velocity, projectileName, shooter, damage, customData, normal, target, uuid)
+    local id = "helldivers_"..classname.."_server_onProjectile"
+    _G[id] = _G[id] or worldScript.server_onProjectile
+
+    function worldScript.server_onProjectile(world, position, airTime, velocity, projectileName, shooter, damage, customData, normal, target, uuid)
         if uuid == projectile_stratagem then
             local bounce = false
             local type = type(target)
             if type == "Shape" and sm.exists(target) then
-                bounce = bounceShapes[tostring(target.uuid)] == true
+                bounce = bounceShapes[tostring(target.uuid)] == true --or sm.item.getQualityLevel(target.uuid) == 1
             elseif type == "Character" then
                 bounce = true
-            else
-                bounce = normal.z <= 0.5
             end
+
+            bounce = bounce or normal.z <= 0.75
 
             if bounce then
                 if customData.bouncesLeft > 0 then
                     customData.bouncesLeft = customData.bouncesLeft - 1
-                    sm.projectile.customProjectileAttack(customData, projectile_stratagem, 0, position, normal * 10, shooter )
+                    -- sm.projectile.customProjectileAttack(customData, projectile_stratagem, 0, position, normal * 10, shooter --[[@as Player]])
+
+                    local vel = -velocity:normalize()
+                    local cross = vel:cross(normal)
+                    sm.projectile.customProjectileAttack(
+                        customData, projectile_stratagem, 0, position,
+                        normal:rotate(math.atan2(cross:length(), normal:dot(vel)), cross) * (velocity:length() * 0.25),
+                        shooter --[[@as Player]]
+                    )
                 else
                     sm.event.sendToTool(sm.HELLDIVERSBACKEND, "OnStratagemTimedOut",
                         {
@@ -92,9 +104,11 @@ local function setupProjectiles(worldScript)
                 return
             end
 
+            local dir = position - customData.origin; dir.z = 0
             sm.event.sendToTool(sm.HELLDIVERSBACKEND, "OnStratagemHit",
                 {
                     position = position,
+                    throwDirection = dir:normalize(),
                     normal = normal,
                     shooter = shooter,
                     data = customData
@@ -105,10 +119,8 @@ local function setupProjectiles(worldScript)
             sm.physics.explode(position, data.level, data.destructionRadius, data.impulseRadius, data.magnitude, data.effect, nil, data.params)
         end
 
-        return oldProjectile(world, position, airTime, velocity, projectileName, shooter, damage, customData, normal, target, uuid)
+        return _G[id](world, position, airTime, velocity, projectileName, shooter, damage, customData, normal, target, uuid)
     end
-    worldScript.server_onProjectile = projectileHook
-    worldScript.PROJECTILESETUPCOMPLETE = true
 end
 
 
@@ -116,7 +128,7 @@ for k, obj in pairs(_G) do
     if type(obj) == "table" then
         if obj.cellMaxX and not obj.PROJECTILESETUPCOMPLETE then
             sm.log.info("[HELLDIVERS] Hooking projectile function...")
-            setupProjectiles(obj)
+            setupProjectiles(obj, k)
         elseif obj.server_onUnitUpdate then
             sm.log.info("[HELLDIVERS] Adding external takeDamage to unit...")
             obj.sv_e_takeDamage = function(obj, args)
@@ -144,7 +156,7 @@ local function dofileHook(path)
     for k, v in pairs(hooks) do
         if path:find(k) then
             sm.log.info("[HELLDIVERS] Adding hook to", path)
-            v(_G[k])
+            v(_G[k], k)
             break
         end
     end

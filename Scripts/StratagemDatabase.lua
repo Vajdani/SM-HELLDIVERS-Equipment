@@ -4,7 +4,20 @@
 ---@field activation number
 ---@field lifeTime number
 ---@field dropEffect? string|Uuid
----@field update function
+---@field update string|function
+---@field create? function
+---@field pelicanEffect? Uuid
+
+---@class StratagemHitData
+---@field position Vec3
+---@field throwDirection Vec3
+---@field normal Vec3
+---@field shooter Player
+---@field data table
+
+---@class StratagemWorldObj : StratagemObj
+---@field dropStartTime number
+---@field hitData StratagemHitData
 
 ---@class StratagemUserdata
 ---@field name string
@@ -15,10 +28,19 @@
 ---@field cost { uuid: Uuid, amount: number }[]
 ---@field preview? number
 
+---@class TemplateStratagemObj : StratagemObj
+---@field uuid nil
+
+---@class CustomStratagemTemplate
+---@field uuid? string
+---@field obj TemplateStratagemObj
+---@field userdata StratagemUserdata
+
 local function SpawnStaticDropPod(self, position)
-    return sm.shape.createPart(self.dropEffect, position - dropPodRotation * sm.item.getShapeOffset(self.dropEffect), dropPodRotation, false, true)
+    return sm.shape.createPart(self.dropEffect, vec3_new(self.hitData.position.x, self.hitData.position.y, position.z) - dropPodRotation * sm.item.getShapeOffset(self.dropEffect), dropPodRotation, false, true)
 end
 
+---@param override RaycastResult
 local function SpawnDropPod(self, override)
     if type(override) == "RaycastResult" then
         local shape = override:getShape()
@@ -27,7 +49,7 @@ local function SpawnDropPod(self, override)
             return true
         end
 
-        shape.body:createPart(self.dropEffect, shape:getClosestBlockLocalPosition(override.pointWorld + override.normalLocal), dropPodRotation * vec3_up, dropPodRotation * vec3_right)
+        shape.body:createPart(self.dropEffect, shape:getClosestBlockLocalPosition(override.pointWorld) + vec3_new(-2, 2, 1), dropPodRotation * vec3_up, dropPodRotation * vec3_right)
 
         return true
     end
@@ -66,7 +88,7 @@ local stratagems = {
     },
     {
         uuid = "4778cafb-d7d0-44cd-bca0-a2494018108b",
-        cooldown = 160 * 40,
+        cooldown = 5 * 40, --160 * 40,
         activation = 3 * 40,
         lifeTime = 0,
         update = function(self)
@@ -96,7 +118,7 @@ local stratagems = {
     },
     {
         uuid = "53d9dc66-e90c-4ea2-9795-7522206a0549",
-        cooldown = 80 * 40,
+        cooldown = 5 * 40, --80 * 40,
         activation = 1 * 40,
         lifeTime = 160,
         update = function(self)
@@ -137,6 +159,46 @@ local stratagems = {
         lifeTime = 0,
         dropEffect = sm.uuid.new("b63d99e5-06e5-4397-bb3d-27c396124334"),
         update = SpawnDropPod
+    },
+    {
+        uuid = "8a5a03ac-5969-4b8a-b22e-624173a96119",
+        cooldown = 3 * 40, --80 * 40,
+        activation = 1 * 40,
+        lifeTime = 30 * 40,
+        create = function(self)
+            self.hotspots = {}
+
+            local seed = self.hitData.throwDirection.x + self.hitData.throwDirection.y
+            for x = 0, 100 do
+                for y = 0, 100 do
+                    local noise = math.abs(sm.noise.perlinNoise2d(x * 0.1, y * 0.1, seed))
+                    if noise > 0.4 then
+                        table.insert(self.hotspots, vec3_new(-50 + x, -50 + y, 0) * 0.5)
+                    end
+                end
+            end
+
+            self.origin = self.hitData.position + vec3_new(100, -50, 150)
+        end,
+        update = function(self)
+            if self.burstCount == 0 and self.tick%100 == 0 then
+                self.burstCount = 3
+            end
+
+            if self.tick%20 == 0 and self.burstCount > 0 then
+                local hotspot = math.random(#self.hotspots)
+                local low, high = sm.projectile.solveBallisticArc(self.origin, self.hitData.position + (self.hotspots[hotspot] or vec3_zero), 250, sm.physics.getGravity())
+                sm.projectile.projectileAttack(projectile_explosivetape, 1000, self.origin, low * 250, self.hitData.shooter)
+
+                self.burstCount = self.burstCount - 1
+                table.remove(self.hotspots, hotspot)
+            end
+
+            self.tick = self.tick + 1
+            return self.tick >= self.lifeTime
+        end,
+        tick = 0,
+        burstCount = 0
     },
 }
 
@@ -270,14 +332,33 @@ local stratagemUserdata = {
                 amount = 5
             }
         }
+    },
+    ["8a5a03ac-5969-4b8a-b22e-624173a96119"] = {
+        name = "Barrage",
+        description = "very big boom",
+        icon = "b63d99e5-06e5-4397-bb3d-27c396124334", --Pod
+        type = "offensive",
+        code = "44444",
+        cost = {
+            {
+                uuid = sm.uuid.new( "5530e6a0-4748-4926-b134-50ca9ecb9dcf" ), --Component kit
+                amount = 5
+            },
+            {
+                uuid = sm.uuid.new( "f152e4df-bc40-44fb-8d20-3b3ff70cdfe3" ), --Circuit
+                amount = 5
+            }
+        }
     }
 }
 
 for k, v in pairs(stratagemUserdata) do
     local path = "$CONTENT_DATA/Gui/StratagemVideos/"..k.."/video.json"
     if sm.json.fileExists(path) then
-        stratagemUserdata[k].preview = tonumber(sm.json.open(path).frameCount)
+        v.preview = tonumber(sm.json.open(path).frameCount)
     end
+
+    v.name = v.name:upper()
 end
 
 
@@ -294,6 +375,7 @@ local customStratagemFunctions = {
     end
 }
 
+---@type { [string]: CustomStratagemTemplate }
 local customStratagemTemplates = {
     VehicleSpawn = {
         obj = {
@@ -422,6 +504,17 @@ function ParseCustomStratagems(data)
     BakeUUIDToIndex()
 end
 
+---@return CustomStratagemTemplate template
 function GetCustomStratagemTemplate(name)
     return ShallowCopy(customStratagemTemplates[name])
+end
+
+function SortStratagemListByIndex(stratagems_)
+    table.sort(stratagems_, function(a, b) return stratagemUUIDToIndex[tostring(a.uuid)] < stratagemUUIDToIndex[tostring(b.uuid)] end)
+end
+
+
+
+if sm.HELLDIVERSBACKEND then
+    sm.event.sendToTool(sm.HELLDIVERSBACKEND, "OnStratagemDBLoaded")
 end

@@ -1,3 +1,5 @@
+---@diagnostic disable:inject-field
+
 dofile "$CONTENT_DATA/Scripts/util.lua"
 
 gameHooked = gameHooked or false
@@ -25,6 +27,7 @@ sm.game.bindChatCommand = bindHook
 
 
 ---@class HelldiversBackend : ToolClass
+---@field queuedStratagems StratagemWorldObj[]
 HelldiversBackend = class()
 
 local dropPodStartHeight = vec3_new(0,0,500)
@@ -121,10 +124,11 @@ function HelldiversBackend:server_onFixedUpdate()
             local pos = stratagem.hitData.position
             local start = sm.vec3.lerp(pos, pos + dropPodStartHeight, stratagem.activation/stratagem.dropStartTime)
             local _end = sm.vec3.lerp(pos, pos + dropPodStartHeight, (stratagem.activation - 1)/stratagem.dropStartTime)
+            -- local start = sm.vec3.lerp(pos, pos + dropPodStartHeight, sm.util.easing("easeOutCubic", stratagem.activation/stratagem.dropStartTime))
+            -- local _end  = sm.vec3.lerp(pos, pos + dropPodStartHeight, sm.util.easing("easeOutCubic", (stratagem.activation - 1)/stratagem.dropStartTime))
             local hit, result = sm.physics.spherecast(start, _end, 0.75)
             local hitType = result.type
             if hitType == "character" then
-                print("hit char")
                 local char = result:getCharacter()
                 if char:isPlayer() then
                     sm.event.sendToPlayer(char:getPlayer(), "sv_e_takeDamage", { damage = 999999999 })
@@ -135,15 +139,12 @@ function HelldiversBackend:server_onFixedUpdate()
                 local shape = result:getShape()
                 local data = sm.item.getFeatureData(shape.uuid)
                 if data and data.classname == "Package" then
-                    print("hit package")
                     sm.event.sendToInteractable( shape.interactable, "sv_e_open", true )
                 else
-                    print("hit body")
                     stratagem:update(result)
                     skip = true
                 end
             elseif hitType == "terrainSurface" or hitType == "terrainAsset" then
-                print("hit terrain")
                 stratagem:update(result.pointWorld)
                 skip = true
             end
@@ -171,7 +172,15 @@ function HelldiversBackend:OnStratagemThrow(args)
     local tick = sm.game.getServerTick()
     if (self.cooldownsPerPlayer[pId][uuid] or tick) > tick then return end
 
-    sm.projectile.customProjectileAttack({ code = args.code, bouncesLeft = STRATAGEMMAXBOUNCEOUNT }, projectile_stratagem, 0, args.pos, player.character.direction * 35, player )
+    sm.projectile.customProjectileAttack(
+        {
+            code = args.code,
+            bouncesLeft = STRATAGEMMAXBOUNCEOUNT,
+            origin = player.character.worldPosition
+        },
+        projectile_stratagem, 0, args.pos,
+        player.character.direction * 35, player
+    )
 
     self:sv_save()
     self:sv_requestData(nil, player)
@@ -184,6 +193,7 @@ function HelldiversBackend:OnStratagemTimedOut(args)
 end
 
 function HelldiversBackend:OnStratagemHit(args)
+    ---@type StratagemWorldObj
     local stratagem = ShallowCopy(GetStratagem(args.data.code))
     local player = args.shooter
     local pId, uuid = player.id, stratagem.uuid
@@ -200,7 +210,8 @@ function HelldiversBackend:OnStratagemHit(args)
         g_sv_stratagemProgression[pId][uuid] = progression
     end
 
-    self.cooldownsPerPlayer[pId][uuid] = sm.game.getServerTick() + stratagem.activation + stratagem.lifeTime + stratagem.cooldown
+    -- self.cooldownsPerPlayer[pId][uuid] = sm.game.getServerTick() + stratagem.activation + stratagem.lifeTime + stratagem.cooldown
+    self.cooldownsPerPlayer[pId][uuid] = sm.game.getServerTick() + stratagem.activation + stratagem.cooldown
 
     args.data = nil
     stratagem.hitData = args
@@ -210,6 +221,10 @@ function HelldiversBackend:OnStratagemHit(args)
     end
 
     self.queuedStratagems[id] = stratagem
+
+    if stratagem.create then
+        stratagem:create()
+    end
 
     self.network:sendToClients("cl_OnStratagemHit",
         {
@@ -510,10 +525,12 @@ function HelldiversBackend:client_onFixedUpdate()
 
     for k, v in pairs(g_cl_queuedStratagems) do
         v.activation = v.activation - 1
-        if v.activation >= 0 then
+        if v.activation >= 40 then
             v.gui:setText("status", ("Inbound T-%s"):format(FormatStratagemTimer(v.activation/40)))
+        elseif v.activation > 0 then
+            v.gui:setText("status", "Impact")
         else
-            v.gui:setText("status", "Ongoing...")
+            v.gui:setText("status", "Impact")
         end
     end
 end
@@ -568,18 +585,18 @@ function HelldiversBackend:cl_OnStratagemHit(args)
     local uuid = id:sub(separator + 1, #id)
     local userdata = GetStratagemUserdata(uuid)
 
-    local beaconScale = vec3_new(0.25,3000,0.25)
+    local beaconScale = vec3_new(0.265,3000,0.265)
     local beacon = sm.effect.createEffect("Stratagem - Beacon")
     beacon:setParameter("Color", STRATAGEMTYPETOCOLOUR[userdata.type])
     beacon:setParameter("Scale", beaconScale)
-    beacon:setPosition(pos + vec3_up * beaconScale.y * 0.125)
+    beacon:setPosition(pos + sm.vec3.getRotation(vec3_up, args.hitData.normal) * vec3_up * 0.15 + vec3_up * beaconScale.y * 0.125)
     beacon:start()
     args.beacon = beacon
 
     local ball = sm.effect.createEffect("ShapeRenderable")
     ball:setParameter("uuid", sm.uuid.new("7705f920-b4cb-41f7-8a9c-088539201c35"))
     ball:setPosition(pos)
-    ball:setRotation(sm.vec3.getRotation(args.hitData.normal, vec3_forward))
+    ball:setRotation(sm.vec3.getRotation(vec3_forward, args.hitData.normal))
     ball:setScale(vec3_one * 0.125)
     ball:start()
     args.ball = ball
@@ -678,6 +695,17 @@ function HelldiversBackend:cl_createHolsterItemEffect(player, holsterItem)
 
     return effect
 end
+
+
+
+function HelldiversBackend:OnStratagemDBLoaded()
+    sm.log.info("[HELLDIVERS] Stratagem DB reloaded")
+    if self.customStratagems then
+        ParseCustomStratagems(self.customStratagems)
+    end
+end
+
+
 
 function HelldiversBackend:GetFirstHolsterItem(player, slot)
     local inv = GetInventory()

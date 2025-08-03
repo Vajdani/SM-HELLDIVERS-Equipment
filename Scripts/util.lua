@@ -9,10 +9,10 @@ dofile "StratagemDatabase.lua"
 
 
 STRATAGEMTYPETOCOLOUR = {
-    supply    = sm.color.new(0,1,1),
-    mission   = sm.color.new(0,1,1), --sm.color.new(1,1,0),
-    defensive = sm.color.new(0,1,0),
-    offensive = sm.color.new(1,0,0),
+    supply    = sm.color.new("#00ffff"),
+    mission   = sm.color.new("#00ffff"), --sm.color.new(1,1,0),
+    defensive = sm.color.new("#00ff00"),
+    offensive = sm.color.new("#ff0000"),
 }
 
 FIREMODESETTINGS_ALL = {
@@ -164,6 +164,7 @@ DAYCYCLE_TIME = 1440.0 -- seconds (24 minutes)
 
 projectile_potato = sm.uuid.new( "5e8eeaae-b5c1-4992-bb21-dec5254ce722" )
 projectile_smallpotato = sm.uuid.new( "132c44d3-7436-419d-ac6b-fc178336dcb7" )
+projectile_explosivetape = sm.uuid.new( "31b92b9a-a9f8-4f6d-988b-04ad479978ec" )
 projectile_loot = sm.uuid.new( "45209992-1a59-479e-a446-57140b605836" )
 projectile_epicloot = sm.uuid.new( "17cd4768-3123-4ce3-835a-362321dcf9de" )
 

@@ -3,15 +3,7 @@
 		{
 			"attachedEffect": "",
 			"audiomass": 250.0,
-			"destruction": {
-				"destructionLevels": [
-					{
-						"chance": 1.0,
-						"qualityLevel": 1
-					}
-				]
-			},
-			"effect": "PotatoProjectile - Hit",
+			"effect": "Sledgehammer - Hit",
 			"effectmaterial": "Potato",
 			"enableGravity": true,
 			"enableImpactEffect": true,

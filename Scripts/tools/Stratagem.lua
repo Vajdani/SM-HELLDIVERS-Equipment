@@ -319,6 +319,7 @@ function Stratagem:client_onToggle()
     self.selected = {}
 
     local stratagems = GetStratagemsFromClProgression()
+    SortStratagemListByIndex(stratagems)
     self.originalLength = #stratagems
     for k, v in pairs(stratagems) do
         if IsAnyOf(v.uuid, g_cl_loadout) then
@@ -522,8 +523,8 @@ function UpdateStratagemHud()
                 gui:setText(widget.."_charges", tostring(charges))
             end
 
-            if isThrown then
-                gui:setText(widget.."_status", "Beacon thrown...")
+            if isActive or isThrown then
+                gui:setText(widget.."_status", "Activating")
                 gui:setVisible(widget.."_codePanel", false)
 
                 goto continue
@@ -532,29 +533,22 @@ function UpdateStratagemHud()
             if stratagemInbound then
                 local activation = stratagemInbound.activation
                 local time = activation/40
-                if time > 0 then
+                if time >= 1 then
                     gui:setText(widget.."_status", ("Inbound T-%s"):format(FormatStratagemTimer(time)))
                 else
-                    gui:setText(widget.."_status", "Ongoing...")
+                    gui:setText(widget.."_status", "Impact")
                 end
 
                 gui:setVisible(widget.."_codePanel", false)
 
-                goto continue
-            end
-
-            if isActive then
-                gui:setText(widget.."_status", "Activating...")
-                gui:setVisible(widget.."_codePanel", false)
-
-                goto continue
+                if time > 0 then
+                    goto continue
+                end
             end
 
             gui:setVisible(widget.."_codePanel", not isOnCooldown)
             if isOnCooldown then
-                if not stratagemInbound then
-                    gui:setText(widget.."_status", ("Cooldown T-%s"):format(FormatStratagemTimer(cooldownSeconds)))
-                end
+                gui:setText(widget.."_status", ("Cooldown T-%s"):format(FormatStratagemTimer(cooldownSeconds)))
             else
                 gui:setText(widget.."_status", "")
 
@@ -602,14 +596,9 @@ function UpdateStratagemHudProgressBars()
                 goto continue
             end
 
-            if stratagemInbound then
-                local activation = stratagemInbound.activation
-                if activation > 0 then
-                    g_stratagemHud.activationBars[i]:update_percentage(1 - activation/GetStratagemByUUID(uuid).activation)
-                else
-                    g_stratagemHud.activationBars[i]:update_percentage(1)
-                end
-
+            local activation = stratagemInbound and stratagemInbound.activation or 0
+            if stratagemInbound and activation > 0 then
+                g_stratagemHud.activationBars[i]:update_percentage(1 - activation/GetStratagemByUUID(uuid).activation)
                 goto continue
             end
 
@@ -623,6 +612,7 @@ function UpdateStratagemHudProgressBars()
             else
                 g_stratagemHud.cooldownBars[i]:update_percentage(1)
             end
+
         end
         ::continue::
     end

@@ -1,6 +1,6 @@
 <MyGUI type="Layout" version="3.2.0">
 	<Widget type="Canvas" skin="Canvas" name="StratagemPanel" position_real="0.010416666666666666 0.018518518518518517 0.22916666666666666 0.5">
-		<Widget type="Canvas" skin="SelectionFieldBox" name="stratagem1" position_real="0.011363636363636364 0.009259259259259259 0.9772727272727273 0.14814814814814814">
+		<Widget type="Canvas" skin="BlurryBackgroundSkin" name="stratagem1" position_real="0.011363636363636364 0.009259259259259259 0.9772727272727273 0.14814814814814814">
 			<Widget type="ImageBox" skin="ImageBox" name="stratagem1_preview" position_real="0.011627906976744186 0.0625 0.16279069767441862 0.875">
 				<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
 				<Property key="NeedKey" value="false" />
@@ -32,7 +32,7 @@
 				</Widget>
 			</Widget>
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
-				<Property key="Colour" value="0.392157 0.392157 0.392157" />
+				<Property key="Colour" value="1 1 1" />
 			</Widget>
 			<Widget type="Canvas" skin="Canvas" name="stratagem1_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem1_codeDigit1" position_real="0 0 0.11475409836065574 1" />
@@ -45,7 +45,7 @@
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem1_codeDigit8" position_real="0.8032786885245902 0 0.11475409836065574 1" />
 			</Widget>
 		</Widget>
-		<Widget type="Canvas" skin="SelectionFieldBox" name="stratagem2" position_real="0.011363636363636364 0.17592592592592593 0.9772727272727273 0.14814814814814814">
+		<Widget type="Canvas" skin="BlurryBackgroundSkin" name="stratagem2" position_real="0.011363636363636364 0.1574074074074074 0.9772727272727273 0.14814814814814814">
 			<Widget type="ImageBox" skin="ImageBox" name="stratagem2_preview" position_real="0.011627906976744186 0.0625 0.16279069767441862 0.875">
 				<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
 				<Property key="NeedKey" value="false" />
@@ -77,7 +77,7 @@
 				</Widget>
 			</Widget>
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
-				<Property key="Colour" value="0.392157 0.392157 0.392157" />
+				<Property key="Colour" value="1 1 1" />
 			</Widget>
 			<Widget type="Canvas" skin="Canvas" name="stratagem2_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem2_codeDigit1" position_real="0 0 0.11475409836065574 1" />
@@ -90,7 +90,7 @@
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem2_codeDigit8" position_real="0.8032786885245902 0 0.11475409836065574 1" />
 			</Widget>
 		</Widget>
-		<Widget type="Canvas" skin="SelectionFieldBox" name="stratagem3" position_real="0.011363636363636364 0.3425925925925926 0.9772727272727273 0.14814814814814814">
+		<Widget type="Canvas" skin="BlurryBackgroundSkin" name="stratagem3" position_real="0.011363636363636364 0.3055555555555556 0.9772727272727273 0.14814814814814814">
 			<Widget type="ImageBox" skin="ImageBox" name="stratagem3_preview" position_real="0.011627906976744186 0.0625 0.16279069767441862 0.875">
 				<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
 				<Property key="NeedKey" value="false" />
@@ -122,7 +122,7 @@
 				</Widget>
 			</Widget>
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
-				<Property key="Colour" value="0.392157 0.392157 0.392157" />
+				<Property key="Colour" value="1 1 1" />
 			</Widget>
 			<Widget type="Canvas" skin="Canvas" name="stratagem3_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem3_codeDigit1" position_real="0 0 0.11475409836065574 1" />
@@ -135,7 +135,7 @@
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem3_codeDigit8" position_real="0.8032786885245902 0 0.11475409836065574 1" />
 			</Widget>
 		</Widget>
-		<Widget type="Canvas" skin="SelectionFieldBox" name="stratagem4" position_real="0.011363636363636364 0.5092592592592593 0.9772727272727273 0.14814814814814814">
+		<Widget type="Canvas" skin="BlurryBackgroundSkin" name="stratagem4" position_real="0.011363636363636364 0.4537037037037037 0.9772727272727273 0.14814814814814814">
 			<Widget type="ImageBox" skin="ImageBox" name="stratagem4_preview" position_real="0.011627906976744186 0.0625 0.16279069767441862 0.875">
 				<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
 				<Property key="NeedKey" value="false" />
@@ -167,7 +167,7 @@
 				</Widget>
 			</Widget>
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
-				<Property key="Colour" value="0.392157 0.392157 0.392157" />
+				<Property key="Colour" value="1 1 1" />
 			</Widget>
 			<Widget type="Canvas" skin="Canvas" name="stratagem4_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem4_codeDigit1" position_real="0 0 0.11475409836065574 1" />
@@ -180,7 +180,7 @@
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem4_codeDigit8" position_real="0.8032786885245902 0 0.11475409836065574 1" />
 			</Widget>
 		</Widget>
-		<Widget type="Canvas" skin="SelectionFieldBox" name="stratagem5" position_real="0.011363636363636364 0.6759259259259259 0.9772727272727273 0.14814814814814814">
+		<Widget type="Canvas" skin="BlurryBackgroundSkin" name="stratagem5" position_real="0.011363636363636364 0.6018518518518519 0.9772727272727273 0.14814814814814814">
 			<Widget type="ImageBox" skin="ImageBox" name="stratagem5_preview" position_real="0.011627906976744186 0.0625 0.16279069767441862 0.875">
 				<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
 				<Property key="NeedKey" value="false" />
@@ -212,7 +212,7 @@
 				</Widget>
 			</Widget>
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
-				<Property key="Colour" value="0.392157 0.392157 0.392157" />
+				<Property key="Colour" value="1 1 1" />
 			</Widget>
 			<Widget type="Canvas" skin="Canvas" name="stratagem5_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem5_codeDigit1" position_real="0 0 0.11475409836065574 1" />
@@ -225,7 +225,7 @@
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem5_codeDigit8" position_real="0.8032786885245902 0 0.11475409836065574 1" />
 			</Widget>
 		</Widget>
-		<Widget type="Canvas" skin="SelectionFieldBox" name="stratagem6" position_real="0.011363636363636364 0.8425925925925926 0.9772727272727273 0.14814814814814814">
+		<Widget type="Canvas" skin="BlurryBackgroundSkin" name="stratagem6" position_real="0.011363636363636364 0.75 0.9772727272727273 0.14814814814814814">
 			<Widget type="ImageBox" skin="ImageBox" name="stratagem6_preview" position_real="0.011627906976744186 0.0625 0.16279069767441862 0.875">
 				<Property key="ImageTexture" value="challenge_missing_icon_large.png" />
 				<Property key="NeedKey" value="false" />
@@ -257,7 +257,7 @@
 				</Widget>
 			</Widget>
 			<Widget type="Canvas" skin="WhiteSkin" position_real="0.19767441860465115 0.4875 0.7906976744186046 0.025">
-				<Property key="Colour" value="0.392157 0.392157 0.392157" />
+				<Property key="Colour" value="1 1 1" />
 			</Widget>
 			<Widget type="Canvas" skin="Canvas" name="stratagem6_codePanel" position_real="0.27906976744186046 0.5375 0.7093023255813954 0.4375">
 				<Widget type="ImageBox" skin="ImageBox" name="stratagem6_codeDigit1" position_real="0 0 0.11475409836065574 1" />
