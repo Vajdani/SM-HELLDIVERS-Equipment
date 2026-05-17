@@ -530,7 +530,8 @@ function HelldiversBackend:client_onFixedUpdate()
         elseif v.activation > 0 then
             v.gui:setText("status", "Impact")
         else
-            v.gui:setText("status", "Impact")
+            local data = GetStratagemByUUID(v.id:sub(3, 38))
+            v.gui:setText("status", ("Ongoing T-%s"):format(FormatStratagemTimer((data.lifeTime + v.activation)/40)))
         end
     end
 end
@@ -601,7 +602,7 @@ function HelldiversBackend:cl_OnStratagemHit(args)
     ball:start()
     args.ball = ball
 
-    local gui = sm.gui.createWorldIconGui(430 * 0.25, 160 * 0.25, "$CONTENT_DATA/Gui/Layouts/StratagemWorldIcon.layout")
+    local gui = sm.gui.createWorldIconGui(430 * 0.5, 160 * 0.5, "$CONTENT_DATA/Gui/Layouts/StratagemWorldIcon.layout")
     gui:setRequireLineOfSight(false)
     gui:setText("status", ("%.0fs"):format(args.activation/40))
     gui:setText("name", "#"..STRATAGEMTYPETOCOLOUR[userdata.type]:getHexStr():sub(1,6)..userdata.name)

@@ -142,7 +142,8 @@
 				"friction": 5,
 				"buoyancy": 2
 			},
-			"flammable": false
+			"flammable": false,
+			"showInInventory": false
 		}
 	]
 }

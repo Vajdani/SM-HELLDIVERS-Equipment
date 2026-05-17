@@ -157,7 +157,7 @@ local stratagems = {
         cooldown = 1, --160 * 40,
         activation = 3 * 40, --12 * 40,
         lifeTime = 0,
-        dropEffect = sm.uuid.new("b63d99e5-06e5-4397-bb3d-27c396124334"),
+        dropEffect = sm.uuid.new("f22e7403-68e4-4979-ad89-1bebe3145785"),
         update = SpawnDropPod
     },
     {
@@ -319,7 +319,7 @@ local stratagemUserdata = {
     ["578b35aa-3865-4297-989b-4734417338c3"] = {
         name = "Hellbomb",
         description = "very big boom",
-        icon = "b63d99e5-06e5-4397-bb3d-27c396124334", --Pod
+        icon = "f22e7403-68e4-4979-ad89-1bebe3145785", --Hellbomb
         type = "mission",
         code = "43143243",
         cost = {
@@ -366,7 +366,7 @@ end
 local customStratagemFunctions = {
     VehicleSpawn = function(self)
         if self.tick == 0 then
-            local builder = SpawnStaticDropPod({ dropEffect = self.pelicanEffect }, self.hitData.position)
+            local builder = SpawnStaticDropPod({ hitData = self.hitData, dropEffect = self.pelicanEffect }, self.hitData.position)
             builder.interactable:setParams(self.blueprint)
         end
 

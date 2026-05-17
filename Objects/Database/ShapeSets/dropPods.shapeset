@@ -5,7 +5,7 @@
 			"cylinder": {
 				"axis": "Y",
 				"depth": 4,
-				"diameter": 2
+				"diameter": 3
 			},
 			"name": "obj_interactive_droppod_collision",
 			"physicsMaterial": "Metal",
@@ -146,9 +146,39 @@
 				"data": {},
 				"filename": "$CONTENT_DATA/Scripts/interactables/VehicleBuilder.lua"
 			},
-			"showInInventory": true,
+			"showInInventory": false,
 			"sticky": "-Y+Y",
 			"uuid": "687465a4-d956-4001-9163-1eab2a7798e0"
+		},
+		{
+			"cylinder": {
+				"axis": "Y",
+				"depth": 1,
+				"diameter": 5
+			},
+			"color": "ff4d00",
+			"name": "obj_interactive_droppod_hellbomb",
+			"physicsMaterial": "Metal",
+			"renderable": "$CONTENT_DATA/Objects/Renderables/obj_interactive_droppod.rend",
+			"restrictions": {
+				"buildable": true,
+				"connectable": true,
+				"convertibleToDynamic": true,
+				"destructable": true,
+				"erasable": false,
+				"liftable": true,
+				"paintable": true,
+				"usable": true
+			},
+			"rotationSet": "PropY",
+			"scripted": {
+				"classname": "Hellbomb",
+				"data": {},
+				"filename": "$CONTENT_DATA/Scripts/interactables/Hellbomb.lua"
+			},
+			"showInInventory": false,
+			"sticky": "-Y+Y",
+			"uuid": "f22e7403-68e4-4979-ad89-1bebe3145785"
 		}
 	]
 }

@@ -238,13 +238,13 @@ ResupplyPod = class(DropPod)
 ResupplyPod.pickupRegions = {
     {
         hitbox = {
-            offset = vec3_new(0, 0.875, 0.214221),
-            size   = vec3_one * 0.15,
+            offset = vec3_new(0, 0.875, 0.3),
+            size   = vec3_new(0.35, 0.2, 0.1),
         },
         effect = {
             name     = obj_containers_woodbox,
-            size     = vec3_new(0.7, 0.75, 0.25),
-            offset   = vec3_new(0, 0, 0.025),
+            size     = vec3_new(0.7, 0.75, 0.3),
+            offset   = vec3_new(0, 0, 0.05),
             rotation = quat_identity,
             colour   = sm.color.new("#ffff00")
         },
@@ -258,13 +258,13 @@ ResupplyPod.pickupRegions = {
     },
     {
         hitbox = {
-            offset = vec3_new(0, 0.374984, 0.214221),
-            size   = vec3_one * 0.15,
+            offset = vec3_new(0, 0.374984, 0.3),
+            size   = vec3_new(0.35, 0.2, 0.1),
         },
         effect = {
             name     = obj_containers_woodbox,
-            size     = vec3_new(0.7, 0.75, 0.25),
-            offset   = vec3_new(0, 0, 0.025),
+            size     = vec3_new(0.7, 0.75, 0.3),
+            offset   = vec3_new(0, 0, 0.05),
             rotation = quat_identity,
             colour   = sm.color.new("#ffff00")
         },
@@ -278,13 +278,13 @@ ResupplyPod.pickupRegions = {
     },
     {
         hitbox = {
-            offset = vec3_new(0, 0.875, -0.214221),
-            size   = vec3_one * 0.15,
+            offset = vec3_new(0, 0.875, -0.3),
+            size   = vec3_new(0.35, 0.2, 0.1),
         },
         effect = {
             name     = obj_containers_woodbox,
-            size     = vec3_new(0.7, 0.75, 0.25),
-            offset   = vec3_new(0, 0, -0.025),
+            size     = vec3_new(0.7, 0.75, 0.3),
+            offset   = vec3_new(0, 0, -0.05),
             rotation = quat_identity,
             colour   = sm.color.new("#ffff00")
         },
@@ -298,13 +298,13 @@ ResupplyPod.pickupRegions = {
     },
     {
         hitbox = {
-            offset = vec3_new(0, 0.374984, -0.214221),
-            size   = vec3_one * 0.15,
+            offset = vec3_new(0, 0.374984, -0.3),
+            size   = vec3_new(0.35, 0.2, 0.1),
         },
         effect = {
             name     = obj_containers_woodbox,
-            size     = vec3_new(0.7, 0.75, 0.25),
-            offset   = vec3_new(0, 0, -0.025),
+            size     = vec3_new(0.7, 0.75, 0.3),
+            offset   = vec3_new(0, 0, -0.05),
             rotation = quat_identity,
             colour   = sm.color.new("#ffff00")
         },
@@ -325,7 +325,7 @@ HMGPod.pickupRegions = {
     {
         hitbox = {
             offset = vec3_new(0, 0.624984, 0.214221),
-            size   = vec3_new(0.2, 0.45, 0.2),
+            size   = vec3_new(0.35, 0.45, 0.2),
         },
         effect = {
             name     = sm.uuid.new( "d48e6383-200a-4aa8-9901-47fdf7969ad9" ),
